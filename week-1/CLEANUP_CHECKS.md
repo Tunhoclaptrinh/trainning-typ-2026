@@ -57,3 +57,18 @@ pnpm start
 ```
 
 Nếu database đã có thêm dữ liệu từ các lần thực hành khác, tổng số bản ghi có thể cao hơn. So sánh số lượng trước và sau lần seed thứ hai để kiểm tra tính không nhân đôi dữ liệu.
+
+## Rà soát tham chiếu tài nguyên ngày 20/10/2026
+
+| Phạm vi | Kết quả |
+|---|---|
+| Đường dẫn trong Markdown và giữa hai repo | 109 đích tồn tại; các anchor đang được dùng khớp heading của tài liệu đích |
+| Liên kết GitHub giữa hai repo | 43 liên kết đúng nhánh và đường dẫn; đối chiếu cây Git của `origin/main` và `origin/week-1` với đầu nhánh trên GitHub |
+| Tài liệu tham khảo bên ngoài | 25/25 URL trong `docs/LEARNING_RESOURCES.md` trả HTTP 200 tại thời điểm kiểm tra |
+| PostgreSQL | Dẫn tài liệu chính thức phiên bản 16 thay vì `/current/` hoặc trang bên thứ ba được ghi nhầm là chính thức |
+| HTTP error response | Cập nhật tài liệu Problem Details từ RFC 7807 sang RFC 9457 |
+| Redis, caching, N+1 và k6 | Dẫn tới tài liệu của Redis, AWS, TypeORM và Grafana; tên nguồn khớp nội dung được dẫn |
+| Điều hướng từ server | Thêm `docs/TRAINING_REFERENCES.md` trong repo backend, dẫn từng chủ đề tới bài TYP tương ứng |
+| Mã minh họa trong bài học | Ghi rõ các file tự tạo khi luyện tập và cấu trúc mở rộng; dẫn demo thực thi về đúng file đang có trong backend |
+
+Các lệnh `pnpm` được đối chiếu với scripts hiện có của backend. Nội dung bổ sung vẫn là commit cục bộ; lần rà soát này không thực hiện push.

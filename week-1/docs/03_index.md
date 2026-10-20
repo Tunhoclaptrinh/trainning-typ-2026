@@ -1,5 +1,7 @@
 # 🔍 PHẦN 3 — INDEX (Lý thuyết đầy đủ + Benchmark EruSentia)
 
+> Đối chiếu thực hành: [Index](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/sql/02_indexes.sql), [Bài benchmark](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/sql/04_week01_benchmark.sql). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server).
+
 ---
 
 ## 3.1 Index là gì?
@@ -273,7 +275,7 @@ Execution Time: 0.065 ms
 
 ```bash
 # Chạy file benchmark tạo 100,000 bản ghi
-docker exec -i sentia_postgres_dev psql -U postgres -d sentia_hub_db < sql/04_week01_benchmark.sql
+docker exec -i sentia_postgres_dev psql -v ON_ERROR_STOP=1 -U postgres -d sentia_hub_db < sql/04_week01_benchmark.sql
 ```
 
 ### Bước 2: Query KHÔNG có index

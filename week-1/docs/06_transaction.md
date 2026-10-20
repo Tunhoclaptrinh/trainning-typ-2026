@@ -1,5 +1,7 @@
 ﻿# 💳 PHẦN 6 — TRANSACTION (Lý thuyết ACID + Thực hành EruSentia)
 
+> Đối chiếu thực hành: [Transaction trong seed](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/scripts/seed.ts). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server).
+
 ---
 
 ## 6.1 Transaction là gì?
@@ -269,7 +271,7 @@ COMMIT;  -- chỉ commit thao tác 1
 ### Pattern 1: Manual transaction
 
 ```typescript
-// src/week01-practice/transaction-demo.ts
+// Ví dụ manual transaction; transaction thực thi hiện có nằm trong scripts/seed.ts
 import { Pool, PoolClient } from 'pg';
 
 const pool = new Pool({ /* config */ });

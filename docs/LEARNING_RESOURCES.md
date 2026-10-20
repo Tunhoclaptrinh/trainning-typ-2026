@@ -3,6 +3,8 @@
 
 ---
 
+> Các liên kết tài liệu bên ngoài được đối chiếu ngày 20/10/2026. Tài liệu PostgreSQL dùng nhánh phiên bản 16 để khớp cấu hình dự án.
+
 ## 🧭 1. CHIẾN LƯỢC HỌC TẬP MỖI TUẦN (NHỊP ĐIỆU LẶP LẠI)
 
 Để không bị đuối và đảm bảo có sản phẩm chạy thật mỗi tuần:
@@ -27,16 +29,16 @@ SQL nâng cao, Indexing, Database Locking, ACID Transactions, OOP & Dependency I
 
 #### 📚 Tài liệu học chọn lọc:
 1. **PostgreSQL Official Tutorial:**
-   👉 [PostgreSQL Tutorial (postgresqltutorial.com)](https://www.postgresqltutorial.com/) — *Ngon và dễ hiểu nhất cho người mới bắt đầu: từ SELECT, JOIN, GROUP BY đến Transaction.*
+   👉 [PostgreSQL 16 — Official Tutorial](https://www.postgresql.org/docs/16/tutorial.html) — *Ngon và dễ hiểu nhất cho người mới bắt đầu: từ SELECT, JOIN, GROUP BY đến Transaction.*
 2. **Kỹ thuật Indexing (Bắt buộc phải đọc):**
    👉 [Use The Index, Luke! (use-the-index-luke.com)](https://use-the-index-luke.com/) — *Kinh thánh về Database Indexing cho lập trình viên backend. Giải thích tại sao B-Tree chạy nhanh, khi nào index bị vô hiệu.*
 3. **Database Locking & Transactions (ACID):**
-   👉 [PostgreSQL Explicit Locking Documentation](https://www.postgresql.org/docs/current/explicit-locking.html) — *Tìm hiểu về `SELECT ... FOR UPDATE`, Row-level lock và Table-level lock.*
+   👉 [PostgreSQL Explicit Locking Documentation](https://www.postgresql.org/docs/16/explicit-locking.html) — *Tìm hiểu về `SELECT ... FOR UPDATE`, Row-level lock và Table-level lock.*
 4. **OOP & TypeScript Clean Code:**
    👉 [TypeScript Official Handbook (Classes & Interfaces)](https://www.typescriptlang.org/docs/handbook/2/classes.html)
    👉 [Domain-Driven Design (Martin Fowler)](https://martinfowler.com/bliki/DomainDrivenDesign.html) — *Hiểu về Entity, Invariants và Encapsulation.*
 5. **Đọc hiểu `EXPLAIN ANALYZE`:**
-   👉 [Tài liệu chính thức EXPLAIN của PostgreSQL](https://www.postgresql.org/docs/current/using-explain.html)
+   👉 [Tài liệu chính thức EXPLAIN của PostgreSQL](https://www.postgresql.org/docs/16/using-explain.html)
 
 ---
 
@@ -48,12 +50,12 @@ Cấu trúc Controller/Service/Repository, HTTP Status Codes, Error Handling chu
 #### 📚 Tài liệu học chọn lọc:
 1. **RESTful API Design Best Practices:**
    👉 [Microsoft REST API Guidelines](https://github.com/microsoft/api-guidelines) — *Chuẩn mực thiết kế URL, mã lỗi và versioning.*
-   👉 [RFC 7807: Problem Details for HTTP APIs](https://datatracker.ietf.org/doc/html/rfc7807) — *Chuẩn hóa response lỗi chuyên nghiệp.*
+   👉 [RFC 9457: Problem Details for HTTP APIs](https://datatracker.ietf.org/doc/html/rfc9457) — *Đặc tả Problem Details; thay thế RFC 7807.*
 2. **Framework & Architecture:**
    👉 [NestJS Official Documentation](https://docs.nestjs.com/) — *Đọc kỹ phần Overview: Controllers, Providers, Modules, Pipes (Validation).*
 3. **ORM & Database Access:**
    👉 [TypeORM Official Docs](https://typeorm.io/) hoặc [Prisma Docs](https://www.prisma.io/docs)
-   👉 [Lỗi N+1 Query là gì và cách phòng tránh](https://stackoverflow.com/questions/97197/what-is-the-n1-select-query-issue-in-object-relational-mapping)
+   👉 [TypeORM — Performance and optimization](https://typeorm.io/docs/advanced-topics/performance-optimizing/)
 
 ---
 
@@ -66,7 +68,7 @@ Password Hashing (bcrypt/argon2), JWT Token (Header/Payload/Signature), Refresh 
 1. **Bảo mật mật khẩu:**
    👉 [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) — *Tại sao tuyệt đối không dùng MD5/SHA, vì sao phải dùng Salt & Cost factor.*
 2. **JSON Web Tokens (JWT):**
-   👉 [JWT.io Introduction](https://jwt.io/introduction) — *Hiểu cấu trúc 3 phần của token và cơ chế xác thực không lưu trạng thái (Stateless).*
+   👉 [RFC 7519 — JSON Web Token](https://datatracker.ietf.org/doc/html/rfc7519) — *Hiểu cấu trúc 3 phần của token và cơ chế xác thực không lưu trạng thái (Stateless).*
 3. **Refresh Token Flow:**
    👉 [Auth0: Refresh Token Rotation](https://auth0.com/docs/secure/tokens/refresh-tokens/refresh-token-rotation) — *Cơ chế cấp lại Access Token an toàn chống bị đánh cắp.*
 
@@ -94,11 +96,11 @@ Cơ chế Cache-Aside, Redis Data Types (String, Hash, Sorted Set), Cache Invali
 
 #### 📚 Tài liệu học chọn lọc:
 1. **Redis Fundamentals:**
-   👉 [Redis Official University (redis.io)](https://redis.io/learn/howtos/quick-start) — *Thực hành trực tiếp với lệnh `SET`, `GET`, `EXPIRE`, `ZADD`, `ZREVRANGE`.*
+   👉 [Redis Quick Start](https://redis.io/tutorials/howtos/quick-start/) và [Redis data types](https://redis.io/docs/latest/develop/data-types/) — *Khởi động Redis và tìm hiểu các kiểu dữ liệu cùng lệnh tương ứng.*
 2. **Chiến lược Caching:**
-   👉 [AWS Caching Best Practices (Cache-Aside, Write-Through)](https://aws.amazon.com/caching/best-practices/)
+   👉 [AWS — Caching patterns: Cache-Aside và Write-Through](https://docs.aws.amazon.com/whitepapers/latest/database-caching-strategies-using-redis/caching-patterns.html)
 3. **Các lỗi kinh điển về Cache:**
-   👉 [Thundering Herd, Cache Avalanche, Cache Penetration explained](https://medium.com/@alxkm/cache-penetration-cache-breakdown-cache-avalanche-6169d2f6fb39)
+   👉 [AWS — Caching challenges and strategies](https://builder.aws.com/content/3K9TeXp6strMiJ4vhakpRD7BQWO/caching-challenges-and-strategies)
 
 ---
 
@@ -109,9 +111,9 @@ Tích hợp toàn bộ hệ thống, Docker Compose cho Production, Deploy lên 
 
 #### 📚 Tài liệu học chọn lọc:
 1. **DevOps & Container:**
-   👉 [Docker Multi-stage Builds Guide](https://docs.docker.com/build/building/multi-stage/) — *Tối ưu image backend từ 1GB xuống dưới 150MB.*
+   👉 [Docker Multi-stage Builds Guide](https://docs.docker.com/build/building/multi-stage/) — *Tách giai đoạn build và runtime để chỉ đưa artifact cần thiết vào image cuối.*
 2. **Load Testing:**
-   👉 [k6 Documentation (k6.io)](https://k6.io/docs/) — *Viết script test đo RPS (Requests Per Second) và độ trễ p95/p99.*
+   👉 [Grafana k6 documentation](https://grafana.com/docs/k6/latest/) — *Viết script test đo RPS (Requests Per Second) và độ trễ p95/p99.*
 
 ---
 

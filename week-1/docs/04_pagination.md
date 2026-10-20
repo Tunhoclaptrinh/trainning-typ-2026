@@ -1,5 +1,7 @@
 ﻿# 📄 PHẦN 4 — PHÂN TRANG (PAGINATION)
 
+> Đối chiếu thực hành: [báo cáo và ảnh thực hành](../WEEK1_REPORT.md). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server).
+
 ---
 
 ## 4.1 Pagination là gì và tại sao cần?

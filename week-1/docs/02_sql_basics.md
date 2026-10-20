@@ -1,5 +1,7 @@
 ﻿# 📊 PHẦN 2 — SQL CƠ BẢN (Lý thuyết + Thực hành EruSentia)
 
+> Đối chiếu thực hành: [Schema nghiệp vụ](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/sql/01_schema.sql), [Seed](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/sql/03_seed.sql). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server).
+
 ---
 
 ## 2.1 CSDL Quan hệ là gì?
@@ -136,7 +138,7 @@ INSERT INTO users (email, ...) VALUES ('a@b.com', ...);  -- ERROR: duplicate key
 ### 2.3.5 Thực hành DDL — Thêm bảng Reviews
 
 ```sql
--- Tạo bảng reviews (lưu vào sql/05_week01_queries.sql)
+-- Bài tập mở rộng: tự tạo file sql/05_week01_queries.sql trong bản clone backend
 CREATE TABLE IF NOT EXISTS reviews (
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     template_id UUID NOT NULL REFERENCES templates(id) ON DELETE CASCADE,
@@ -479,7 +481,7 @@ WHERE t.status = 'published';
 
 ## 2.8 Bài tập thực hành
 
-Lưu kết quả vào `sql/05_week01_queries.sql`:
+Tự tạo file `sql/05_week01_queries.sql` trong bản clone backend để lưu bài tập; repo chưa có file lời giải này:
 
 ```sql
 -- Bài 1: Tất cả template published kèm tên tác giả, category, số tags

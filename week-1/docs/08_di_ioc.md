@@ -1,5 +1,7 @@
 # 🔌 PHẦN 8 — DEPENDENCY INJECTION & IoC (Lý thuyết + TypeScript + NestJS)
 
+> Đối chiếu thực hành: [Demo DI](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/di/demo.ts), [Repository interface hiện có](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/domain/repositories/ITemplateRepository.ts). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server).
+
 ---
 
 ## 8.1 Dependency là gì?
@@ -25,7 +27,7 @@ class UserService {
 Kết quả: hai class gắn chặt với nhau, không thể thay thế một bên mà không ảnh hưởng bên kia.
 
 ```typescript
-// src/week01-practice/di/00_problem.ts
+// Ví dụ minh họa tight coupling; demo thực thi: src/week01-practice/di/demo.ts
 
 class PostgresUserRepository {
   async findById(id: string) {
@@ -121,7 +123,7 @@ class UserService {
 **Bước 1: Định nghĩa interface (abstraction)**
 
 ```typescript
-// src/week01-practice/di/01_basic_di.ts
+// Ví dụ minh họa constructor injection; demo thực thi: src/week01-practice/di/demo.ts
 
 // Interface = contract: "ai implement tôi phải có các methods này"
 interface IUserRepository {
@@ -279,7 +281,7 @@ IoC còn được gọi là **"Hollywood Principle"**:
 ### Implement DI Container đơn giản
 
 ```typescript
-// src/week01-practice/di/02_di_container.ts
+// Ví dụ minh họa IoC container; demo thực thi: src/week01-practice/di/demo.ts
 
 class DIContainer {
   private registry = new Map<string, () => any>();
@@ -379,7 +381,9 @@ export class UserModule {}
 → Bạn không cần new ở bất kỳ đâu!
 ```
 
-### Liên hệ với EruSentia Clean Architecture
+### Liên hệ với Clean Architecture
+
+Cấu trúc sau minh họa một phương án mở rộng với use case và repository cho User. Backend hiện có domain entities và `ITemplateRepository`; các file `IUserRepository`, `GetUserUseCase` và `UserPgRepository` trong ví dụ chưa được triển khai thành các file độc lập.
 
 ```
 src/

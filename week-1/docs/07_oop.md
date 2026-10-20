@@ -1,5 +1,7 @@
 # 🧱 PHẦN 7 — OOP (Lý thuyết đầy đủ + TypeScript EruSentia)
 
+> Đối chiếu thực hành: [Demo OOP](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/oop/demo.ts), [Domain entities](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/domain/entities/Template.ts). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server).
+
 ---
 
 ## 7.1 OOP là gì?
@@ -120,7 +122,7 @@ class User {
 
 ### Thực hành
 
-Tạo `src/week01-practice/oop/01_encapsulation.ts`:
+Ví dụ minh họa đóng gói; demo thực thi nằm trong `src/week01-practice/oop/demo.ts`:
 
 ```typescript
 class User {
@@ -209,7 +211,7 @@ của class cha (superclass/parent)**, đồng thời có thể mở rộng ho�
 
 ### Thực hành
 
-Tạo `src/week01-practice/oop/02_inheritance.ts`:
+Ví dụ minh họa kế thừa; demo thực thi nằm trong `src/week01-practice/oop/demo.ts`:
 
 ```typescript
 // Abstract base class: chứa behavior chung cho mọi domain entity
@@ -384,7 +386,7 @@ Có 2 loại:
 
 ### Ví dụ thực tế
 
-Tạo `src/week01-practice/oop/03_polymorphism.ts`:
+Ví dụ minh họa đa hình; demo thực thi nằm trong `src/week01-practice/oop/demo.ts`:
 
 ```typescript
 // Interface = contract (tôi hứa sẽ có method này)
@@ -513,7 +515,7 @@ Dùng abstract class khi:
 3. Có **protected fields** cần subclass access
 
 ```typescript
-// Tạo src/week01-practice/oop/04_abstraction.ts
+// Ví dụ trừu tượng hóa; demo thực thi nằm trong src/week01-practice/oop/demo.ts
 
 abstract class NotificationSender {
   // Shared state

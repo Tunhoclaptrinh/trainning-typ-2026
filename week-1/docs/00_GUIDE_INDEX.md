@@ -25,7 +25,10 @@
 |-----------|----------|
 | [Demo OOP](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/oop/demo.ts) | Thực nghiệm 4 tính chất OOP (Encapsulation, Inheritance, Polymorphism, Abstraction) |
 | [Demo DI](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/di/demo.ts) | Thực nghiệm Dependency Injection & DI Container |
+| [Hướng dẫn cài đặt và lệnh chạy](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/README.md) | Cài dependencies, cấu hình PostgreSQL và chạy demo từ repo backend |
+| [Schema thực tế](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/sql/01_schema.sql) | 9 bảng nghiệp vụ hiện có |
 | [SQL của backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/main/sql) | Toàn bộ script DDL Schema, Index, Seed nghiệp vụ cốt lõi & Benchmark đo kiểm |
+| [Kiểm tra sau dọn repo](../CLEANUP_CHECKS.md) | Kết quả kiểm tra ngày 20/10/2026, môi trường và commit backend |
 | [`WEEK1_REPORT.md`](../WEEK1_REPORT.md) | Báo cáo chi tiết: Đo kiểm Index (100,000 dòng), Locking, Transaction & 12 ảnh chụp thực tế |
 
 ---
