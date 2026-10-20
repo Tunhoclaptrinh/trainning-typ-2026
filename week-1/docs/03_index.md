@@ -166,17 +166,22 @@ Mỗi UPDATE trên cột có index → phải rebuild index đó. Write-heavy co
 CREATE INDEX idx_templates_status_author ON templates(status, author_id);
 ```
 
-**Leftmost Prefix Rule — Quy tắc quan trọng nhất:**
-```sql
--- Index (status, author_id) hỗ trợ:
-WHERE status = ?                              -- ✅ dùng được (prefix đầu)
-WHERE status = ? AND author_id = ?            -- ✅ dùng được (cả 2)
-WHERE status = ? AND author_id = ? AND ...   -- ✅ dùng được
+**Leftmost prefix nói về thứ tự cột trong index, không phải thứ tự viết điều kiện `WHERE`.**
+Các dòng dưới là mảnh điều kiện minh họa; `?` là chỗ điền giá trị, không phải placeholder của PostgreSQL.
 
--- Index (status, author_id) KHÔNG hỗ trợ:
-WHERE author_id = ?                           -- ❌ bỏ qua cột đầu
-WHERE author_id = ? AND status = ?           -- ❌ không theo thứ tự prefix
+```sql
+-- Với B-tree (status, author_id):
+WHERE status = ?                         -- giới hạn theo cột đầu
+WHERE status = ? AND author_id = ?       -- giới hạn theo cả hai cột
+WHERE author_id = ? AND status = ?       -- tương đương dòng trên
+WHERE author_id = ?                      -- vẫn có thể dùng index,
+                                        -- nhưng thiếu cột đầu có thể phải quét toàn index
 ```
+
+PostgreSQL 16 giới hạn vùng quét hiệu quả bằng các điều kiện equality trên các cột
+đầu và điều kiện range trên cột đầu tiên không có equality. Planner chọn index hay
+sequential scan theo chi phí; không thể kết luận chỉ từ thứ tự viết các biểu thức `AND`.
+Xem [Multicolumn Indexes — PostgreSQL 16](https://www.postgresql.org/docs/16/indexes-multicolumn.html).
 
 **Thứ tự cột trong composite index:**
 - Đặt cột **equality** (`=`) trước, cột **range** (`>`, `<`) sau

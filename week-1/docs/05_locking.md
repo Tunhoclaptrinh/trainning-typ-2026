@@ -1,4 +1,4 @@
-﻿# 🔒 PHẦN 5 — LOCKING (Lý thuyết đầy đủ + Demo EruSentia)
+# 🔒 PHẦN 5 — LOCKING (Lý thuyết đầy đủ + Demo EruSentia)
 
 > Đối chiếu thực hành: [báo cáo và ảnh thực hành](../WEEK1_REPORT.md). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
 
@@ -266,8 +266,9 @@ WHERE id = 1 AND updated_at = '2024-03-15 10:30:00.123456'
 
 ### Ưu điểm Optimistic
 
-- ✅ **Throughput cao:** không block ai khi đọc
-- ✅ **Không có Deadlock:** không có lock nên không có deadlock
+- ✅ **Không giữ row lock từ bước đọc:** đọc thường không dùng `SELECT FOR UPDATE`.
+- ⚠️ **Vẫn có blocking và deadlock khi ghi:** `UPDATE ... WHERE version = ...` vẫn lấy row lock.
+  Hai transaction cập nhật nhiều row theo thứ tự ngược nhau có thể deadlock, dù đều kiểm tra version.
 - ✅ **Phù hợp read-heavy:** phần lớn thời gian chỉ đọc, hiếm khi ghi đồng thời
 
 ### Nhược điểm Optimistic
@@ -331,6 +332,23 @@ SELECT * FROM template_slots WHERE id = 2 FOR UPDATE;
 -- → Một trong hai terminal sẽ nhận ERROR: deadlock detected
 ```
 
+### Optimistic lock cũng có thể deadlock
+
+Ví dụ thứ tự lệnh trên **hai row đã tồn tại**, mỗi row bắt đầu ở `version = 0`:
+
+| Bước | Session A | Session B |
+|------|-----------|-----------|
+| 1 | `BEGIN;` | `BEGIN;` |
+| 2 | `UPDATE template_slots SET version = version + 1 WHERE id = 1 AND version = 0;` | |
+| 3 | | `UPDATE template_slots SET version = version + 1 WHERE id = 2 AND version = 0;` |
+| 4 | `UPDATE template_slots SET version = version + 1 WHERE id = 2 AND version = 0;` → chờ B | |
+| 5 | | `UPDATE template_slots SET version = version + 1 WHERE id = 1 AND version = 0;` → tạo vòng chờ |
+
+PostgreSQL hủy một transaction với SQLSTATE `40P01`. Session bị lỗi cần `ROLLBACK`;
+ứng dụng có thể retry **toàn bộ transaction**, đọc lại version và kiểm tra nghiệp vụ,
+với giới hạn số lần thử. Không chỉ chạy lại câu `UPDATE` lỗi trong transaction đã aborted.
+Xem [Explicit Locking — PostgreSQL 16](https://www.postgresql.org/docs/16/explicit-locking.html#LOCKING-DEADLOCKS).
+
 ### Cách phòng tránh Deadlock
 
 **Nguyên tắc vàng: Lock theo thứ tự nhất quán**
@@ -360,10 +378,10 @@ FOR UPDATE;
 |---------|------------|-----------|
 | **Triết lý** | "Conflict sẽ xảy ra — lock trước" | "Conflict hiếm — check khi ghi" |
 | **Cơ chế** | `SELECT FOR UPDATE` | version column + rowsAffected check |
-| **Blocking** | Có (các session xếp hàng) | Không |
-| **Throughput** | Thấp hơn | Cao hơn |
-| **Deadlock risk** | Có | Không |
-| **Retry logic** | Không cần | Cần |
+| **Blocking** | Có khi lấy lock xung đột | Có thể xảy ra tại `UPDATE` |
+| **Throughput** | Phụ thuộc thời gian giữ lock và contention | Phụ thuộc contention và số lần retry |
+| **Deadlock risk** | Có | Có, do lock của `UPDATE` |
+| **Retry logic** | Cần khi deadlock/serialization failure | Xử lý version conflict và lỗi transaction |
 | **Conflict rate cao** | ✅ Phù hợp | ❌ Nhiều retry |
 | **Read-heavy** | ❌ Lãng phí | ✅ Phù hợp |
 | **Use case EruSentia** | Mua template giới hạn | Edit profile, update template |
