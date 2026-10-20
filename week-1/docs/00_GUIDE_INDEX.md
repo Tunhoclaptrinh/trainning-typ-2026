@@ -1,6 +1,6 @@
 # 🗺️ TÀI LIỆU KỸ THUẬT & HƯỚNG DẪN THỰC HÀNH TUẦN 1
 
-> Tổng hợp toàn bộ 8 chuyên đề lý thuyết chuyên sâu, phân tích kỹ thuật và mã nguồn thực hành của Tuần 1.
+> Tổng hợp toàn bộ 8 chuyên đề lý thuyết chuyên sâu, phân tích kỹ thuật và liên kết mã nguồn thực hành của Tuần 1. Mã nguồn thực thi được quản lý tại repo backend.
 
 ---
 
@@ -23,9 +23,9 @@
 
 | Đường dẫn | Nội dung |
 |-----------|----------|
-| [`src/oop/demo.ts`](../src/oop/demo.ts) | Thực nghiệm 4 tính chất OOP (Encapsulation, Inheritance, Polymorphism, Abstraction) |
-| [`src/di/demo.ts`](../src/di/demo.ts) | Thực nghiệm Dependency Injection & DI Container |
-| [`sql/`](../sql/) | Toàn bộ script DDL Schema, Index, Seed nghiệp vụ cốt lõi & Benchmark đo kiểm |
+| [Demo OOP](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/oop/demo.ts) | Thực nghiệm 4 tính chất OOP (Encapsulation, Inheritance, Polymorphism, Abstraction) |
+| [Demo DI](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/di/demo.ts) | Thực nghiệm Dependency Injection & DI Container |
+| [SQL của backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/main/sql) | Toàn bộ script DDL Schema, Index, Seed nghiệp vụ cốt lõi & Benchmark đo kiểm |
 | [`WEEK1_REPORT.md`](../WEEK1_REPORT.md) | Báo cáo chi tiết: Đo kiểm Index (100,000 dòng), Locking, Transaction & 12 ảnh chụp thực tế |
 
 ---
@@ -38,3 +38,5 @@
 | 2 | Database có dữ liệu mẫu, chạy được JOIN / GROUP BY | ✅ Hoàn thành |
 | 3 | Demo sự khác nhau trước/sau khi đánh Index (EXPLAIN ANALYZE) | ✅ Hoàn thành |
 | 4 | Demo cơ chế Locking: Chạy transaction kiểm chứng lock hoạt động | ✅ Hoàn thành |
+
+Các đường dẫn `src/` và `sql/` trong ví dụ lý thuyết được hiểu theo thư mục gốc của backend; các file mẫu trong bài học không phải tất cả đều là file đã triển khai. Xem [hướng dẫn tái hiện](../README.md#báo-cáo-và-hướng-dẫn-tái-hiện).

@@ -60,3 +60,27 @@
 - Database có dữ liệu mẫu, chạy được các query (JOIN, GROUP BY)
 - Demo được sự khác nhau giữa có index và không có index
 - Demo được locking: chạy 2 transaction đồng thời, cho thấy lock hoạt động
+
+
+## Báo cáo và hướng dẫn tái hiện
+
+- [Báo cáo kỹ thuật tuần 1](WEEK1_REPORT.md).
+- [Kết quả kiểm tra sau dọn repo ngày 20/10/2026](CLEANUP_CHECKS.md).
+- [8 chuyên đề lý thuyết](docs/00_GUIDE_INDEX.md).
+- [12 ảnh minh chứng](screenshots/).
+- [Mã nguồn backend và hướng dẫn cài đặt](https://github.com/Tunhoclaptrinh/EruSentia-Server).
+- [Schema, index, seed và benchmark SQL](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/main/sql).
+- [Demo OOP](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/oop/demo.ts) và [demo DI](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/di/demo.ts).
+
+Các lệnh sau chạy từ thư mục `EruSentia-Server` sau khi đã cài dependencies và cấu hình PostgreSQL theo README của backend:
+
+```bash
+pnpm db:check
+pnpm demo:oop
+pnpm demo:di
+pnpm db:benchmark
+```
+
+Schema nghiệp vụ có 9 bảng. `users_no_index` và `template_slots` trong báo cáo là bảng phụ của bài thực hành. Báo cáo giữ kết quả và ảnh của lần đo được ghi ngày trong tài liệu.
+
+Demo DI dùng repository Postgres mô phỏng; phần kết nối database thật được thực hiện bởi các script `db:*` của backend.

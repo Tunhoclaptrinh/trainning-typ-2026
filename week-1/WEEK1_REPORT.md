@@ -2,8 +2,10 @@
 **Học viên:** Nguyễn Tiến Tuấn  
 **Chuyên đề:** Database (PostgreSQL) & Hướng đối tượng (OOP / DI)  
 **Thời gian:** 03/10/2026  
-**Dự án thực tế áp dụng:** [EruSentia Platform Backend](https://github.com/Tunhoclaptrinh/EruSentia-Server)  
+**Dự án thực tế áp dụng:** [Sentia Hub Backend](https://github.com/Tunhoclaptrinh/EruSentia-Server)
 **Kho lưu trữ nộp bài:** [github.com/Tunhoclaptrinh/trainning-typ-2026](https://github.com/Tunhoclaptrinh/trainning-typ-2026)
+
+> Báo cáo lưu kết quả và ảnh chụp của lần thực hành ngày 03/10/2026. Mã nguồn thực thi được quản lý tại [EruSentia-Server](https://github.com/Tunhoclaptrinh/EruSentia-Server); xem [hướng dẫn tái hiện](README.md#báo-cáo-và-hướng-dẫn-tái-hiện). Schema chính có 9 bảng; tổng 11 bảng trong ảnh bao gồm `users_no_index` và `template_slots` dùng riêng cho bài thực hành.
 
 ---
 
@@ -331,11 +333,11 @@ WHERE u.id = 'a0000000-0000-0000-0000-000000000004';
 
 ## PHẦN 2: LẬP TRÌNH HƯỚNG ĐỐI TƯỢNG (OOP)
 
-**Mã nguồn:** `src/oop/demo.ts`
+**Mã nguồn:** [Demo OOP trong backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/oop/demo.ts)
 
 ### Kiểm chứng mã nguồn
 ```
-$ npx tsx src/oop/demo.ts
+$ pnpm demo:oop  # Chạy từ repo EruSentia-Server
 ```
 
 **Kết quả Console Output:**
@@ -389,11 +391,11 @@ OOP Demo — EruSentia Domain Objects
 
 ## PHẦN 3: DEPENDENCY INJECTION (DI) & IoC
 
-**Mã nguồn:** `src/di/demo.ts`
+**Mã nguồn:** [Demo DI trong backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/di/demo.ts)
 
 ### Kiểm chứng mã nguồn
 ```
-$ npx tsx src/di/demo.ts
+$ pnpm demo:di  # Chạy từ repo EruSentia-Server
 ```
 
 **Kết quả Console Output:**
