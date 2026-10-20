@@ -2,10 +2,11 @@
 **Học viên:** Nguyễn Tiến Tuấn  
 **Chuyên đề:** Database (PostgreSQL) & Hướng đối tượng (OOP / DI)  
 **Thời gian:** 03/10/2026  
-**Dự án thực tế áp dụng:** [Sentia Hub Backend](https://github.com/Tunhoclaptrinh/EruSentia-Server)
-**Kho lưu trữ nộp bài:** [github.com/Tunhoclaptrinh/trainning-typ-2026](https://github.com/Tunhoclaptrinh/trainning-typ-2026)
+**Dự án thực tế áp dụng:** [Sentia Hub Backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220)
+**Mốc nguồn đối chiếu sau dọn repo:** [`b851e15`](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220) — [cách mở và tải toàn bộ bản nguồn](SOURCE_SNAPSHOT.md)
+**Kho lưu trữ nộp bài:** [TYP tại mốc tuần 1](https://github.com/Tunhoclaptrinh/trainning-typ-2026/tree/typ-2026-week-1)
 
-> Báo cáo lưu kết quả và ảnh chụp của lần thực hành ngày 03/10/2026. Mã nguồn thực thi được quản lý tại [EruSentia-Server](https://github.com/Tunhoclaptrinh/EruSentia-Server); xem [hướng dẫn tái hiện](README.md#báo-cáo-và-hướng-dẫn-tái-hiện). Schema chính có 9 bảng; tổng 11 bảng trong ảnh bao gồm `users_no_index` và `template_slots` dùng riêng cho bài thực hành.
+> Báo cáo lưu kết quả và ảnh chụp của lần thực hành ngày 03/10/2026. Mã nguồn thực thi được quản lý tại [EruSentia-Server](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220); xem [hướng dẫn tái hiện](README.md#báo-cáo-và-hướng-dẫn-tái-hiện). Schema chính có 9 bảng; tổng 11 bảng trong ảnh bao gồm `users_no_index` và `template_slots` dùng riêng cho bài thực hành.
 
 ---
 
@@ -333,7 +334,7 @@ WHERE u.id = 'a0000000-0000-0000-0000-000000000004';
 
 ## PHẦN 2: LẬP TRÌNH HƯỚNG ĐỐI TƯỢNG (OOP)
 
-**Mã nguồn:** [Demo OOP trong backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/oop/demo.ts)
+**Mã nguồn:** [Demo OOP trong backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/src/week01-practice/oop/demo.ts)
 
 ### Kiểm chứng mã nguồn
 ```
@@ -391,7 +392,7 @@ OOP Demo — EruSentia Domain Objects
 
 ## PHẦN 3: DEPENDENCY INJECTION (DI) & IoC
 
-**Mã nguồn:** [Demo DI trong backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/di/demo.ts)
+**Mã nguồn:** [Demo DI trong backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/src/week01-practice/di/demo.ts)
 
 ### Kiểm chứng mã nguồn
 ```

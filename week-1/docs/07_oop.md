@@ -1,6 +1,6 @@
 # 🧱 PHẦN 7 — OOP (Lý thuyết đầy đủ + TypeScript EruSentia)
 
-> Đối chiếu thực hành: [Demo OOP](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/oop/demo.ts), [Domain entities](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/domain/entities/Template.ts). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server).
+> Đối chiếu thực hành: [Demo OOP](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/src/week01-practice/oop/demo.ts), [Domain entities](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/src/domain/entities/Template.ts). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
 
 ---
 

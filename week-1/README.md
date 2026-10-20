@@ -65,12 +65,13 @@
 ## Báo cáo và hướng dẫn tái hiện
 
 - [Báo cáo kỹ thuật tuần 1](WEEK1_REPORT.md).
+- [Bản nguồn cố định: commit, tag và tải toàn bộ repo](SOURCE_SNAPSHOT.md).
 - [Kết quả kiểm tra sau dọn repo ngày 20/10/2026](CLEANUP_CHECKS.md).
 - [8 chuyên đề lý thuyết](docs/00_GUIDE_INDEX.md).
 - [12 ảnh minh chứng](screenshots/).
-- [Mã nguồn backend và hướng dẫn cài đặt](https://github.com/Tunhoclaptrinh/EruSentia-Server).
-- [Schema, index, seed và benchmark SQL](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/main/sql).
-- [Demo OOP](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/oop/demo.ts) và [demo DI](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/src/week01-practice/di/demo.ts).
+- [Mã nguồn backend và hướng dẫn cài đặt](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
+- [Schema, index, seed và benchmark SQL](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220/sql).
+- [Demo OOP](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/src/week01-practice/oop/demo.ts) và [demo DI](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/src/week01-practice/di/demo.ts).
 
 Các lệnh sau chạy từ thư mục `EruSentia-Server` sau khi đã cài dependencies và cấu hình PostgreSQL theo README của backend:
 

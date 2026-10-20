@@ -1,6 +1,6 @@
 ﻿# 📊 PHẦN 2 — SQL CƠ BẢN (Lý thuyết + Thực hành EruSentia)
 
-> Đối chiếu thực hành: [Schema nghiệp vụ](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/sql/01_schema.sql), [Seed](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/sql/03_seed.sql). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server).
+> Đối chiếu thực hành: [Schema nghiệp vụ](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/sql/01_schema.sql), [Seed](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/sql/03_seed.sql). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
 
 ---
 

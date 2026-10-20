@@ -1,6 +1,6 @@
 ﻿# 💳 PHẦN 6 — TRANSACTION (Lý thuyết ACID + Thực hành EruSentia)
 
-> Đối chiếu thực hành: [Transaction trong seed](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/scripts/seed.ts). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server).
+> Đối chiếu thực hành: [Transaction trong seed](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/scripts/seed.ts). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
 
 ---
 

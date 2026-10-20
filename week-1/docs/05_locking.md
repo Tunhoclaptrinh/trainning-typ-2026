@@ -1,6 +1,6 @@
 ﻿# 🔒 PHẦN 5 — LOCKING (Lý thuyết đầy đủ + Demo EruSentia)
 
-> Đối chiếu thực hành: [báo cáo và ảnh thực hành](../WEEK1_REPORT.md). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server).
+> Đối chiếu thực hành: [báo cáo và ảnh thực hành](../WEEK1_REPORT.md). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
 
 ---
 

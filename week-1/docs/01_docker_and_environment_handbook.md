@@ -1,6 +1,6 @@
 # 🐳 SỔ TAY KỸ THUẬT TUẦN 1: DOCKER & MÔI TRƯỜNG DATABASE THỰC CHIẾN
 
-> Đối chiếu thực hành: [Docker Compose](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/docker/docker-compose.dev.yml), [Biến môi trường mẫu](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/.env.example). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server).
+> Đối chiếu thực hành: [Docker Compose](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/docker/docker-compose.dev.yml), [Biến môi trường mẫu](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/.env.example). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
 > Ghi chép các kiến thức "ngầm", bài học thực tế và thông số kết nối quan trọng cần nhớ trong Tuần 1.
 
 ---

@@ -20,7 +20,11 @@
 ---
 
 ## 💻 3. KẾT QUẢ ĐÃ LÀM ĐƯỢC (DELIVERABLES & ARTIFACTS)
-- **Source Code / PR:** [Link commit / branch]
+- **Repo backend:** URL repo
+- **Commit backend đầy đủ:** Mã SHA và link `tree/<SHA>`
+- **File dẫn chứng:** Link `blob/<SHA>/đường/dẫn/file`
+- **Tag lưu trữ báo cáo:** Tên tag TYP đã chốt
+- **Nguồn của kết quả đo:** Ngày đo, môi trường và commit thực sự được chạy
 - **Các file quan trọng đã tạo:**
   - `path/to/file1.ts`: Ý nghĩa chức năng
   - `path/to/file2.sql`: Ý nghĩa chức năng

@@ -1,6 +1,6 @@
 # 🔍 PHẦN 3 — INDEX (Lý thuyết đầy đủ + Benchmark EruSentia)
 
-> Đối chiếu thực hành: [Index](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/sql/02_indexes.sql), [Bài benchmark](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/main/sql/04_week01_benchmark.sql). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server).
+> Đối chiếu thực hành: [Index](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/sql/02_indexes.sql), [Bài benchmark](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/sql/04_week01_benchmark.sql). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
 
 ---
 

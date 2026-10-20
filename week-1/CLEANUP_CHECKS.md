@@ -5,7 +5,7 @@ Ngày kiểm tra: 20/10/2026. Commit mã nguồn backend được kiểm tra: `5
 ## Phân chia nội dung
 
 - Repo TYP giữ báo cáo, 8 chuyên đề lý thuyết, hướng dẫn và 12 ảnh minh chứng.
-- Repo [EruSentia-Server](https://github.com/Tunhoclaptrinh/EruSentia-Server) giữ SQL, domain models, script database, demo OOP/DI và kiểm thử CLI.
+- Repo [EruSentia-Server](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220) giữ SQL, domain models, script database, demo OOP/DI và kiểm thử CLI.
 - Các bản SQL và demo TypeScript trùng ở TYP đã được đối chiếu nội dung trước khi loại bỏ.
 - Bản nháp tuần 2 đang tạm cất; chưa nhập vào backend.
 
