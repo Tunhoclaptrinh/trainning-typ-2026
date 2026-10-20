@@ -414,3 +414,5 @@ FOR UPDATE;
 | **Conflict rate cao** | ✅ Phù hợp | ❌ Nhiều retry |
 | **Read-heavy** | Chỉ lock đoạn cần read-modify-write | Thường phù hợp khi write conflict thấp |
 | **Use case EruSentia** | Mua template giới hạn | Edit profile, update template |
+
+Đã kiểm chứng hai connection trên Docker PostgreSQL 16.15 ngày 20/10/2026: blocking/unblock, UPDATE 0 với version cũ và deadlock 40P01. Kết quả ghi trong [báo cáo](../WEEK1_REPORT.md).

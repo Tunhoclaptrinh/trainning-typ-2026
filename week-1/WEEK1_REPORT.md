@@ -6,6 +6,8 @@
 **Mốc nguồn đối chiếu sau dọn repo:** [`b851e15`](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220) — [cách mở và tải toàn bộ bản nguồn](SOURCE_SNAPSHOT.md)
 **Kho lưu trữ nộp bài:** [TYP tại mốc tuần 1](https://github.com/Tunhoclaptrinh/trainning-typ-2026/tree/typ-2026-week-1)
 
+> Bổ sung ngày 20/10/2026: kết quả thực hành Docker trên Ubuntu và ảnh Adminer thật được ghi ở cuối báo cáo, tách khỏi lần thực hành ngày 03/10/2026.
+
 > Hiệu đính sau review ngày 20/10/2026: [những điểm đã sửa và giới hạn bằng chứng](REVIEW_UPDATES.md). Ảnh/số đo lịch sử giữ nguyên; nội dung giải thích được sửa trên nhánh hiện tại, tag cũ không đổi.
 
 > Báo cáo lưu kết quả và ảnh chụp của lần thực hành ngày 03/10/2026. Mã nguồn thực thi được quản lý tại [EruSentia-Server](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220); xem [hướng dẫn tái hiện](README.md#báo-cáo-và-hướng-dẫn-tái-hiện). Schema chính có 9 bảng; tổng 11 bảng trong ảnh bao gồm `users_no_index` và `template_slots` dùng riêng cho bài thực hành.
@@ -229,7 +231,7 @@ suy ra số lần đọc bằng `log₂(n)` hoặc kết luận “giảm 100,00
 Để đo lại: chạy script benchmark trên DB thực hành riêng, xác nhận số dòng hai bảng,
 `ANALYZE` cả hai, truy vấn **cùng email** `bench_50000@erusentia.test` và thu
 `EXPLAIN (ANALYZE, BUFFERS)` nhiều lần. [Hướng dẫn index](docs/03_index.md#37-thực-hành-benchmark-trên-erusentia)
-có câu lệnh đối chiếu. Chưa có ảnh/số đo mới cho protocol này trong báo cáo.
+có câu lệnh đối chiếu. Lần thực hành 03/10 chưa có protocol này; bằng chứng đo có kiểm soát bổ sung ngày 20/10 nằm ở cuối báo cáo.
 
 ---
 
@@ -453,9 +455,9 @@ Repository tên Postgres trong demo là **stub trả dữ liệu giả**, không
 | Môi trường Docker | Hoàn thành | PostgreSQL 16 & Adminer hoạt động ổn định |
 | Thiết kế CSDL & Seed dữ liệu | Hoàn thành | 9 bảng nghiệp vụ + 2 bảng lab trong ảnh; 1,012 templates mẫu |
 | SQL Queries (JOIN, GROUP BY, HAVING) | Hoàn thành | Đầy đủ 4 truy vấn mẫu cùng kết quả chụp thực tế |
-| Đo kiểm hiệu năng Index | Hoàn thành | Hai plan lịch sử; cần đo lại cùng query/dataset để kết luận mức tăng tốc |
+| Đo kiểm hiệu năng Index | Hoàn thành | Hai plan lịch sử; bổ sung benchmark cùng bảng/query trên Docker PostgreSQL 16.15 ngày 20/10 |
 | Kỹ thuật phân trang & Điểm nghẽn | Hoàn thành | Phân tích chi tiết Offset Scan vs Cursor Paging |
-| Cơ chế Locking | Hoàn thành | Có ảnh một session và version không khớp; hướng dẫn hai session bổ sung, chưa có ảnh đồng thời |
+| Cơ chế Locking | Hoàn thành | Ảnh cũ một session; bổ sung event log/PID và ảnh báo cáo hai session trên Docker PostgreSQL 16.15 |
 | Giao dịch ACID & Savepoint | Hoàn thành | Ảnh chứng minh rollback về savepoint; chưa kiểm chứng đầy đủ isolation/durability |
 | Demo 4 tính chất OOP | Hoàn thành | Mã nguồn TypeScript chạy hoàn chỉnh |
 | Demo DI Container | Hoàn thành | Chuyển đổi thành công từ Tight Coupling sang DI Container |
@@ -463,8 +465,67 @@ Repository tên Postgres trong demo là **stub trả dữ liệu giả**, không
 ## Phạm vi đáp ứng đề bài
 
 Lý thuyết có đủ 8 chuyên đề; SQL/seed và demo OOP/DI có mã thực thi trong backend.
-Phần OOP/DI được vận dụng bằng TypeScript, đối chiếu NestJS; đây là điều chỉnh theo stack
-EruSentia, không phải bằng chứng đã làm bài Java thuần/Spring trong đề gốc. Nếu yêu cầu
-chấm bắt buộc Java/Spring thì phần đó còn cần bổ sung. Bằng chứng khóa đồng thời hai session
-và benchmark có kiểm soát còn thiếu ảnh mới; các hướng dẫn hiện có giúp tái hiện, không thay
-thế bằng chứng chạy thực tế. Tuần 1 chưa có HTTP API, NestJS module, ORM hoặc Redis adapter.
+Phần OOP/DI được vận dụng bằng TypeScript, đối chiếu NestJS theo stack EruSentia.
+Các mục Java/Spring trong đề gốc được đối chiếu về kiến thức; không chuyển backend sang
+Java để làm bài training. Việc giữ stack TypeScript là lựa chọn của dự án, không có
+nghĩa đã chạy một ứng dụng Java/Spring. Tuần 1 chưa có HTTP API, NestJS module, ORM hoặc
+Redis adapter.
+
+## Bổ sung ngày 20/10/2026 — Ubuntu và Docker thực
+
+Đã chạy đúng Compose của backend trên Ubuntu 26.04.1 LTS: Docker Engine 29.1.3,
+Compose 2.40.3, PostgreSQL **16.15** (`postgres:16-alpine`), Adminer **6.1.2**.
+Giữ nguyên source TypeScript và cấu hình Compose hiện có.
+
+### Môi trường và dữ liệu
+
+Ảnh dưới chụp trực tiếp Adminer đang chạy tại localhost:8080 trên máy Ubuntu.
+Database nghiệp vụ `sentia_hub_db` có 9 bảng, 10 users, 8 categories, 1.012 templates.
+Chạy seed lần hai không nhân đôi dữ liệu. Các lệnh hiện có `db:check`, `db:schema`,
+`db:indexes`, `db:seed`, `typecheck`, `test` (6/6), `build`, `start`, `demo:oop`,
+`demo:di`, `db:benchmark` đều thành công. `start` chỉ kiểm tra DB rồi thoát, chưa có API.
+
+![Adminer thật trên Ubuntu](screenshots/13_ubuntu_adminer_overview.png)
+*Hình 13: Database dự án trên Docker Ubuntu.*
+
+![Phiên bản và số dòng thực tế](screenshots/14_ubuntu_adminer_verified_counts.png)
+*Hình 14: PostgreSQL 16.15; 9 bảng, 10 users, 8 categories và 1.012 templates.*
+
+### Benchmark cùng bảng và query
+
+Tạo bảng lab theo cấu trúc `users`, sinh 100.000 rows. Cùng câu truy vấn và cùng email
+được đo trước/sau khi thêm unique index trên email:
+
+```sql
+SELECT * FROM week01_evidence.benchmark_users
+WHERE email = 'bench_50000@erusentia.test';
+```
+
+Mỗi pha chạy ANALYZE, 3 lần warm-up, rồi 10 lần `EXPLAIN (ANALYZE, BUFFERS, SETTINGS,
+FORMAT JSON)`. Fingerprint toàn bộ rows trước/sau index giữ nguyên
+(`dd0205da78b6f0748b6e98745f5d857b`). Các mẫu Execution Time thu được, đơn vị ms:
+
+| Pha | 10 mẫu | Median |
+|-----|--------|--------|
+| Không index — Seq Scan | 5.424, 5.372, 5.69, 5.038, 5.058, 5.4, 5.147, 5.159, 5.04, 5.082 | 5.153 ms |
+| Có index — Index Scan | 0.016, 0.013, 0.011, 0.012, 0.011, 0.011, 0.01, 0.009, 0.009, 0.009 | 0.011 ms |
+
+Tỷ số khoảng 468,5 lần **chỉ trong lần đo warm-cache này**. Không flush cache, pha
+không index chạy trước pha có index; không đo throughput tải đồng thời hay write cost.
+Execution Time tách Planning Time và không gồm network/UI. Không dùng tỷ số làm cam kết
+hiệu năng ứng dụng hoặc thay vào hai ảnh lịch sử như thể cùng một lần đo.
+
+### Locking hai connection trên PostgreSQL 16.15
+
+| Scenario | Kết quả quan sát thực tế |
+|----------|-------------------------|
+| Pessimistic | Session A PID 186 giữ row lock; observer thấy `pg_blocking_pids(195)` trả về A. A giảm slots 1→0 và COMMIT; B tiếp tục, thấy slots=0 rồi ROLLBACK. |
+| Optimistic conflict | A/B cùng đọc version=0; B cập nhật 1 row và COMMIT, A dùng version=0 cập nhật 0 row rồi ROLLBACK. |
+| Optimistic deadlock | A cập nhật row 1, B cập nhật row 2; B chờ row 1, A thử row 2 tạo vòng chờ. Session B nhận `40P01: deadlock detected`; cả hai kết thúc bằng ROLLBACK. |
+
+Scenario chạy trong database lab riêng của cùng container, không thêm 100.000 users
+hay bảng slots vào DB nghiệp vụ. DB lab được dọn sau thử nghiệm. PostgreSQL/Adminer
+và volume dev giữ chạy; Portainer hiện có được giữ nguyên.
+
+Xem [cách chạy trên Ubuntu](docs/01_docker_and_environment_handbook.md#7-chạy-thực-tế-trên-ubuntu-native)
+và [các bước hai terminal](docs/05_locking.md) để tái hiện.

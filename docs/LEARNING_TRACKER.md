@@ -4,7 +4,7 @@ Repo này lưu báo cáo, lý thuyết, hướng dẫn, ảnh demo và ví dụ 
 
 | Tuần | Chủ đề | Trạng thái | Báo cáo / yêu cầu |
 |---|---|---|---|
-| 1 | Database, OOP và DI | Đã hiệu đính review; còn giới hạn bằng chứng ghi trong báo cáo | [Báo cáo](../week-1/WEEK1_REPORT.md), [hướng dẫn](../week-1/README.md), [mốc nguồn](../week-1/SOURCE_SNAPSHOT.md) |
+| 1 | Database, OOP và DI | Đã hiệu đính và kiểm chứng trên Docker Ubuntu / PostgreSQL 16 | [Báo cáo](../week-1/WEEK1_REPORT.md), [hướng dẫn](../week-1/README.md), [mốc nguồn](../week-1/SOURCE_SNAPSHOT.md) |
 | 2 | Framework, RESTful API và ORM | Bản nháp đang tạm cất; chưa nhập vào backend | [Yêu cầu tuần 2](../week-2/README.md) |
 | 3 | Authentication và Authorization | Theo lộ trình | [Yêu cầu tuần 3](../week-3/README.md) |
 | 4 | Message Queue | Theo lộ trình | [Yêu cầu tuần 4](../week-4/README.md) |

@@ -41,7 +41,7 @@
 |---|-----------------|------------|
 | 1 | Trình bày lý thuyết Database + OOP | ✅ Hoàn thành |
 | 2 | Database có dữ liệu mẫu, chạy được JOIN / GROUP BY | ✅ Hoàn thành |
-| 3 | Demo index (EXPLAIN ANALYZE) | Có hai plan; cần số đo cùng query/dataset để so sánh định lượng |
-| 4 | Demo cơ chế Locking | Có ảnh một session; hướng dẫn hai terminal, còn thiếu ảnh blocking đồng thời |
+| 3 | Demo index (EXPLAIN ANALYZE) | Đã đo cùng bảng/query trên Docker PostgreSQL 16.15, kết quả trong báo cáo |
+| 4 | Demo cơ chế Locking | Đã kiểm chứng hai connection: blocking, version conflict và deadlock trên PostgreSQL 16.15 |
 
 Các đường dẫn `src/` và `sql/` trong ví dụ lý thuyết được hiểu theo thư mục gốc của backend; các file mẫu trong bài học không phải tất cả đều là file đã triển khai. Xem [hướng dẫn tái hiện](../README.md#báo-cáo-và-hướng-dẫn-tái-hiện).

@@ -72,3 +72,5 @@ Nếu database đã có thêm dữ liệu từ các lần thực hành khác, t�
 | Mã minh họa trong bài học | Ghi rõ các file tự tạo khi luyện tập và cấu trúc mở rộng; dẫn demo thực thi về đúng file đang có trong backend |
 
 Các lệnh `pnpm` được đối chiếu với scripts hiện có của backend. Nội dung bổ sung vẫn là commit cục bộ; lần rà soát này không thực hiện push.
+
+Bổ sung ngày 20/10/2026: đã kiểm chứng trên Docker PostgreSQL 16.15 của máy Ubuntu; kết quả ghi trong [báo cáo tuần 1](WEEK1_REPORT.md).

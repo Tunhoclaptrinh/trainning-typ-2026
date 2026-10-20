@@ -349,3 +349,5 @@ CREATE INDEX CONCURRENTLY idx_templates_views ON templates(views_count);
 ```
 
 Nguồn: [Index-only scan](https://www.postgresql.org/docs/16/indexes-index-only-scans.html), [EXPLAIN](https://www.postgresql.org/docs/16/using-explain.html), [CREATE INDEX](https://www.postgresql.org/docs/16/sql-createindex.html), [HOT](https://www.postgresql.org/docs/16/storage-hot.html).
+
+Đã đo lại trên Docker PostgreSQL 16.15 ngày 20/10/2026, cùng bảng/query và 10 mẫu mỗi pha; kết quả, điều kiện cache và giới hạn ghi trong [báo cáo](../WEEK1_REPORT.md).

@@ -51,14 +51,10 @@ chỉ mở Unix socket, không sử dụng DB/volume dự án. Đây là kiểm 
 03/10/2026. Các fragment NestJS/Jest/Redis vẫn là hướng dẫn mở rộng, chưa chạy như ứng dụng
 thật. Không có số đo benchmark định lượng mới để thay hai ảnh cũ.
 
-## Giới hạn còn lại và cách lưu mốc
+## Bổ sung kiểm chứng trên Ubuntu
 
-- Hai ảnh index cũ dùng email khác nhau; chưa xác nhận cùng kích thước bảng/cache.
-  Chưa thể kết luận mức tăng tốc có kiểm soát là 65 lần. Cách đo lại có trong bài index.
-- Ảnh locking cũ chưa thể hiện hai session đồng thời. Kiểm chứng PostgreSQL 18.6 ở trên
-  bổ sung hành vi thực tế, chưa có ảnh hai terminal trên PostgreSQL 16 để nộp thay thế.
-- Đề gốc nêu Java thuần/Spring; bài hiện tại vận dụng TypeScript/NestJS cho EruSentia.
-  Nếu việc chấm bắt buộc ngôn ngữ/framework gốc thì cần bổ sung phần đó.
-- Tag `typ-2026-week-1` ở hai repo giữ nguyên bản lưu trữ trước hiệu đính; không ghi đè.
-  Tài liệu mới ở nhánh/commit mới. Dẫn chứng backend vẫn ghim SHA đầy đủ trong
-  [SOURCE_SNAPSHOT.md](SOURCE_SNAPSHOT.md).
+Ngày 20/10/2026 đã chạy đúng Compose của backend trên Ubuntu 26.04.1 LTS với
+PostgreSQL 16.15. Benchmark cùng bảng/query và các tình huống locking hai connection
+đều đạt; kết quả và hai ảnh Adminer thật được đưa vào [báo cáo tuần 1](WEEK1_REPORT.md).
+Phần OOP/DI giữ TypeScript/NestJS theo stack dự án. Hai ảnh benchmark cũ vẫn là số đo
+lịch sử, không dùng làm kết luận tăng tốc 65 lần. Tag `typ-2026-week-1` giữ nguyên.

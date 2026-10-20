@@ -65,6 +65,7 @@
 ## Báo cáo và hướng dẫn tái hiện
 
 - [Nhật ký xử lý review và rà soát](REVIEW_UPDATES.md).
+- [Chạy trên Ubuntu](docs/01_docker_and_environment_handbook.md#7-chạy-thực-tế-trên-ubuntu-native).
 - [Báo cáo kỹ thuật tuần 1](WEEK1_REPORT.md).
 - [Bản nguồn cố định: commit, tag và tải toàn bộ repo](SOURCE_SNAPSHOT.md).
 - [Kết quả kiểm tra sau dọn repo ngày 20/10/2026](CLEANUP_CHECKS.md).
@@ -87,4 +88,6 @@ Schema nghiệp vụ có 9 bảng. `users_no_index` và `template_slots` trong b
 
 Demo DI dùng repository Postgres mô phỏng; phần kết nối database thật được thực hiện bởi các script `db:*` của backend.
 
-Bản hiện tại đã hiệu đính sau review; tag `typ-2026-week-1` vẫn giữ nguyên bản cũ. Ảnh benchmark dùng query khác nhau và ảnh locking chưa ghi lại hai session đồng thời; xem giới hạn bằng chứng cuối báo cáo. Phần TypeScript/NestJS là vận dụng theo stack EruSentia, chưa phải bài Java/Spring của đề gốc.
+Bản hiện tại đã hiệu đính review và bổ sung kiểm chứng trên Docker PostgreSQL 16.15 của
+máy Ubuntu; kết quả và ảnh Adminer thật nằm trong báo cáo. Tag `typ-2026-week-1` giữ bản
+lưu trữ cũ. Phần OOP/DI dùng TypeScript/NestJS theo stack EruSentia.
