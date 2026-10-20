@@ -17,14 +17,14 @@ Mỗi khi cần mở giao diện quản trị Database hoặc kết nối code, 
 | **Server** *(Khi dùng code Node/DBeaver)* | `localhost` hoặc `127.0.0.1` | Vì truy cập từ ngoài máy tính của bạn vào |
 | **Port** | `5432` | Cổng mặc định của PostgreSQL |
 | **Username** | `postgres` | Tài khoản superuser mặc định |
-| **Password** | `postgres_dev_password` | Mật khẩu môi trường dev (khai báo trong `.env`) |
+| **Password** | `postgres_dev_password` | Mật khẩu dev đang ghi trong Compose; `.env.example` phải khớp cấu hình này |
 | **Database Name** | `sentia_hub_db` | Tên cơ sở dữ liệu của dự án |
 
 ---
 
 ## 🧠 2. BÀI HỌC KINH NGHIỆM: ẢO HÓA (VIRTUALIZATION) & WSL 2
 
-Đây là lỗi kinh điển 90% lập trình viên Windows gặp phải khi mới bắt đầu với Docker:
+Ví dụ sự cố môi trường Windows khi dùng Docker Desktop với WSL 2 backend:
 
 ```
 [Phần cứng CPU]              ➔ [Hệ điều hành Windows]         ➔ [Ứng dụng Docker]
@@ -33,7 +33,7 @@ Intel VT-x / AMD-V              WSL 2 Subsystem                  Docker Desktop
 ```
 
 - **Sự cố vừa gặp:** Task Manager báo `Virtualization: Enabled` (phần cứng đã sẵn sàng), nhưng Docker vẫn báo `Virtualization support not detected`.
-- **Bản chất nguyên nhân:** Docker Desktop trên Windows 10/11 không chạy trực tiếp trên Windows, mà chạy trên một nhân Linux siêu nhỏ gọi là **WSL 2 (Windows Subsystem for Linux)**. CPU bật ảo hóa thôi chưa đủ, Windows cần phải được cài đặt gói WSL 2.
+- **Bản chất nguyên nhân:** Với Linux containers và WSL 2 backend, Docker Desktop sử dụng môi trường Linux do WSL 2 cung cấp. CPU bật ảo hóa chưa đủ; cần kiểm tra cài đặt WSL và các Windows features liên quan. Docker Desktop còn có Hyper-V backend; không thể kết luận mọi lỗi ảo hóa đều do thiếu WSL.
 - **Câu lệnh thần thánh để sửa:**
   ```powershell
   wsl --install --no-distribution
@@ -79,8 +79,8 @@ volumes:
   - ../sql/02_indexes.sql:/docker-entrypoint-initdb.d/02_indexes.sql:ro
 ```
 
-- **Nguyên lý hoạt động:** Image chính thức của PostgreSQL được lập trình sẵn một quy tắc: *Mỗi khi container được khởi tạo lần đầu tiên với volume trống, nó sẽ tự động duyệt toàn bộ file trong thư mục `/docker-entrypoint-initdb.d/` và chạy lần lượt từ trên xuống dưới theo thứ tự bảng chữ cái.*
-- **Lợi ích:** Bạn không cần phải mở giao diện lên rồi paste từng dòng lệnh SQL bằng tay. Chỉ cần `docker compose up -d`, toàn bộ 8 bảng và các Index đã được tạo sẵn trong nháy mắt!
+- **Nguyên lý hoạt động:** Image chính thức của PostgreSQL được lập trình sẵn một quy tắc: *Mỗi khi container được khởi tạo lần đầu tiên với volume trống, nó sẽ tự động xử lý các file init được hỗ trợ (như `.sql`, `.sh`) trong `/docker-entrypoint-initdb.d/` theo thứ tự tên file.*
+- **Lợi ích:** Bạn không cần phải mở giao diện lên rồi paste từng dòng lệnh SQL bằng tay. Chỉ cần `docker compose -f docker/docker-compose.dev.yml up -d`, toàn bộ 9 bảng nghiệp vụ và các Index đã được tạo sẵn trong nháy mắt!
 
 ---
 
@@ -110,3 +110,5 @@ volumes:
 | `docker compose -f docker/docker-compose.dev.yml down` | **Tối hết giờ làm:** Tắt container để giải phóng RAM cho máy (Dữ liệu vẫn còn nguyên) |
 | `docker compose -f docker/docker-compose.dev.yml ps` | **Khi code báo lỗi mất kết nối DB:** Kiểm tra xem container có đang `Up` không |
 | `docker compose -f docker/docker-compose.dev.yml down -v` | ⚠️ **Khi muốn RESET DB về số 0:** Xóa sạch volume dữ liệu cũ để nạp lại từ đầu |
+
+Nguồn: [Docker Desktop WSL 2 backend](https://docs.docker.com/desktop/features/wsl/), [Postgres image initialization](https://hub.docker.com/_/postgres). Init scripts chỉ chạy khi data directory trống; sửa file SQL không tự cập nhật volume đã tồn tại. Các giá trị dev trong bảng trên không tự đổi chỉ bằng sửa `.env` khi Compose đang ghi cứng chúng.

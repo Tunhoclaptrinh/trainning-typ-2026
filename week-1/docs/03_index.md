@@ -2,6 +2,8 @@
 
 > Đối chiếu thực hành: [Index](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/sql/02_indexes.sql), [Bài benchmark](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/sql/04_week01_benchmark.sql). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
 
+> Các đoạn chỉ có WHERE/ORDER BY, `?` hay tên cột mẫu là mảnh cú pháp minh họa; không phải script chạy nguyên khối. Index bổ sung dưới đây chỉ thử trong database thực hành sau khi xem workload/index đã có.
+
 ---
 
 ## 3.1 Index là gì?
@@ -21,7 +23,7 @@ Không có index, database phải thực hiện **Sequential Scan** (Full Table 
 Với Index (B-Tree):
 - Tra cứu theo cấu trúc cây cân bằng
 - Độ phức tạp: **O(log n)**
-- 1,000,000 rows: chỉ cần ~20 bước (log₂(1,000,000) ≈ 20)
+- B-tree có nhiều nhánh trên mỗi page; số tầng phụ thuộc fan-out/kích thước khóa, không phải cây nhị phân với `log₂(n)` tầng. Chi phí còn gồm đọc heap và số kết quả.
 
 ### Analogy — Mục lục sách
 
@@ -38,7 +40,7 @@ Có index = sách có mục lục
 
 ## 3.2 Cấu trúc B-Tree Index
 
-**B-Tree (Balanced Tree)** là cấu trúc index mặc định trong PostgreSQL (và hầu hết DBMS).
+**B-tree (cây tìm kiếm nhiều nhánh cân bằng)** là cấu trúc index mặc định trong PostgreSQL (và hầu hết DBMS).
 
 ### Đặc điểm B-Tree
 - **Balanced:** mọi node lá ở cùng độ sâu → thời gian tìm kiếm nhất quán
@@ -48,7 +50,7 @@ Có index = sách có mục lục
 ### Minh họa B-Tree
 
 ```
-Giả sử index trên cột `price` của bảng templates:
+Sơ đồ hai nhánh dưới chỉ minh họa đường tìm kiếm trên `views_count`, không mô tả cấu trúc page B-tree PostgreSQL:
 
                     [50000]
                    /       \
@@ -59,8 +61,8 @@ Giả sử index trên cột `price` của bảng templates:
       row ptr   row ptr  row ptr  row ptr
 ```
 
-- Tìm price = 35000: root → rẽ trái → [20000] → rẽ phải → tìm thấy, 3 bước
-- Tìm price > 50000: dùng node lá theo thứ tự → range scan hiệu quả
+- Tìm views_count = 35000: root → rẽ trái → [20000] → rẽ phải → tìm thấy, 3 bước
+- Tìm views_count > 50000: dùng node lá theo thứ tự → range scan hiệu quả
 
 ### Những loại query B-Tree hỗ trợ
 
@@ -69,8 +71,8 @@ WHERE col = value           -- equality
 WHERE col > value           -- range (greater than)
 WHERE col < value           -- range (less than)
 WHERE col BETWEEN a AND b   -- range
-WHERE col LIKE 'abc%'       -- prefix search (không hỗ trợ '%abc')
-ORDER BY col                -- nếu có index, sort free
+WHERE col LIKE 'abc%'       -- prefix; tùy collation, có thể cần text_pattern_ops
+ORDER BY col                -- có thể tránh Sort nếu thứ tự/index/query phù hợp
 ```
 
 ---
@@ -80,20 +82,20 @@ ORDER BY col                -- nếu có index, sort free
 | Loại | Cấu trúc | Dùng cho |
 |------|---------|---------|
 | **B-Tree** | Balanced Tree | Mặc định, equality + range, sort |
-| **Hash** | Hash table | Chỉ equality (`=`), nhanh hơn B-Tree cho exact match |
+| **Hash** | Hash table | Chỉ equality (`=`); hiệu năng cần đo, không mặc định nhanh hơn B-tree |
 | **GiST** | Generalized Search Tree | Geometric data, full-text search |
 | **GIN** | Generalized Inverted Index | Array, JSONB, full-text (contains queries) |
 | **BRIN** | Block Range Index | Bảng cực lớn, dữ liệu có thứ tự tự nhiên (time-series) |
 
 ```sql
 -- B-Tree (mặc định)
-CREATE INDEX idx_users_email ON users(email);
+-- users_email_key đã có do UNIQUE(email); không cần tạo index B-tree trùng.
 
 -- Hash (chỉ equality)
 CREATE INDEX idx_users_email_hash ON users USING hash(email);
 
 -- GIN cho JSONB (EruSentia có thể lưu template metadata dạng JSON)
-CREATE INDEX idx_templates_meta ON templates USING gin(metadata);
+CREATE INDEX idx_templates_meta ON templates USING gin(content_json);
 
 -- GIN cho full-text search
 CREATE INDEX idx_templates_search ON templates USING gin(to_tsvector('english', title));
@@ -111,16 +113,16 @@ CREATE INDEX idx_templates_search ON templates USING gin(to_tsvector('english', 
 SELECT * FROM users WHERE email = ?;
 -- → Cần index trên email
 
--- Query phổ biến: template theo status + author
-SELECT * FROM templates WHERE status = 'published' AND author_id = ?;
--- → Cần index trên (status, author_id)
+-- Query phổ biến: template theo tác giả, chưa bị xóa
+SELECT * FROM templates WHERE deleted_at IS NULL AND author_id = ?;
+-- → Đối chiếu idx_templates_author_list đã có; không tạo index trùng.
 ```
 
 **2. Cột dùng trong JOIN ON:**
 ```sql
 SELECT * FROM templates t JOIN users u ON t.author_id = u.id;
--- → Cần index trên templates.author_id
--- (PostgreSQL KHÔNG tự tạo index cho FK như MySQL)
+-- → Cân nhắc index theo workload; JOIN không bắt buộc phải dùng index.
+-- (PostgreSQL không tự tạo index ở phía cột FK; PK/UNIQUE phía được tham chiếu có index.)
 ```
 
 **3. Cột dùng trong ORDER BY (với bảng lớn):**
@@ -132,27 +134,27 @@ SELECT * FROM templates ORDER BY created_at DESC LIMIT 20;
 **4. Cột có cardinality cao:**
 - **Cardinality** = số lượng giá trị phân biệt trong cột
 - `email`: cardinality = số users (rất cao) → index rất hiệu quả
-- `status`: cardinality = 3-4 giá trị (thấp) → index kém hiệu quả
-- `is_active`: cardinality = 2 (boolean) → thường không nên index
+- `role`: ít giá trị, nhưng index vẫn có thể hữu ích khi lọc một nhóm hiếm
+- `is_active`: hiệu quả phụ thuộc phân bố, điều kiện query và khả năng index-only scan
 
 ### ❌ KHÔNG NÊN đánh
 
-**1. Bảng nhỏ (< 1,000-5,000 rows):**
+**1. Bảng nhỏ:**
 Sequential Scan trên bảng nhỏ thường nhanh hơn Index Scan vì overhead của index lookup.
 
 **2. Cột cardinality thấp:**
 ```sql
 -- Nếu 90% users có is_active = TRUE
--- Index trả về 90% bảng → planner sẽ chọn Seq Scan thay vì dùng index
+-- Lấy phần lớn bảng → planner có thể chọn Seq Scan; còn tùy projection/cost/cache
 CREATE INDEX idx_users_active ON users(is_active);  -- ít tác dụng
 ```
 
 **3. Cột bị UPDATE liên tục:**
-Mỗi UPDATE trên cột có index → phải rebuild index đó. Write-heavy column.
+UPDATE có thể cần tạo index entries mới, tăng chi phí ghi; không rebuild toàn bộ index. HOT update có thể tránh cập nhật index khi đủ điều kiện.
 
 **4. Quá nhiều index trên 1 bảng:**
-- Mỗi INSERT/UPDATE/DELETE phải cập nhật TẤT CẢ index
-- Với 10 index: 1 INSERT → 10 index operations
+- Index tăng chi phí ghi và dọn các phiên bản cũ (VACUUM). Partial index chỉ chứa rows phù hợp predicate.
+- UPDATE phụ thuộc cột thay đổi/HOT; DELETE để lại tuple cần dọn, không xóa tức thì khỏi mọi index.
 - Storage tăng đáng kể
 
 ---
@@ -163,17 +165,17 @@ Mỗi UPDATE trên cột có index → phải rebuild index đó. Write-heavy co
 
 ```sql
 -- Composite index: (col_a, col_b)
-CREATE INDEX idx_templates_status_author ON templates(status, author_id);
+CREATE INDEX idx_templates_is_public_author ON templates(is_public, author_id);
 ```
 
 **Leftmost prefix nói về thứ tự cột trong index, không phải thứ tự viết điều kiện `WHERE`.**
 Các dòng dưới là mảnh điều kiện minh họa; `?` là chỗ điền giá trị, không phải placeholder của PostgreSQL.
 
 ```sql
--- Với B-tree (status, author_id):
-WHERE status = ?                         -- giới hạn theo cột đầu
-WHERE status = ? AND author_id = ?       -- giới hạn theo cả hai cột
-WHERE author_id = ? AND status = ?       -- tương đương dòng trên
+-- Với B-tree (is_public, author_id):
+WHERE is_public = ?                         -- giới hạn theo cột đầu
+WHERE is_public = ? AND author_id = ?       -- giới hạn theo cả hai cột
+WHERE author_id = ? AND is_public = ?       -- tương đương dòng trên
 WHERE author_id = ?                      -- vẫn có thể dùng index,
                                         -- nhưng thiếu cột đầu có thể phải quét toàn index
 ```
@@ -185,46 +187,44 @@ Xem [Multicolumn Indexes — PostgreSQL 16](https://www.postgresql.org/docs/16/i
 
 **Thứ tự cột trong composite index:**
 - Đặt cột **equality** (`=`) trước, cột **range** (`>`, `<`) sau
-- Đặt cột **cardinality cao** trước để filter nhiều nhất
+- Chọn thứ tự theo các query cần phục vụ (lọc, range, ORDER BY, prefix). Không có luật luôn đặt cardinality cao nhất trước.
 
 ```sql
--- Tốt: status (equality) trước, created_at (range) sau
-CREATE INDEX idx_good ON templates(status, created_at);
-WHERE status = 'published' AND created_at > '2024-01-01'  -- ✅
+-- Tốt: is_public (equality) trước, created_at (range) sau
+CREATE INDEX idx_good ON templates(is_public, created_at);
+WHERE is_public = TRUE AND created_at > '2024-01-01'  -- ✅
 
--- Kém: created_at (range) trước, status (equality) sau
-CREATE INDEX idx_bad ON templates(created_at, status);
--- Index này kém hiệu quả hơn cho query trên
+-- Kém: created_at (range) trước, is_public (equality) sau
+CREATE INDEX idx_bad ON templates(created_at, is_public);
+-- Equality trước thường giới hạn vùng quét tốt hơn cho dạng query này; vẫn cần EXPLAIN.
 ```
 
 ### Partial Index (Index có điều kiện)
 
 ```sql
--- Chỉ index templates đang published (không index draft/archived)
--- Nếu 80% queries chỉ quan tâm đến published
+-- Ví dụ chỉ index các template public (không có cột trạng thái draft/archived).
 CREATE INDEX idx_published_templates ON templates(created_at DESC, author_id)
-WHERE status = 'published';
+WHERE is_public = TRUE;
 
--- Ưu điểm:
--- - Index nhỏ hơn nhiều (chỉ index 20% bảng)
--- - Insert/Update draft không phải rebuild index này
--- - Query cho published nhanh hơn
+-- Kích thước phụ thuộc tỷ lệ rows thỏa điều kiện; không có tỷ lệ cố định.
+-- Planner phải chứng minh predicate của query suy ra predicate của index.
 
 -- Để sử dụng partial index, query phải có điều kiện tương ứng:
-SELECT * FROM templates WHERE status = 'published' ORDER BY created_at DESC;
+SELECT * FROM templates WHERE is_public = TRUE ORDER BY created_at DESC;
 ```
 
 ### Covering Index
 
 ```sql
--- Index bao gồm tất cả cột query cần → không cần truy cập bảng gốc
-CREATE INDEX idx_templates_listing ON templates(status, created_at DESC)
-INCLUDE (id, title, price, author_id);
+-- Index chứa các cột query cần → có thể dùng Index Only Scan
+CREATE INDEX idx_templates_listing ON templates(is_public, created_at DESC)
+INCLUDE (id, title, rating_avg, author_id);
 
--- Query này chỉ cần đọc index (Index Only Scan), không cần đọc heap
-SELECT id, title, price, author_id
+-- Chỉ tránh heap fetch khi visibility map đánh dấu page all-visible.
+-- Xem Heap Fetches trong EXPLAIN; INCLUDE không bảo đảm luôn không đọc heap.
+SELECT id, title, rating_avg, author_id
 FROM templates
-WHERE status = 'published'
+WHERE is_public = TRUE
 ORDER BY created_at DESC
 LIMIT 20;
 ```
@@ -257,20 +257,16 @@ Execution Time: 0.065 ms
 | `cost=0.42..8.44` | Chi phí ước tính: startup_cost..total_cost (đơn vị tương đối, không phải ms) |
 | `rows=1` | Số rows ước tính sẽ trả về |
 | `width=89` | Kích thước trung bình mỗi row (bytes) |
-| `actual time=0.043..0.044` | Thời gian thực: startup..total (ms) |
-| `rows=1` | Số rows thực tế trả về |
+| `actual time=0.043..0.044` | Thời gian startup..total của node (ms), trung bình mỗi loop |
+| `rows=1` | Số rows thực tế trung bình mỗi loop |
 | `loops=1` | Node này chạy bao nhiêu lần |
 | `Planning Time` | Thời gian optimizer tính execution plan |
-| `Execution Time` | Tổng thời gian thực thi (bao gồm planning nếu dùng EXPLAIN ANALYZE) |
+| `Execution Time` | Thời gian thực thi, tách riêng Planning Time; không gồm truyền kết quả tới client |
 
-**Các loại Scan:**
-
-| Scan type | Khi nào | Hiệu quả |
-|-----------|---------|---------|
-| `Seq Scan` | Không có index, hoặc index không hiệu quả | Chậm với bảng lớn |
-| `Index Scan` | Có index, trả về ít rows | Nhanh |
-| `Index Only Scan` | Covering index (không cần truy cập heap) | Nhanh nhất |
-| `Bitmap Heap Scan` | Index trả về nhiều rows → gộp thành bitmap | Trung bình |
+**Các loại Scan:** `Seq Scan` có thể tốt cho bảng nhỏ hoặc khi lấy phần lớn bảng;
+`Index Scan` thường phù hợp khi chọn ít rows; `Bitmap Heap Scan` gom vị trí heap từ index;
+`Index Only Scan` có thể giảm heap fetch khi visibility map cho phép. Không có thứ hạng
+nhanh/chậm cố định: đọc plan và `BUFFERS` theo query/dataset thực tế.
 
 ---
 
@@ -291,17 +287,21 @@ docker exec -i sentia_postgres_dev psql -v ON_ERROR_STOP=1 -U postgres -d sentia
 -- Bảng không có index
 EXPLAIN ANALYZE
 SELECT * FROM users_no_index WHERE email = 'bench_50000@erusentia.test';
--- Kết quả thực tế: Seq Scan, duyệt qua 100,009 rows, time ≈ 7.312 ms
+-- Ghi số đo mới; ảnh lịch sử dùng query/dataset chưa được kiểm soát đồng nhất.
 ```
 
 ### Bước 3: Query CÓ index (bảng gốc)
 
 ```sql
 EXPLAIN ANALYZE
-SELECT * FROM users WHERE email = 'admin@sentiahub.local';
--- Kết quả thực tế: Index Scan (B-Tree), đọc đúng 1 row duy nhất, time ≈ 0.112 ms
--- So sánh: Tốc độ tối ưu hơn ~65 lần
+SELECT * FROM users WHERE email = 'bench_50000@erusentia.test';
+-- Chạy cùng email, cùng tập dữ liệu; không dùng số 0.112 ms của ảnh cũ cho query này.
 ```
+
+Chạy `ANALYZE users; ANALYZE users_no_index;` trước khi đo. Dùng
+`EXPLAIN (ANALYZE, BUFFERS)` nhiều lần, ghi số dòng, môi trường và tình trạng cache.
+Ảnh cũ trong báo cáo dùng hai email khác nhau và không xác nhận cùng kích thước bảng;
+tỷ số ~65 chỉ mô tả hai số đo đó, chưa chứng minh mức tăng tốc nhân quả của index.
 
 ### Bước 4: Test Foreign Key index
 
@@ -311,11 +311,13 @@ SELECT indexname, indexdef
 FROM pg_indexes
 WHERE tablename = 'templates' AND indexdef LIKE '%author_id%';
 
--- Nếu chưa có:
-CREATE INDEX IF NOT EXISTS idx_templates_author_id ON templates(author_id);
+-- Backend có partial index (author_id, created_at DESC) WHERE deleted_at IS NULL.
+-- Nó phục vụ query loại soft-delete; query toàn bộ rows cần được đánh giá riêng.
+-- Chỉ thêm full index khi workload cần; IF NOT EXISTS chỉ kiểm tra tên index.
 
 -- So sánh
-EXPLAIN ANALYZE SELECT * FROM templates WHERE author_id = '<some_uuid>';
+EXPLAIN ANALYZE SELECT * FROM templates
+WHERE author_id = 'a0000000-0000-0000-0000-000000000002' AND deleted_at IS NULL;
 ```
 
 ---
@@ -337,9 +339,13 @@ ORDER BY pg_relation_size(indexname::regclass) DESC;
 DROP INDEX IF EXISTS idx_users_is_active;
 
 -- Rebuild index (nếu index bị bloat sau nhiều UPDATE)
-REINDEX INDEX idx_templates_author_id;
+REINDEX INDEX idx_templates_author_list;
 
--- Tạo index không block production (CONCURRENTLY)
-CREATE INDEX CONCURRENTLY idx_templates_price ON templates(price);
--- Chú ý: CONCURRENTLY chậm hơn nhưng không lock bảng
+-- Ví dụ thêm index khi đã xác nhận cần cho workload:
+CREATE INDEX CONCURRENTLY idx_templates_views ON templates(views_count);
+-- Không chặn INSERT/UPDATE/DELETE như CREATE INDEX thường, nhưng vẫn lấy lock,
+-- có thể chờ transaction, tốn thêm công và có thể để lại index INVALID nếu lỗi.
+-- Không chạy CONCURRENTLY trong transaction block.
 ```
+
+Nguồn: [Index-only scan](https://www.postgresql.org/docs/16/indexes-index-only-scans.html), [EXPLAIN](https://www.postgresql.org/docs/16/using-explain.html), [CREATE INDEX](https://www.postgresql.org/docs/16/sql-createindex.html), [HOT](https://www.postgresql.org/docs/16/storage-hot.html).

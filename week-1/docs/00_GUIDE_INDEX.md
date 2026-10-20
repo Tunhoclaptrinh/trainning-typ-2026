@@ -23,6 +23,7 @@
 
 | Đường dẫn | Nội dung |
 |-----------|----------|
+| [Hiệu đính sau review](../REVIEW_UPDATES.md) | Hai góp ý đã xử lý, các lỗi khác và giới hạn bằng chứng |
 | [Mốc nguồn cố định](../SOURCE_SNAPSHOT.md) | Commit backend và bản lưu trữ báo cáo, hướng dẫn mở hoặc tải toàn bộ repo tại mốc tuần 1 |
 | [Demo OOP](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/src/week01-practice/oop/demo.ts) | Thực nghiệm 4 tính chất OOP (Encapsulation, Inheritance, Polymorphism, Abstraction) |
 | [Demo DI](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/src/week01-practice/di/demo.ts) | Thực nghiệm Dependency Injection & DI Container |
@@ -30,7 +31,7 @@
 | [Schema thực tế](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/sql/01_schema.sql) | 9 bảng nghiệp vụ hiện có |
 | [SQL của backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220/sql) | Toàn bộ script DDL Schema, Index, Seed nghiệp vụ cốt lõi & Benchmark đo kiểm |
 | [Kiểm tra sau dọn repo](../CLEANUP_CHECKS.md) | Kết quả kiểm tra ngày 20/10/2026, môi trường và commit backend |
-| [`WEEK1_REPORT.md`](../WEEK1_REPORT.md) | Báo cáo chi tiết: Đo kiểm Index (100,000 dòng), Locking, Transaction & 12 ảnh chụp thực tế |
+| [`WEEK1_REPORT.md`](../WEEK1_REPORT.md) | Báo cáo, 12 ảnh lịch sử và giới hạn bằng chứng benchmark/locking |
 
 ---
 
@@ -40,7 +41,7 @@
 |---|-----------------|------------|
 | 1 | Trình bày lý thuyết Database + OOP | ✅ Hoàn thành |
 | 2 | Database có dữ liệu mẫu, chạy được JOIN / GROUP BY | ✅ Hoàn thành |
-| 3 | Demo sự khác nhau trước/sau khi đánh Index (EXPLAIN ANALYZE) | ✅ Hoàn thành |
-| 4 | Demo cơ chế Locking: Chạy transaction kiểm chứng lock hoạt động | ✅ Hoàn thành |
+| 3 | Demo index (EXPLAIN ANALYZE) | Có hai plan; cần số đo cùng query/dataset để so sánh định lượng |
+| 4 | Demo cơ chế Locking | Có ảnh một session; hướng dẫn hai terminal, còn thiếu ảnh blocking đồng thời |
 
 Các đường dẫn `src/` và `sql/` trong ví dụ lý thuyết được hiểu theo thư mục gốc của backend; các file mẫu trong bài học không phải tất cả đều là file đã triển khai. Xem [hướng dẫn tái hiện](../README.md#báo-cáo-và-hướng-dẫn-tái-hiện).

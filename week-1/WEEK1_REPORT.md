@@ -6,6 +6,8 @@
 **Mốc nguồn đối chiếu sau dọn repo:** [`b851e15`](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220) — [cách mở và tải toàn bộ bản nguồn](SOURCE_SNAPSHOT.md)
 **Kho lưu trữ nộp bài:** [TYP tại mốc tuần 1](https://github.com/Tunhoclaptrinh/trainning-typ-2026/tree/typ-2026-week-1)
 
+> Hiệu đính sau review ngày 20/10/2026: [những điểm đã sửa và giới hạn bằng chứng](REVIEW_UPDATES.md). Ảnh/số đo lịch sử giữ nguyên; nội dung giải thích được sửa trên nhánh hiện tại, tag cũ không đổi.
+
 > Báo cáo lưu kết quả và ảnh chụp của lần thực hành ngày 03/10/2026. Mã nguồn thực thi được quản lý tại [EruSentia-Server](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220); xem [hướng dẫn tái hiện](README.md#báo-cáo-và-hướng-dẫn-tái-hiện). Schema chính có 9 bảng; tổng 11 bảng trong ảnh bao gồm `users_no_index` và `template_slots` dùng riêng cho bài thực hành.
 
 ---
@@ -15,8 +17,8 @@
 | # | Hạng mục | Kết quả | Chi tiết |
 |---|----------|---------|----------|
 | 1 | CSDL quan hệ & DDL/DML | ✅ Hoàn thành | Thiết kế schema chuẩn, seed 10 users + 8 categories, sinh 1,000 templates đo kiểm |
-| 2 | Truy vấn dữ liệu phức tạp | ✅ Hoàn thành | INNER JOIN 3 bảng, GROUP BY, Aggregate, HAVING |
-| 3 | Tối ưu hóa truy vấn bằng Index | ✅ Hoàn thành | Khảo sát 100,000 dòng: B-Tree Index nhanh hơn **~65x** |
+| 2 | Truy vấn dữ liệu phức tạp | ✅ Hoàn thành | INNER JOIN 4 bảng, GROUP BY, Aggregate, HAVING |
+| 3 | Tối ưu hóa truy vấn bằng Index | ✅ Hoàn thành | Minh họa hai execution plan; số đo cũ chưa đủ cho kết luận tăng tốc có kiểm soát |
 | 4 | Phân trang (Pagination) | ✅ Hoàn thành | Offset Paging, phân tích điểm nghẽn Deep Offset |
 | 5 | Quản lý đồng thời & Locking | ✅ Hoàn thành | Pessimistic Lock (`FOR UPDATE`) & Optimistic Lock (Version) |
 | 6 | Toàn vẹn giao dịch (Transaction) | ✅ Hoàn thành | ACID, kiểm soát Savepoint và Partial Rollback |
@@ -83,8 +85,8 @@ Cơ sở dữ liệu `sentia_hub_db` được khởi tạo thông qua `docker/do
 ### 1.2 Truy vấn SQL cơ bản & nâng cao
 
 #### Thiết kế Schema & Quy ước
-- **UUID Primary Key (`gen_random_uuid()`):** Khởi tạo phân tán ở client, không phụ thuộc auto-increment, tránh quét dữ liệu tuần tự từ bên ngoài.
-- **Soft Delete (`deleted_at`):** Giữ vết lịch sử giao dịch và bảo toàn tính toàn vẹn khóa ngoại.
+- **UUID Primary Key (`gen_random_uuid()`):** Trong schema này UUID do DB sinh mặc định; cũng có thể sinh ở client. Giảm tính đoán được của ID tuần tự, nhưng không thay thế kiểm tra quyền truy cập.
+- **Soft Delete (`deleted_at`):** Giữ row và thời điểm đánh dấu xóa; lịch sử ai làm gì cần audit log riêng. FK không tự lọc row soft-delete.
 
 ---
 
@@ -104,7 +106,7 @@ LIMIT 5;
 
 ---
 
-#### 1.2.2 INNER JOIN 3 bảng — Thông tin template, tác giả và danh mục
+#### 1.2.2 INNER JOIN 4 bảng — Thông tin template, tác giả và danh mục
 
 Liên kết bảng `templates`, `profiles` (qua `users`) và `categories` để hiển thị danh sách template chi tiết:
 ```sql
@@ -124,7 +126,7 @@ ORDER BY t.created_at DESC
 LIMIT 8;
 ```
 
-**Nhận xét:** `INNER JOIN` chỉ trả về các bản ghi thỏa mãn điều kiện khớp khóa trên cả 3 bảng, loại bỏ các bản ghi mồ côi (orphan records).
+**Nhận xét:** Query có 4 bảng và 3 phép JOIN, chỉ trả rows khớp đủ các điều kiện. FK đã bảo vệ tham chiếu tác giả/category; user chưa có profile vẫn có thể hợp lệ nhưng bị loại khỏi kết quả JOIN này.
 
 ![Kết quả INNER JOIN](./screenshots/03_sql_join_templates_author_category.png)
 *Hình 3: Kết quả thực thi INNER JOIN hiển thị đầy đủ template kèm tác giả và danh mục.*
@@ -178,9 +180,9 @@ ORDER BY template_count DESC;
 
 ### 1.3 Hiệu năng Index — Benchmark thực tế trên 100,000 bản ghi
 
-Bài test được thực hiện giữa hai bảng có cùng cấu trúc và dữ liệu:
+Script benchmark tạo bản sao dữ liệu bằng `CREATE TABLE AS`, không sao chép constraints/index. Hai ảnh lịch sử dưới đây dùng **hai email khác nhau** và không có ảnh xác nhận số dòng của cả hai bảng tại cùng thời điểm:
 1. `users_no_index`: 100,010 bản ghi, không có index trên cột `email`.
-2. `users`: Có index B-Tree độc nhất (`users_email_key`) trên cột `email`.
+2. `users`: Có index B-Tree độc nhất (`users_email_key`) trên cột `email`; kích thước bảng tại lúc chụp ảnh index chưa được xác nhận.
 
 #### Trường hợp 1: Không có Index (Sequential Scan)
 ```sql
@@ -189,11 +191,11 @@ SELECT * FROM users_no_index
 WHERE email = 'bench_50000@erusentia.test';
 ```
 
-- **Cơ chế:** Quét tuần tự toàn bộ **100,009 dòng** (`Seq Scan`).
+- **Cơ chế:** `Seq Scan` xét **100,010 rows**: trả 1 row, loại 100,009 rows bởi filter.
 - **Thời gian thực thi:** **~7.312 ms**.
 
 ![Execution Plan không có index](./screenshots/06_sql_index_seq_scan_explain.png)
-*Hình 6: Execution Plan: Quét tuần tự (Seq Scan) toàn bộ 100,009 dòng khi không có Index.*
+*Hình 6: Execution Plan: Seq Scan trả 1 row, Rows Removed by Filter = 100,009; tổng xét 100,010 rows.*
 
 ---
 
@@ -204,7 +206,7 @@ SELECT * FROM users
 WHERE email = 'admin@sentiahub.local';
 ```
 
-- **Cơ chế:** Tra cứu trực tiếp trên cây chỉ mục B-Tree (`Index Scan`), chỉ đọc đúng **1 dòng**.
+- **Cơ chế:** Tra cứu trực tiếp trên cây chỉ mục B-Tree (`Index Scan`), trả **1 row**; còn đọc các page của index/heap, không suy ra tổng I/O là 1.
 - **Thời gian thực thi:** **~0.112 ms**.
 
 ![Execution Plan có index](./screenshots/07_sql_index_scan_explain.png)
@@ -212,15 +214,22 @@ WHERE email = 'admin@sentiahub.local';
 
 ---
 
-#### Bảng đối chiếu hiệu năng
+#### Đối chiếu hai ảnh lịch sử (không phải benchmark có kiểm soát)
 
-| Chỉ số | Không có Index (Seq Scan) | Có B-Tree Index (Index Scan) | Tỷ lệ cải thiện |
-|---|---|---|---|
-| **Độ phức tạp** | Tuyến tính $O(n)$ | Logarit $O(\log n)$ | Đột phá cấu trúc |
-| **Số rows phải đọc** | 100,009 dòng | 1 dòng duy nhất | Giảm **100,000 lần** |
-| **Thời gian thực thi** | **~7.312 ms** | **~0.112 ms** | **Nhanh hơn ~65 lần** |
+| Chỉ số quan sát | Ảnh Seq Scan | Ảnh Index Scan |
+|------------------|--------------|----------------|
+| Email truy vấn | `bench_50000@erusentia.test` | `admin@sentiahub.local` |
+| Kết quả | 1 row; 100,009 rows bị filter | 1 row; không đo tổng page I/O |
+| Execution Time | ~7.312 ms | ~0.112 ms |
 
-**Kết luận:** Với bảng lớn, Index biến việc quét ổ cứng tuần tự thành tra cứu cây với số bước $\approx \log_2(100,000) \approx 17$, tối ưu hóa tài nguyên hệ thống.
+Tỷ số hai thời gian khoảng 65,3, nhưng không thể quy toàn bộ chênh lệch cho index vì
+query/dataset/cache chưa được kiểm soát. B-tree có nhiều nhánh trên một page; không
+suy ra số lần đọc bằng `log₂(n)` hoặc kết luận “giảm 100,000 lần I/O”.
+
+Để đo lại: chạy script benchmark trên DB thực hành riêng, xác nhận số dòng hai bảng,
+`ANALYZE` cả hai, truy vấn **cùng email** `bench_50000@erusentia.test` và thu
+`EXPLAIN (ANALYZE, BUFFERS)` nhiều lần. [Hướng dẫn index](docs/03_index.md#37-thực-hành-benchmark-trên-erusentia)
+có câu lệnh đối chiếu. Chưa có ảnh/số đo mới cho protocol này trong báo cáo.
 
 ---
 
@@ -249,7 +258,7 @@ LIMIT 5 OFFSET 500;
 ```
 
 **Đánh giá:**
-Ở `OFFSET 500`, engine vẫn phải quét và sắp xếp toàn bộ tập dữ liệu, duyệt qua 505 dòng rồi mới bỏ qua 500 dòng đầu. Với hệ thống lớn, giải pháp tối ưu là chuyển sang **Cursor-based pagination** (`WHERE (created_at, id) < (cursor_created_at, cursor_id) LIMIT N`).
+Ở `OFFSET 500`, node Limit cần nhận ít nhất 505 rows nếu đủ kết quả rồi bỏ 500 rows đầu. Scan/Sort phía dưới có thể xử lý nhiều hơn; Sort không bắt buộc nếu có index khớp ORDER BY. Với hệ thống lớn, giải pháp tối ưu là chuyển sang **Cursor-based pagination** (`WHERE (created_at, id) < (cursor_created_at, cursor_id) LIMIT N`).
 
 ![Điểm nghẽn Deep Offset](./screenshots/09_sql_pagination_deep_offset_explain.png)
 *Hình 9: EXPLAIN ANALYZE minh họa việc DB phải duyệt qua 505 dòng trước khi cắt kết quả.*
@@ -267,8 +276,8 @@ CREATE TABLE template_slots (
     version INT NOT NULL DEFAULT 0,
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-INSERT INTO template_slots VALUES (1, 'Limited Edition AI Pack', 1, 0);
-INSERT INTO template_slots VALUES (2, 'Pro React Bundle', 10, 0);
+INSERT INTO template_slots (id, name, slots, version) VALUES (1, 'Limited Edition AI Pack', 1, 0);
+INSERT INTO template_slots (id, name, slots, version) VALUES (2, 'Pro React Bundle', 10, 0);
 ```
 
 #### 1.5.1 Pessimistic Lock (Khóa bi quan với SELECT FOR UPDATE)
@@ -282,7 +291,7 @@ SELECT id, name, slots, version FROM template_slots WHERE id = 1;
 ```
 
 - Transaction chiếm giữ row lock độc quyền.
-- Slot được trừ an toàn từ 1 xuống 0, version tăng lên 1 mà không thể bị các session khác chen ngang ghi đè.
+- Slot được trừ từ 1 xuống 0, version tăng lên 1 trong transaction. Ảnh ghi lại một session; cần demo hai session theo hướng dẫn để quan sát blocking. Ứng dụng vẫn phải kiểm tra slot còn trước khi trừ.
 
 ![Thực thi Pessimistic Lock](./screenshots/10_sql_pessimistic_lock_select_for_update.png)
 *Hình 10: Khóa bi quan với `FOR UPDATE` bảo vệ toàn vẹn tài nguyên.*
@@ -293,13 +302,14 @@ SELECT id, name, slots, version FROM template_slots WHERE id = 1;
 Thích hợp cho hệ thống đọc nhiều, tỷ lệ xung đột thấp:
 ```sql
 SELECT id, name, slots, version FROM template_slots WHERE id = 2;
--- Session khác cố ghi đè với version cũ (version = 999):
+-- Chủ động thử một version không khớp (999); không chứng minh có session đồng thời:
 UPDATE template_slots SET slots = 8, version = version + 1 WHERE id = 2 AND version = 999;
 SELECT id, name, slots, version FROM template_slots WHERE id = 2;
 ```
 
 - Câu lệnh trả về `0 rows affected` vì điều kiện version không khớp.
-- Tránh được lỗi ghi đè mất dữ liệu (Lost Update Problem). Ứng dụng phát hiện và thông báo xung đột kịp thời.
+- Ảnh chứng minh điều kiện version không khớp thì không cập nhật; chưa chứng minh luồng cạnh tranh giữa hai session hoặc retry trong ứng dụng.
+- Optimistic lock vẫn lấy row lock khi UPDATE và có thể deadlock. [Hướng dẫn hai terminal](docs/05_locking.md) bổ sung các bước tái hiện; ảnh cũ không được coi là bằng chứng đã chạy hai terminal.
 
 ![Thực thi Optimistic Lock](./screenshots/11_sql_optimistic_lock_conflict.png)
 *Hình 11: Khóa lạc quan phát hiện xung đột phiên bản, ngăn chặn ghi đè.*
@@ -323,9 +333,9 @@ WHERE u.id = 'a0000000-0000-0000-0000-000000000004';
 
 **Phân tích tính chất ACID:**
 - **Atomicity:** Toàn bộ lệnh trong transaction hoặc thành công hoặc bị rollback. Điểm savepoint cho phép rollback từng phần.
-- **Consistency:** Trạng thái cơ sở dữ liệu luôn thỏa mãn các ràng buộc nghiệp vụ.
-- **Isolation:** Thao tác trong transaction chưa commit hoàn toàn cô lập với các session khác.
-- **Durability:** Dữ liệu sau khi commit được ghi xuống WAL và ổ đĩa bền vững.
+- **Consistency:** DB bảo vệ constraints đã khai báo; ứng dụng phải kiểm tra các quy tắc nghiệp vụ còn lại.
+- **Isolation:** SELECT thường ở READ COMMITTED không thấy row chưa commit của session khác; các lần đọc có thể khác snapshot, và các lệnh ghi có thể chờ lock.
+- **Durability:** Với cấu hình bền vững mặc định, WAL được flush trước khi xác nhận commit; ảnh savepoint không phải thử nghiệm crash recovery.
 
 ![ACID Savepoint Partial Rollback](./screenshots/12_sql_acid_savepoint_transaction.png)
 *Hình 12: Thao tác Savepoint hủy bỏ lệnh cộng điểm thưởng nhưng bảo toàn lệnh active tài khoản.*
@@ -428,9 +438,11 @@ DI & IoC Demo — EruSentia
 ```
 
 ### Kiến trúc giải pháp
-- **Tight Coupling:** Service tự `new PostgresUserRepository()` dẫn đến phụ thuộc cứng vào cơ sở dữ liệu thật, không thể viết Unit Test độc lập.
+
+Repository tên Postgres trong demo là **stub trả dữ liệu giả**, không kết nối PostgreSQL; nhãn “Production” trong output lịch sử không chứng minh triển khai production.
+- **Tight Coupling:** Service tự `new PostgresUserRepository()` gắn service với implementation cụ thể. Nếu implementation kết nối DB thật thì test phụ thuộc DB; stub hiện tại không có phụ thuộc mạng.
 - **Dependency Injection:** Tách rời khởi tạo và sử dụng. `UserService` nhận interface `IUserRepository` qua constructor. Khi chạy kiểm thử tự động, dễ dàng đưa `InMemoryUserRepository` vào mà không cần kết nối mạng hay Docker.
-- **IoC Container:** Tự động hóa giải quyết chuỗi phụ thuộc và kiểm soát vòng đời đối tượng (Singleton, Transient), tương đồng với cách thức NestJS vận hành qua `@Injectable()` và `@Module()`.
+- **IoC Container:** Demo chỉ đăng ký factory/singleton và wiring thủ công; không tự phân tích constructor, chưa có scope/cycle detection đầy đủ như NestJS. NestJS minh họa cơ chế liên quan qua `@Injectable()` và `@Module()`.
 
 ---
 
@@ -439,11 +451,20 @@ DI & IoC Demo — EruSentia
 | Tiêu chí | Trạng thái | Ghi chú |
 |---|---|---|
 | Môi trường Docker | Hoàn thành | PostgreSQL 16 & Adminer hoạt động ổn định |
-| Thiết kế CSDL & Seed dữ liệu | Hoàn thành | 11 bảng, 1,012 templates mẫu |
+| Thiết kế CSDL & Seed dữ liệu | Hoàn thành | 9 bảng nghiệp vụ + 2 bảng lab trong ảnh; 1,012 templates mẫu |
 | SQL Queries (JOIN, GROUP BY, HAVING) | Hoàn thành | Đầy đủ 4 truy vấn mẫu cùng kết quả chụp thực tế |
-| Đo kiểm hiệu năng Index | Hoàn thành | Benchmark trên bảng 100k dòng, tăng tốc ~65x |
+| Đo kiểm hiệu năng Index | Hoàn thành | Hai plan lịch sử; cần đo lại cùng query/dataset để kết luận mức tăng tốc |
 | Kỹ thuật phân trang & Điểm nghẽn | Hoàn thành | Phân tích chi tiết Offset Scan vs Cursor Paging |
-| Cơ chế Locking | Hoàn thành | Kiểm chứng thành công cả Pessimistic và Optimistic Lock |
-| Giao dịch ACID & Savepoint | Hoàn thành | Thao tác an toàn, rollback đúng ranh giới nghiệp vụ |
+| Cơ chế Locking | Hoàn thành | Có ảnh một session và version không khớp; hướng dẫn hai session bổ sung, chưa có ảnh đồng thời |
+| Giao dịch ACID & Savepoint | Hoàn thành | Ảnh chứng minh rollback về savepoint; chưa kiểm chứng đầy đủ isolation/durability |
 | Demo 4 tính chất OOP | Hoàn thành | Mã nguồn TypeScript chạy hoàn chỉnh |
 | Demo DI Container | Hoàn thành | Chuyển đổi thành công từ Tight Coupling sang DI Container |
+
+## Phạm vi đáp ứng đề bài
+
+Lý thuyết có đủ 8 chuyên đề; SQL/seed và demo OOP/DI có mã thực thi trong backend.
+Phần OOP/DI được vận dụng bằng TypeScript, đối chiếu NestJS; đây là điều chỉnh theo stack
+EruSentia, không phải bằng chứng đã làm bài Java thuần/Spring trong đề gốc. Nếu yêu cầu
+chấm bắt buộc Java/Spring thì phần đó còn cần bổ sung. Bằng chứng khóa đồng thời hai session
+và benchmark có kiểm soát còn thiếu ảnh mới; các hướng dẫn hiện có giúp tái hiện, không thay
+thế bằng chứng chạy thực tế. Tuần 1 chưa có HTTP API, NestJS module, ORM hoặc Redis adapter.

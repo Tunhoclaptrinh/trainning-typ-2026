@@ -2,6 +2,10 @@
 
 > Đối chiếu thực hành: [Demo DI](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/src/week01-practice/di/demo.ts), [Repository interface hiện có](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/src/domain/repositories/ITemplateRepository.ts). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
 
+> Ví dụ tách theo từng mục, không ghép tất cả class trùng tên thành một file.
+> `PostgresUserRepository` trong demo chỉ trả dữ liệu giả/log, chưa kết nối DB, dù output
+> cũ ghi “Production”. NestJS, Jest và Redis dưới đây là ví dụ mở rộng, chưa cài trong backend tuần 1.
+
 ---
 
 ## 8.1 Dependency là gì?
@@ -15,7 +19,7 @@ class UserService {
 }
 ```
 
-**Vấn đề cốt lõi:** AI cũng quan trọng không chỉ là class A cần B, mà là **"AI quyết định tạo B"**.
+**Câu hỏi cốt lõi:** thành phần nào chịu trách nhiệm tạo và chọn dependency cho class A?
 
 ---
 
@@ -23,7 +27,7 @@ class UserService {
 
 ### Định nghĩa
 
-**Tight Coupling (Khớp nối chặt)** = class tự tạo (instantiate) dependency của mình.
+**Tight Coupling (Khớp nối chặt)** là phụ thuộc sâu vào chi tiết implementation cụ thể. Tự khởi tạo dependency là một nguyên nhân thường gặp; dùng DI vẫn có thể coupling chặt nếu contract không phù hợp.
 Kết quả: hai class gắn chặt với nhau, không thể thay thế một bên mà không ảnh hưởng bên kia.
 
 ```typescript
@@ -31,7 +35,7 @@ Kết quả: hai class gắn chặt với nhau, không thể thay thế một b�
 
 class PostgresUserRepository {
   async findById(id: string) {
-    // Hard-coded kết nối PostgreSQL
+    // Dữ liệu giả mô phỏng repository; không mở kết nối PostgreSQL
     return { id, email: 'from_postgres@db.com', role: 'user' };
   }
 
@@ -55,13 +59,10 @@ class UserService {
 
 **1. Khó test (Hardest problem):**
 ```typescript
-// Muốn test UserService.getUser() phải:
-// - Có PostgreSQL đang chạy
-// - Có data trong DB
-// - Network kết nối được
-// → Unit test không còn là "unit" nữa — chạy chậm, phụ thuộc môi trường
+// Nếu repository thực sự kết nối DB, test phải chuẩn bị DB/data/network.
+// Riêng mock ở trên không cần PostgreSQL; vấn đề là khó thay thế dependency từ ngoài.
 const service = new UserService();
-await service.getUser('1');  // phải có DB thật!
+await service.getUser('1');  // ví dụ hiện tại trả dữ liệu giả
 ```
 
 **2. Khó thay đổi implementation:**
@@ -118,7 +119,9 @@ class UserService {
 
 > NestJS và hầu hết frameworks dùng **Constructor Injection**.
 
-### DI + Interface = Dependency Inversion
+### DI và Dependency Inversion (DIP)
+
+DI là kỹ thuật cung cấp dependency; DIP là nguyên tắc hướng phụ thuộc vào abstraction. DI hỗ trợ DIP khi contract được thiết kế đúng, không đồng nghĩa cứ DI + interface là tự thỏa DIP.
 
 **Bước 1: Định nghĩa interface (abstraction)**
 
@@ -136,7 +139,7 @@ interface IUserRepository {
 **Bước 2: Các implementations**
 
 ```typescript
-// Postgres implementation (production)
+// Postgres-named stub (chưa phải production implementation)
 class PostgresUserRepository implements IUserRepository {
   async findById(id: string) {
     console.log('[Postgres] findById:', id);
@@ -203,8 +206,8 @@ class UserService {
 **Bước 4: Wiring — caller quyết định implementation**
 
 ```typescript
-// === Production ===
-const productionService = new UserService(
+// === Wiring stub minh họa ===
+const stubService = new UserService(
   new PostgresUserRepository()  // inject Postgres
 );
 
@@ -318,7 +321,7 @@ container.registerSingleton('UserRepository', () => new PostgresUserRepository()
 
 // Đăng ký services (transient — tạo mới mỗi lần)
 container.register('UserService', () =>
-  new UserService(container.resolve('UserRepository'))
+  new UserService(container.resolve<IUserRepository>('UserRepository'))
 );
 
 // Sử dụng
@@ -348,7 +351,7 @@ export class UserRepository {
 // 2. Service nhận dependency qua constructor (NestJS tự inject)
 @Injectable()
 export class UserService {
-  // NestJS đọc TypeScript type → biết cần inject UserRepository
+  // NestJS đọc metadata constructor của class token → resolve UserRepository
   constructor(private readonly userRepository: UserRepository) {}
 
   async getUser(id: string) {
@@ -369,16 +372,32 @@ export class UserService {
 export class UserModule {}
 ```
 
+TypeScript interface không tồn tại ở runtime nên NestJS không thể suy ra provider từ
+`IUserRepository`. Dùng token cụ thể và đăng ký implementation trong module:
+
+```typescript
+// Fragment cấu hình NestJS, cần project NestJS và các implementation đã định nghĩa.
+const USER_REPOSITORY = Symbol('USER_REPOSITORY');
+@Injectable()
+class UserService {
+  constructor(@Inject(USER_REPOSITORY) private readonly repo: IUserRepository) {}
+}
+@Module({
+  providers: [UserService, { provide: USER_REPOSITORY, useClass: InMemoryUserRepository }],
+})
+class UserModule {}
+```
+
 ### NestJS làm gì phía sau?
 
 ```
 1. NestJS đọc @Module({ providers: [UserService, UserRepository] })
 2. Dùng Reflect.getMetadata để đọc constructor signature của UserService
    → Thấy: constructor(userRepository: UserRepository)
-3. Tự tạo UserRepository instance (singleton trong scope module)
+3. Resolve provider đã đăng ký (mặc định singleton; request/transient cần khai báo riêng)
 4. Inject vào UserService constructor
 5. Tạo UserService instance với UserRepository đã inject
-→ Bạn không cần new ở bất kỳ đâu!
+→ Container tạo object đã đăng ký; custom factory/composition root vẫn có thể dùng new.
 ```
 
 ### Liên hệ với Clean Architecture
@@ -399,7 +418,7 @@ src/
 │
 └── infrastructure/            ← Implementation cụ thể, phụ thuộc ngoài
     └── database/
-        └── UserPgRepository.ts ← implements IUserRepository, dùng pg library
+        └── UserPgRepository.ts ← phương án mở rộng, dùng pg library
 ```
 
 ```typescript
@@ -424,10 +443,12 @@ export class GetUserUseCase {
 // GetUserUseCase không import bất kỳ gì từ infrastructure/
 // → Có thể test với InMemoryUserRepository mà không cần DB
 
+// Skeleton thiết kế, chưa phải file thực thi: cần imports User, Pool và cài save().
 // infrastructure/database/UserPgRepository.ts
 import { IUserRepository } from '../../application/ports/IUserRepository';
 
-export class UserPgRepository implements IUserRepository {
+// Chỉ minh họa findById; chưa implements IUserRepository vì chưa có save.
+export class UserPgRepository {
   constructor(private readonly pool: Pool) {}
 
   async findById(id: string): Promise<User | null> {
@@ -439,7 +460,7 @@ export class UserPgRepository implements IUserRepository {
   }
 
   private mapToEntity(row: any): User {
-    return new User(row.id, row.email, row.password_hash);
+    return new User({ id: row.id, email: row.email, passwordHash: row.password_hash });
   }
 }
 ```
@@ -450,6 +471,8 @@ export class UserPgRepository implements IUserRepository {
 
 ### Testability (Khả năng test)
 
+Ví dụ Jest độc lập, không phải bộ test hiện có của repo (backend dùng Node test runner):
+
 ```typescript
 // Unit test GetUserUseCase — không cần DB
 describe('GetUserUseCase', () => {
@@ -457,7 +480,7 @@ describe('GetUserUseCase', () => {
     // Mock repository
     const mockRepo: IUserRepository = {
       findById: jest.fn().mockResolvedValue(
-        new User('1', 'test@test.com', 'hash')
+        new User({ id: '1', email: 'test@test.com', passwordHash: 'hash' })
       ),
       save: jest.fn(),
     };
@@ -465,7 +488,7 @@ describe('GetUserUseCase', () => {
     const useCase = new GetUserUseCase(mockRepo);  // inject mock
     const user = await useCase.execute('1');
 
-    expect(user.getEmail()).toBe('test@test.com');
+    expect(user.email).toBe('test@test.com');
     expect(mockRepo.findById).toHaveBeenCalledWith('1');
     // Test hoàn toàn không cần PostgreSQL, chạy trong ms
   });
@@ -474,32 +497,17 @@ describe('GetUserUseCase', () => {
 
 ### Flexibility (Linh hoạt)
 
-```typescript
-// Đổi DB từ Postgres sang Redis cache cho read-heavy operations
-// Chỉ cần thêm implementation, không sửa UseCase
-class CachedUserRepository implements IUserRepository {
-  constructor(
-    private readonly redis: RedisClient,
-    private readonly postgres: UserPgRepository
-  ) {}
-
-  async findById(id: string) {
-    const cached = await this.redis.get(`user:${id}`);
-    if (cached) return JSON.parse(cached);
-
-    const user = await this.postgres.findById(id);
-    if (user) await this.redis.set(`user:${id}`, JSON.stringify(user), 'EX', 3600);
-    return user;
-  }
-}
-// GetUserUseCase không cần sửa dòng nào!
-```
+Một cache decorator có thể phụ thuộc `IUserRepository`, đọc cache trước rồi fallback
+repository gốc, nhưng vẫn phải thực hiện đủ contract (kể cả `save` nếu interface yêu cầu).
+Khi cache domain entity, `JSON.parse()` chỉ trả object thường, không khôi phục class methods
+hoặc `Date`; cần DTO + mapping/re-hydration, TTL và invalidation sau ghi. Ví dụ này là phương
+án kiến trúc, chưa có Redis adapter thực thi trong tuần 1.
 
 ---
 
 ## 8.8 SOLID Principles (Mở rộng)
 
-DI và IoC là cách thực hiện **Dependency Inversion Principle (D trong SOLID)**:
+DI là một kỹ thuật hỗ trợ **Dependency Inversion Principle (D trong SOLID)**. IoC rộng hơn DI; không phải mọi IoC đều thực hiện DIP:
 
 | Chữ | Principle | Ý nghĩa |
 |-----|-----------|---------|
@@ -514,3 +522,5 @@ DI và IoC là cách thực hiện **Dependency Inversion Principle (D trong SOL
 High-level modules (UserService) không phụ thuộc vào Low-level modules (PostgresRepo)
 Cả hai phụ thuộc vào Abstractions (IUserRepository)
 ```
+
+Nguồn: [NestJS custom providers](https://docs.nestjs.com/fundamentals/custom-providers), [provider scopes](https://docs.nestjs.com/fundamentals/injection-scopes), [TypeScript classes](https://www.typescriptlang.org/docs/handbook/2/classes.html). Container dùng string + generic trong ví dụ chưa bảo đảm token/type ở runtime và chưa xử lý dependency cycle, scope hay disposal như framework đầy đủ.

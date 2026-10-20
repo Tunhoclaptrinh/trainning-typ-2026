@@ -1,6 +1,10 @@
-﻿# 📊 PHẦN 2 — SQL CƠ BẢN (Lý thuyết + Thực hành EruSentia)
+# 📊 PHẦN 2 — SQL CƠ BẢN (Lý thuyết + Thực hành EruSentia)
 
 > Đối chiếu thực hành: [Schema nghiệp vụ](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/sql/01_schema.sql), [Seed](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/sql/03_seed.sql). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
+
+> Phạm vi: ví dụ nghiệp vụ dùng schema 9 bảng của backend. `ratings` lưu đánh giá,
+> `templates.tags` là `TEXT[]`; không có `reviews`, `template_tags`, `templates.status` hoặc `price`.
+> Các đoạn có `...`, `table_name`, `<...>` và mảnh `WHERE` là cú pháp mẫu, cần thay giá trị.
 
 ---
 
@@ -26,11 +30,11 @@ trong đó các bảng có quan hệ với nhau thông qua **khóa (key)**.
 
 | File JSON | CSDL Quan hệ |
 |-----------|-------------|
-| Không có cấu trúc bắt buộc | Schema định nghĩa rõ ràng |
+| File JSON thuần không tự áp schema | Schema định nghĩa rõ ràng |
 | Tìm kiếm chậm (O(n)) | Index giúp tìm kiếm O(log n) |
-| Không đảm bảo tính nhất quán | Constraints + ACID |
+| Phải tự xây kiểm tra/đồng bộ khi ghi | Constraints + ACID |
 | Khó query phức tạp (join) | SQL cực mạnh, linh hoạt |
-| Không có transaction | COMMIT / ROLLBACK |
+| File thuần không cung cấp transaction DB | COMMIT / ROLLBACK |
 
 ---
 
@@ -47,7 +51,7 @@ Database engine (PostgreSQL) tự tìm cách tối ưu để lấy dữ liệu.
 
 ```sql
 -- Declarative: nói "tôi muốn templates published, sắp theo mới nhất"
-SELECT * FROM templates WHERE status = 'published' ORDER BY created_at DESC;
+SELECT * FROM templates WHERE is_public = TRUE AND deleted_at IS NULL ORDER BY created_at DESC, id DESC;
 -- PostgreSQL tự quyết: dùng index nào, join order nào, sort algorithm nào
 ```
 
@@ -55,7 +59,7 @@ SELECT * FROM templates WHERE status = 'published' ORDER BY created_at DESC;
 
 ## 2.3 DDL — Data Definition Language
 
-DDL là nhóm lệnh **định nghĩa cấu trúc** của database. DDL thay đổi schema, không phải data.
+DDL là nhóm lệnh **định nghĩa cấu trúc** của database. DDL chủ yếu quản lý cấu trúc; một số lệnh như `DROP` và `TRUNCATE` cũng xóa dữ liệu.
 
 ### 2.3.1 Các lệnh DDL chính
 
@@ -72,26 +76,26 @@ DDL là nhóm lệnh **định nghĩa cấu trúc** của database. DDL thay đ�
 
 | Kiểu | Ý nghĩa | Ví dụ |
 |------|---------|-------|
-| `UUID` | Chuỗi 128-bit định danh duy nhất toàn cầu | `550e8400-e29b-41d4-a716-446655440000` |
+| `UUID` | Giá trị định danh 128-bit; uniqueness trong bảng do PK/UNIQUE bảo đảm | `550e8400-e29b-41d4-a716-446655440000` |
 | `VARCHAR(n)` | Chuỗi ký tự, tối đa n ký tự | `email VARCHAR(255)` |
 | `TEXT` | Chuỗi không giới hạn độ dài | `bio TEXT` |
 | `INT / INTEGER` | Số nguyên 32-bit (-2 tỷ đến 2 tỷ) | `reputation_score INT` |
 | `BIGINT` | Số nguyên 64-bit | `view_count BIGINT` |
-| `NUMERIC(p,s)` | Số thập phân chính xác (precision, scale) | `price NUMERIC(12,2)` |
+| `NUMERIC(p,s)` | Số thập phân chính xác (precision, scale) | `rating_avg NUMERIC(3,2)` |
 | `BOOLEAN` | TRUE / FALSE | `is_active BOOLEAN` |
 | `TIMESTAMP` | Ngày giờ (không có timezone) | - |
-| `TIMESTAMPTZ` | Ngày giờ **có** timezone | `created_at TIMESTAMPTZ` |
+| `TIMESTAMPTZ` | Thời điểm tuyệt đối; hiển thị theo timezone của session | `created_at TIMESTAMPTZ` |
 | `DATE` | Chỉ ngày, không có giờ | `birth_date DATE` |
-| `SMALLINT` | Số nguyên 16-bit (-32768 đến 32767) | `rating SMALLINT` |
+| `SMALLINT` | Số nguyên 16-bit (-32768 đến 32767) | `score SMALLINT` |
 
 > **Tại sao EruSentia dùng `TIMESTAMPTZ` thay `TIMESTAMP`?**
-> `TIMESTAMPTZ` lưu timezone, đảm bảo khi server deploy ở múi giờ khác vẫn hiển thị đúng.
+> `TIMESTAMPTZ` chuẩn hóa thời điểm theo UTC, không giữ tên múi giờ/offset gốc. Khi đọc, PostgreSQL hiển thị theo `TimeZone` của session; nếu cần múi giờ gốc phải lưu riêng.
 
 > **Tại sao dùng `UUID` thay `SERIAL` (auto-increment)?**
 > UUID có thể generate ở client (không cần hỏi DB), phân tán tốt hơn, không lộ thông tin
 > (user id = 1, 2, 3 lộ có bao nhiêu user trong hệ thống).
 
-### 2.3.3 Constraints — Ràng buộc dữ liệu
+### 2.3.3 Constraints và giá trị mặc định
 
 **Constraint** là quy tắc ràng buộc dữ liệu được DB tự động kiểm tra.
 
@@ -101,7 +105,7 @@ DDL là nhóm lệnh **định nghĩa cấu trúc** của database. DDL thay đ�
 | `NOT NULL` | Cột bắt buộc phải có giá trị | `email VARCHAR(255) NOT NULL` |
 | `UNIQUE` | Giá trị trong cột phải duy nhất (cho phép NULL) | `UNIQUE(email)` |
 | `CHECK` | Điều kiện tùy chỉnh | `CHECK (role IN ('user','creator','admin'))` |
-| `DEFAULT` | Giá trị mặc định khi không truyền vào | `DEFAULT CURRENT_TIMESTAMP` |
+| `DEFAULT` (không phải constraint kiểm tra) | Giá trị mặc định khi không truyền vào | `DEFAULT CURRENT_TIMESTAMP` |
 | `FOREIGN KEY` | Đảm bảo giá trị phải tồn tại ở bảng tham chiếu | `author_id REFERENCES users(id)` |
 
 **Tại sao constraints quan trọng?**
@@ -120,11 +124,11 @@ INSERT INTO users (email, ...) VALUES ('a@b.com', ...);  -- ERROR: duplicate key
 
 | Option | Hành vi khi xóa row ở bảng cha |
 |--------|-------------------------------|
-| `RESTRICT` (default) | Từ chối xóa nếu có row con tham chiếu |
+| `RESTRICT` | Từ chối xóa nếu còn tham chiếu; không trì hoãn kiểm tra |
 | `CASCADE` | Tự động xóa cả row con |
 | `SET NULL` | Set FK của row con thành NULL |
 | `SET DEFAULT` | Set FK về giá trị DEFAULT |
-| `NO ACTION` | Tương tự RESTRICT nhưng kiểm tra cuối transaction |
+| `NO ACTION` (default) | Kiểm tra ngay theo mặc định; chỉ trì hoãn nếu FK được khai báo `DEFERRABLE` và đang deferred |
 
 ```sql
 -- Trong EruSentia:
@@ -135,27 +139,22 @@ INSERT INTO users (email, ...) VALUES ('a@b.com', ...);  -- ERROR: duplicate key
 -- → Không thể xóa user nếu còn template (bảo vệ dữ liệu)
 ```
 
-### 2.3.5 Thực hành DDL — Thêm bảng Reviews
+### 2.3.5 Thực hành DDL — bảng đánh giá
+
+Schema thực tế đã có `ratings` với FK tới `templates`, `users`, `CHECK (score BETWEEN 1 AND 5)`
+và `UNIQUE (template_id, user_id)`. Không tạo thêm `reviews` trùng nghiệp vụ.
+Dưới đây là bài DDL độc lập, chạy trong session thực hành rồi hoàn tác:
 
 ```sql
--- Bài tập mở rộng: tự tạo file sql/05_week01_queries.sql trong bản clone backend
-CREATE TABLE IF NOT EXISTS reviews (
-    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    template_id UUID NOT NULL REFERENCES templates(id) ON DELETE CASCADE,
-    user_id     UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    rating      SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
-    content     TEXT,
-    created_at  TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (template_id, user_id)   -- mỗi user chỉ review 1 lần / template
+BEGIN;
+CREATE TABLE rating_ddl_lab (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    template_id UUID NOT NULL REFERENCES templates(id),
+    score SMALLINT NOT NULL CHECK (score BETWEEN 1 AND 5)
 );
-
--- Thêm cột vào bảng có sẵn
-ALTER TABLE templates ADD COLUMN IF NOT EXISTS avg_rating NUMERIC(3,2) DEFAULT 0;
-ALTER TABLE templates ADD COLUMN IF NOT EXISTS review_count INT DEFAULT 0;
-
--- Kiểm tra cấu trúc bảng mới
-\d reviews
+ALTER TABLE rating_ddl_lab ADD COLUMN comment TEXT;
+-- Trong psql: \d rating_ddl_lab
+ROLLBACK;
 ```
 
 ---
@@ -172,20 +171,20 @@ INSERT INTO table_name (col1, col2, col3)
 VALUES (val1, val2, val3);
 
 -- Insert nhiều rows cùng lúc
-INSERT INTO reviews (template_id, user_id, rating, content)
+INSERT INTO ratings (template_id, user_id, score, comment)
 VALUES
   ('<template_id_1>', '<user_id_2>', 5, 'Tuyệt vời!'),
   ('<template_id_1>', '<user_id_3>', 4, 'Khá ổn');
 
 -- INSERT ... RETURNING: lấy lại giá trị vừa insert (thường dùng để lấy auto-generated id)
-INSERT INTO reviews (template_id, user_id, rating)
+INSERT INTO ratings (template_id, user_id, score)
 VALUES ('<t_id>', '<u_id>', 5)
 RETURNING id, created_at;
 ```
 
 ### 2.4.2 SELECT — Truy vấn dữ liệu
 
-**Thứ tự xử lý của SQL query** (quan trọng để hiểu WHERE vs HAVING):
+**Thứ tự logic để hiểu SQL query** (optimizer có thể dùng kế hoạch vật lý khác) (quan trọng để hiểu WHERE vs HAVING):
 
 ```
 1. FROM       — xác định bảng nào
@@ -196,8 +195,7 @@ RETURNING id, created_at;
 6. SELECT     — chọn cột để trả về
 7. DISTINCT   — loại bỏ trùng
 8. ORDER BY   — sắp xếp
-9. LIMIT      — giới hạn số rows
-10. OFFSET    — bỏ qua N rows đầu
+9. OFFSET/LIMIT — bỏ qua OFFSET rows rồi lấy tối đa LIMIT rows
 ```
 
 > **Tại sao không dùng WHERE với aggregate function?**
@@ -221,29 +219,29 @@ HAVING COUNT(*) > 2;  -- ← lọc sau khi đã GROUP xong
 **WHERE — Lọc điều kiện:**
 ```sql
 -- Operators cơ bản
-WHERE price = 99000           -- bằng
-WHERE price != 0              -- khác
-WHERE price > 50000           -- lớn hơn
-WHERE price BETWEEN 10000 AND 100000  -- trong khoảng (inclusive)
+WHERE views_count = 99000           -- bằng
+WHERE views_count != 0              -- khác
+WHERE views_count > 50000           -- lớn hơn
+WHERE views_count BETWEEN 10000 AND 100000  -- trong khoảng (inclusive)
 WHERE title LIKE '%React%'    -- chứa chuỗi (% = bất kỳ ký tự)
 WHERE title ILIKE '%react%'   -- case-insensitive LIKE (PostgreSQL)
-WHERE status IN ('published', 'draft')  -- trong danh sách
-WHERE status NOT IN ('archived')
+WHERE role IN ('creator', 'admin')  -- trong danh sách
+WHERE role NOT IN ('admin')
 WHERE deleted_at IS NULL      -- NULL check (không dùng = NULL!)
 WHERE deleted_at IS NOT NULL
 
 -- Kết hợp điều kiện
-WHERE status = 'published' AND price > 0
+WHERE is_public = TRUE AND views_count > 0
 WHERE role = 'creator' OR role = 'admin'
-WHERE NOT (status = 'archived')
+WHERE NOT is_public
 ```
 
 **ORDER BY — Sắp xếp:**
 ```sql
 ORDER BY created_at DESC           -- mới nhất trước
-ORDER BY price ASC                 -- rẻ nhất trước
-ORDER BY price DESC, created_at DESC  -- sort nhiều cột
-ORDER BY price DESC NULLS LAST    -- NULL xuống cuối
+ORDER BY views_count ASC                 -- ít lượt xem nhất trước
+ORDER BY views_count DESC, created_at DESC  -- sort nhiều cột
+ORDER BY views_count DESC NULLS LAST    -- NULL xuống cuối
 ```
 
 **Aggregate Functions:**
@@ -257,6 +255,8 @@ ORDER BY price DESC NULLS LAST    -- NULL xuống cuối
 | `MIN(col)` | Giá trị nhỏ nhất | Hoạt động với cả string, date |
 | `MAX(col)` | Giá trị lớn nhất | Hoạt động với cả string, date |
 
+SUM/AVG/MIN/MAX trả NULL nếu tập đầu vào không có giá trị; dùng COALESCE khi cần giá trị mặc định. NOT IN cũng có ngữ nghĩa ba giá trị khi danh sách chứa NULL; không thay cho IS NULL.
+
 ### 2.4.4 UPDATE — Cập nhật dữ liệu
 
 ```sql
@@ -267,7 +267,7 @@ WHERE condition;
 
 -- Ví dụ EruSentia:
 UPDATE templates
-SET status = 'published', updated_at = NOW()
+SET is_public = TRUE, updated_at = NOW()
 WHERE id = '<template_id>' AND author_id = '<user_id>';
 
 -- UPDATE ... RETURNING: lấy lại row sau khi update
@@ -278,19 +278,22 @@ RETURNING id, reputation_score;
 
 -- Cập nhật dựa trên giá trị cột khác (bảng khác)
 UPDATE templates t
-SET avg_rating = (
-    SELECT ROUND(AVG(r.rating)::NUMERIC, 2)
-    FROM reviews r
+SET rating_avg = COALESCE((
+    SELECT ROUND(AVG(r.score)::NUMERIC, 2)
+    FROM ratings r
     WHERE r.template_id = t.id
-)
+), 0),
+ratings_count = (SELECT COUNT(*) FROM ratings r WHERE r.template_id = t.id)
 WHERE id = '<template_id>';
+-- Khi thêm/xóa rating thực tế, cập nhật cached aggregate trong cùng transaction.
+-- Cần khóa template/serialization phù hợp khi có nhiều người đánh giá đồng thời.
 ```
 
 ### 2.4.5 DELETE — Xóa dữ liệu
 
 ```sql
 -- Hard delete (xóa thật) — NGUY HIỂM nếu thiếu WHERE
-DELETE FROM reviews WHERE id = '<review_id>';
+DELETE FROM ratings WHERE id = '<review_id>';
 
 -- Soft delete (xóa mềm) — pattern EruSentia dùng
 -- Không xóa thật, chỉ đánh dấu deleted_at
@@ -303,7 +306,7 @@ SELECT * FROM users WHERE deleted_at IS NULL;
 ```
 
 > **Tại sao EruSentia dùng soft delete?**
-> 1. Audit trail: biết ai xóa gì, khi nào
+> 1. Giữ thời điểm đánh dấu xóa; muốn biết ai xóa/lý do cần ghi thêm `audit_logs`
 > 2. Khôi phục được nếu xóa nhầm
 > 3. FK constraint: nếu user có templates, hard delete sẽ fail nếu có RESTRICT
 
@@ -328,14 +331,14 @@ INNER JOIN: [2, 3]  ← chỉ phần giao
 -- Templates với tên tác giả (chỉ lấy template có user tồn tại)
 SELECT
     t.title,
-    t.price,
+    t.rating_avg,
     p.username     AS author,
     c.name         AS category
 FROM templates t
 INNER JOIN users u      ON t.author_id = u.id
 INNER JOIN profiles p   ON p.user_id = u.id
 INNER JOIN categories c ON t.category_id = c.id
-WHERE t.status = 'published'
+WHERE t.is_public = TRUE AND t.deleted_at IS NULL
   AND u.deleted_at IS NULL
 ORDER BY t.created_at DESC;
 ```
@@ -403,33 +406,25 @@ INNER JOIN profiles p ON ...
 sau đó áp dụng aggregate function lên mỗi nhóm.
 
 ```sql
--- Thống kê template theo category (số lượng, giá trung bình)
+-- Thống kê template theo category (số lượng, điểm trung bình, lượt xem)
 SELECT
     c.name                       AS category_name,
     COUNT(t.id)                  AS total_templates,
-    COUNT(CASE WHEN t.status = 'published' THEN 1 END) AS published_count,
-    ROUND(AVG(t.price)::NUMERIC, 0) AS avg_price,
-    MAX(t.price)                 AS max_price,
-    MIN(t.price)                 AS min_price,
-    SUM(t.price)                 AS total_potential_revenue
+    COUNT(CASE WHEN t.is_public = TRUE THEN 1 END) AS public_count,
+    ROUND(AVG(t.rating_avg)::NUMERIC, 0) AS mean_template_rating,
+    MAX(t.views_count)                 AS max_views,
+    MIN(t.views_count)                 AS min_views,
+    SUM(t.views_count)                 AS total_views
 FROM categories c
 LEFT JOIN templates t ON t.category_id = c.id AND t.deleted_at IS NULL
 GROUP BY c.id, c.name
 ORDER BY total_templates DESC;
 ```
 
-> **Quy tắc GROUP BY:** Mọi cột trong SELECT mà không phải aggregate function **phải** có trong GROUP BY.
-
-```sql
--- Sai: c.name không trong GROUP BY
-SELECT c.id, c.name, COUNT(t.id)
-FROM categories c LEFT JOIN templates t ON ...
-GROUP BY c.id;  -- thiếu c.name → lỗi
-
--- Đúng:
-GROUP BY c.id, c.name;  -- hoặc GROUP BY c.id (nếu c.name functionally dependent on c.id)
--- PostgreSQL cho phép GROUP BY primary key → tự hiểu các cột khác cùng bảng
-```
+> **Quy tắc GROUP BY:** Cột SELECT không được aggregate phải có trong GROUP BY,
+> hoặc phụ thuộc hàm vào khóa chính đã được nhóm của chính bảng đó. PostgreSQL cho phép
+> `SELECT c.id, c.name ... GROUP BY c.id` khi `c.id` là PK; đây không phải ví dụ lỗi.
+> Để viết rõ ràng và dễ chuyển DBMS, có thể nhóm cả `c.id, c.name`.
 
 **HAVING — Lọc sau GROUP:**
 ```sql
@@ -441,7 +436,7 @@ SELECT
 FROM profiles p
 JOIN users u     ON p.user_id = u.id
 JOIN templates t ON t.author_id = u.id
-WHERE t.status = 'published'   -- lọc TRƯỚC group (rows)
+WHERE t.is_public = TRUE AND t.deleted_at IS NULL   -- lọc TRƯỚC group (rows)
 GROUP BY p.id, p.username, p.reputation_score
 HAVING COUNT(t.id) >= 2        -- lọc SAU group (groups)
 ORDER BY template_count DESC;
@@ -457,25 +452,27 @@ ORDER BY template_count DESC;
 -- Tìm user có email trong danh sách creators
 SELECT email FROM users
 WHERE id IN (
-    SELECT DISTINCT author_id FROM templates WHERE status = 'published'
+    SELECT DISTINCT author_id FROM templates WHERE is_public = TRUE AND deleted_at IS NULL
 );
 
--- Tìm template có price cao hơn average
-SELECT title, price
-FROM templates
-WHERE price > (SELECT AVG(price) FROM templates WHERE status = 'published')
-  AND status = 'published';
+-- Template có lượt xem cao hơn trung bình của các template công khai còn hoạt động
+SELECT title, views_count FROM templates
+WHERE is_public = TRUE AND deleted_at IS NULL
+  AND views_count > (
+    SELECT AVG(views_count) FROM templates
+    WHERE is_public = TRUE AND deleted_at IS NULL
+  );
 
 -- Correlated subquery: subquery tham chiếu đến outer query
 SELECT
     t.title,
-    (SELECT COUNT(*) FROM reviews r WHERE r.template_id = t.id) AS review_count
+    (SELECT COUNT(*) FROM ratings r WHERE r.template_id = t.id) AS ratings_count
 FROM templates t
-WHERE t.status = 'published';
+WHERE t.is_public = TRUE AND t.deleted_at IS NULL;
 ```
 
-> **Subquery vs JOIN:** Subquery thường dễ đọc hơn nhưng có thể chậm hơn JOIN.
-> Optimizer hiện đại thường convert subquery thành JOIN tự động.
+> **Subquery vs JOIN:** Chọn theo ngữ nghĩa (đặc biệt số row và NULL), rồi đo plan.
+> PostgreSQL có thể chuyển đổi một số subquery; không bảo đảm mọi subquery chậm hơn JOIN.
 
 ---
 
@@ -485,7 +482,7 @@ Tự tạo file `sql/05_week01_queries.sql` trong bản clone backend để lưu
 
 ```sql
 -- Bài 1: Tất cả template published kèm tên tác giả, category, số tags
--- Hint: cần JOIN templates, users, profiles, categories, template_tags
+-- Hint: cần JOIN templates, users, profiles, categories; cardinality(t.tags) đếm tags
 
 -- Bài 2: User đăng ký > 30 ngày chưa verify email
 -- Hint: NOW() - created_at > INTERVAL '30 days' AND email_verified_at IS NULL
@@ -494,10 +491,12 @@ Tự tạo file `sql/05_week01_queries.sql` trong bản clone backend để lưu
 -- Hint: GROUP BY + ORDER BY COUNT DESC LIMIT 5
 
 -- Bài 4: Template không có tag nào
--- Hint: LEFT JOIN template_tags + IS NULL
+-- Hint: cardinality(tags) = 0
 
--- Bài 5: Tính tổng revenue tiềm năng (tổng price của tất cả template published)
--- Hint: SUM + WHERE status = 'published'
+-- Bài 5: Tính tổng lượt xem của các template công khai chưa bị xóa
+-- Hint: SUM(views_count) + WHERE is_public = TRUE AND deleted_at IS NULL
 
--- Bài 6 (nâng cao): Với mỗi creator, show: tên, số template, template đắt nhất, tổng value
+-- Bài 6 (nâng cao): Với mỗi creator, show: tên, số template, template nhiều lượt xem nhất, tổng lượt xem
 ```
+
+Nguồn đối chiếu: [Constraints](https://www.postgresql.org/docs/16/ddl-constraints.html), [Date/Time](https://www.postgresql.org/docs/16/datatype-datetime.html), [SELECT](https://www.postgresql.org/docs/16/sql-select.html) — PostgreSQL 16.

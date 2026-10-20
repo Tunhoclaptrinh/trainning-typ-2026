@@ -2,6 +2,11 @@
 
 > Đối chiếu thực hành: [Demo OOP](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/src/week01-practice/oop/demo.ts), [Domain entities](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/src/domain/entities/Template.ts). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
 
+> Các đoạn dưới là ví dụ riêng theo từng mục, không ghép nguyên trang thành một file
+> (nhiều class trùng tên). Phần có `price`, `PaidTemplate`, `status` là mô hình giả định
+> để giải thích interface, không phải nghiệp vụ đã có trong schema EruSentia. Demo thực tế
+> dùng `isPublic`, các notifier và validator; domain thật dùng `TemplateProps`.
+
 ---
 
 ## 7.1 OOP là gì?
@@ -15,14 +20,14 @@
 **Object** = thực thể có:
 - **State (Trạng thái):** dữ liệu, thuộc tính → stored trong **fields/attributes**
 - **Behavior (Hành vi):** những gì object có thể làm → defined bằng **methods**
-- **Identity (Định danh):** mỗi object là duy nhất, có địa chỉ riêng trong memory
+- **Identity (Định danh):** hai object có thể khác reference dù cùng dữ liệu. Domain entity còn có định danh nghiệp vụ `id`, không đồng nghĩa địa chỉ bộ nhớ.
 
 ```typescript
 // Object "user" có:
 // State: id, email, role, isActive
 // Behavior: changeEmail(), promoteToCreator(), deactivate()
 // Identity: đây là user cụ thể, khác với user khác dù có cùng email
-const user = new User('uuid-1', 'tientuan@erusentia.com', 'creator');
+// Minh họa state; constructor User ở mục 7.3 nhận passwordHash ở đối số thứ ba.
 ```
 
 ### Tại sao OOP?
@@ -113,12 +118,15 @@ class User {
 
 ### Access Modifiers
 
-| Modifier | Truy cập từ | TypeScript | Java |
-|----------|-----------|-----------|------|
-| `public` | Mọi nơi | Mặc định | Phải khai báo |
-| `private` | Chỉ trong class này | `private` | `private` |
-| `protected` | Class này + subclass | `protected` | `protected` |
-| `readonly` | Chỉ đọc, không set sau init | `readonly` | `final` |
+| Thành phần | TypeScript | Đối chiếu Java |
+|------------|------------|----------------|
+| `public` | Mặc định cho member không ghi modifier | Không có modifier thường là package-private, không phải public |
+| `private` | Hạn chế truy cập khi type-check; dùng `#field` nếu cần private ở runtime | Private trong class |
+| `protected` | Class và subclass | Còn cho phép truy cập trong cùng package |
+| `readonly` | Chặn gán lại field qua type-check, không deep-freeze object | `final` chặn gán lại reference; object vẫn có thể mutable |
+
+`private`/`readonly` TypeScript không phải ranh giới bảo mật. Getter trả nguyên `Date`,
+array hoặc object mutable vẫn có thể làm lộ state; trả bản sao hoặc kiểu bất biến phù hợp.
 
 ### Thực hành
 
@@ -136,6 +144,7 @@ class User {
   constructor(id: string, email: string, passwordHash: string) {
     this.id = id;
     this.email = this.normalizeEmail(email);
+    if (!this.email.includes('@')) throw new Error('Invalid email format');
     this.passwordHash = passwordHash;
     this.role = 'user';
     this.isActive = true;
@@ -147,7 +156,7 @@ class User {
   getEmail(): string { return this.email; }
   getRole(): string { return this.role; }
   isUserActive(): boolean { return this.isActive; }
-  getCreatedAt(): Date { return this.createdAt; }
+  getCreatedAt(): Date { return new Date(this.createdAt.getTime()); }
 
   // Business methods: validation nằm trong class, không rải ra ngoài
   changeEmail(newEmail: string): void {
@@ -167,6 +176,8 @@ class User {
   }
 
   // Không expose password hash ra ngoài
+  // Chỉ so sánh chuỗi giả trong bài OOP, không phải password verification thực tế.
+  // Authentication thật cần thư viện hash/verify phù hợp.
   verifyPassword(inputHash: string): boolean {
     return this.passwordHash === inputHash;
   }
@@ -180,9 +191,11 @@ class User {
 // Test
 const user = new User('uuid-1', ' TienTuan@Email.COM ', 'hash123');
 console.log(user.getEmail());     // tientuan@email.com (normalized)
-user.changeEmail('invalid');      // throws: Invalid email format
+try { user.changeEmail('invalid'); }
+catch (e) { console.log(e instanceof Error ? e.message : String(e)); }
 user.promoteToCreator();          // OK
-user.promoteToCreator();          // throws: Already creator
+try { user.promoteToCreator(); }
+catch (e) { console.log(e instanceof Error ? e.message : String(e)); }
 // user.role = 'admin';           // TypeScript ERROR: property 'role' is private
 ```
 
@@ -227,8 +240,8 @@ abstract class BaseEntity {
   }
 
   getId(): string { return this.id; }
-  getCreatedAt(): Date { return this.createdAt; }
-  getUpdatedAt(): Date { return this.updatedAt; }
+  getCreatedAt(): Date { return new Date(this.createdAt.getTime()); }
+  getUpdatedAt(): Date { return new Date(this.updatedAt.getTime()); }
 
   // Protected: chỉ class này và subclass dùng
   protected touch(): void {
@@ -253,7 +266,7 @@ class Template extends BaseEntity {
   private categoryId: string;
 
   constructor(id: string, authorId: string, categoryId: string, title: string, price: number) {
-    super(id);  // PHẢI gọi super() đầu tiên
+    super(id);  // Gọi super() trước khi truy cập this trong constructor dẫn xuất
     this.authorId = authorId;
     this.categoryId = categoryId;
     this.title = title;
@@ -347,7 +360,7 @@ const template = new Template('t-1', 'u-1', 'cat-1', 'React Dashboard Kit', 9900
 console.log(template.toString());  // Template(id=t-1, title="React Dashboard Kit", status=draft)
 template.publish();
 console.log(template.getStatus()); // published
-try { template.publish(); } catch (e) { console.log(e.message); }  // Cannot publish...
+try { template.publish(); } catch (e) { console.log(e instanceof Error ? e.message : String(e)); }  // Cannot publish...
 
 const profile = new Profile('p-1', 'u-1', 'tientuan', 'Tien Tuan');
 profile.addReputation(10);
@@ -380,8 +393,8 @@ class UserService {
 **Polymorphism** (từ Greek: "nhiều hình dạng") là khả năng **các objects khác nhau
 có thể được xử lý thông qua cùng một interface**, mỗi object có thể có behavior khác nhau.
 
-Có 2 loại:
-- **Compile-time (Static) Polymorphism:** Method Overloading (cùng tên, khác params)
+Hai hình thức thường gặp (không phải danh sách đầy đủ):
+- **Compile-time (Static) Polymorphism:** Method Overloading (cùng tên, nhiều signature; TypeScript chỉ có một implementation JavaScript, không tự dispatch theo kiểu runtime)
 - **Runtime (Dynamic) Polymorphism:** Method Overriding (subclass override method cha)
 
 ### Ví dụ thực tế
@@ -453,7 +466,7 @@ function publishAll(items: Publishable[]): void {
       item.publish();
       console.log(`Published: ${item.getStatus()}`);
     } catch (e) {
-      console.log(`Failed to publish: ${e.message}`);
+      console.log(`Failed to publish: ${e instanceof Error ? e.message : String(e)}`);
     }
   });
 }
@@ -504,7 +517,7 @@ Abstraction giúp:
 **Interface:**
 - Chỉ **contract** (khai báo methods, không implement)
 - **Multiple implementation** (1 class implement nhiều interface)
-- Không có constructor
+- Không có constructor thực thi; có thể mô tả construct signature `new (...)`
 - Tất cả members mặc định là public
 
 ### Khi nào dùng Abstract Class?
@@ -614,3 +627,5 @@ interface IUserRepository {
 | **Inheritance** | Class con kế thừa class cha | Tái sử dụng code, IS-A relationship |
 | **Polymorphism** | Cùng interface, behavior khác nhau | Extensible, giảm if-else |
 | **Abstraction** | Ẩn complexity, expose interface | Đơn giản hóa, giảm coupling |
+
+Nguồn: [Classes — TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/2/classes.html). Kiểu/interface bị xóa khi biên dịch; validation runtime vẫn cần khi nhận dữ liệu bên ngoài.

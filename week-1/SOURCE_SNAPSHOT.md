@@ -2,6 +2,8 @@
 
 Mốc này được chốt sau đợt dọn repo và rà soát tài liệu ngày 20/10/2026. Báo cáo ngày 03/10/2026 vẫn giữ các ảnh và số đo lịch sử; kết quả kiểm tra sau dọn repo nằm tại [CLEANUP_CHECKS.md](CLEANUP_CHECKS.md). Mốc nguồn này không đổi ngày hoặc nguồn gốc của các kết quả lịch sử đó.
 
+Bản tài liệu hiện tại trên nhánh có [hiệu đính review](REVIEW_UPDATES.md). Tag `typ-2026-week-1` lưu bản **trước hiệu đính** và không được di chuyển; các dẫn chứng mã nguồn backend vẫn dùng commit cố định dưới đây.
+
 ## Backend tại thời điểm chốt
 
 | Thành phần | Mốc cố định |

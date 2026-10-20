@@ -31,6 +31,8 @@ Xem hướng dẫn nộp bài tại [Hướng dẫn](https://github.com/quanglam
 - Mã nguồn backend, SQL, seed, benchmark và demo thực thi tập trung tại [EruSentia-Server](https://github.com/Tunhoclaptrinh/EruSentia-Server).
 - Các đoạn code trong tài liệu là ví dụ giải thích bài học; hướng dẫn chạy dẫn về repo backend.
 
-[Báo cáo tuần 1](https://github.com/Tunhoclaptrinh/trainning-typ-2026/blob/typ-2026-week-1/week-1/WEEK1_REPORT.md) · [Lý thuyết tuần 1](https://github.com/Tunhoclaptrinh/trainning-typ-2026/blob/typ-2026-week-1/week-1/docs/00_GUIDE_INDEX.md) · [Tiến độ học tập](docs/LEARNING_TRACKER.md).
+[Báo cáo tuần 1](week-1/WEEK1_REPORT.md) · [Lý thuyết tuần 1](week-1/docs/00_GUIDE_INDEX.md) · [Tiến độ học tập](docs/LEARNING_TRACKER.md).
 
 Báo cáo tuần 1 dùng [mốc nguồn cố định](https://github.com/Tunhoclaptrinh/trainning-typ-2026/blob/typ-2026-week-1/week-1/SOURCE_SNAPSHOT.md): dẫn chứng ghim bằng mã commit backend, báo cáo và ảnh được giữ qua tag `typ-2026-week-1`.
+
+Liên kết báo cáo/lý thuyết phía trên mở bản hiện tại có hiệu đính review. Tag `typ-2026-week-1` giữ bản lưu trữ trước hiệu đính; xem [nhật ký rà soát](week-1/REVIEW_UPDATES.md).

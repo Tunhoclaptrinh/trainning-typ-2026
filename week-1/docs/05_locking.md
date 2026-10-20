@@ -45,28 +45,36 @@ T1 đếm lại: SELECT COUNT(*) WHERE status='published' → 105
 (records "ma" xuất hiện trong transaction của T1)
 ```
 
-**Locking giải quyết các vấn đề này** bằng cách kiểm soát thứ tự và tính cô lập giữa các transaction.
+MVCC, isolation level, row lock và điều kiện UPDATE phối hợp kiểm soát truy cập đồng thời. Dirty read là khái niệm tổng quát; PostgreSQL không cho dirty read ở bất kỳ isolation level nào.
 
 ---
 
 ## 5.2 Transaction Isolation Levels
 
-PostgreSQL hỗ trợ 4 mức cô lập (theo chuẩn SQL):
+Chuẩn SQL có 4 tên mức cô lập; PostgreSQL chỉ thực thi 3 hành vi khác nhau:
+`READ UNCOMMITTED` được ánh xạ thành `READ COMMITTED`.
 
-| Isolation Level | Dirty Read | Non-Repeatable Read | Phantom Read |
-|----------------|-----------|--------------------|--------------| 
-| **READ UNCOMMITTED** | ❌ Có thể | ❌ Có thể | ❌ Có thể |
-| **READ COMMITTED** (default PG) | ✅ Không | ❌ Có thể | ❌ Có thể |
-| **REPEATABLE READ** | ✅ Không | ✅ Không | ✅ Không (PG) |
-| **SERIALIZABLE** | ✅ Không | ✅ Không | ✅ Không |
+| Mức trong PostgreSQL | Dirty read | Non-repeatable read | Phantom read | Serialization anomaly |
+|---------------------|------------|---------------------|--------------|-----------------------|
+| READ UNCOMMITTED / READ COMMITTED (mặc định) | Không | Có thể | Có thể | Có thể |
+| REPEATABLE READ | Không | Không | Không | Có thể, ví dụ write skew |
+| SERIALIZABLE | Không | Không | Không | Không với các transaction commit thành công |
 
-> PostgreSQL mặc định dùng **READ COMMITTED** — transaction chỉ thấy data đã được COMMIT.
+READ COMMITTED lấy snapshot mới cho mỗi statement và vẫn thấy thay đổi của chính
+transaction mình. REPEATABLE READ/SERIALIZABLE có thể yêu cầu retry transaction
+(`40001`). Các lệnh sau là hai lựa chọn độc lập, không chạy hai BEGIN lồng nhau:
 
 ```sql
--- Thay đổi isolation level
 BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+SELECT COUNT(*) FROM templates;
+ROLLBACK;
+
 BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+SELECT COUNT(*) FROM templates;
+ROLLBACK;
 ```
+
+Nguồn: [Transaction Isolation — PostgreSQL 16](https://www.postgresql.org/docs/16/transaction-iso.html).
 
 ---
 
@@ -97,6 +105,9 @@ COMMIT;  -- → Release lock, session đang chờ sẽ được thực thi
 
 ### Các variants của SELECT FOR UPDATE
 
+Các lệnh bên dưới là lựa chọn độc lập. Muốn giữ row lock qua bước xử lý tiếp theo,
+chạy trong BEGIN/COMMIT; ở autocommit lock kết thúc ngay sau statement.
+
 ```sql
 -- Đợi vô thời hạn nếu bị lock (mặc định)
 SELECT * FROM template_slots WHERE id = 1 FOR UPDATE;
@@ -109,30 +120,40 @@ SELECT * FROM template_slots WHERE id = 1 FOR UPDATE NOWAIT;
 SELECT * FROM template_slots WHERE id IN (1,2,3) FOR UPDATE SKIP LOCKED;
 -- → Hữu ích cho job queue: worker A lấy item đầu, worker B tự động lấy item tiếp theo
 
--- Lock nhẹ hơn: chỉ block UPDATE/DELETE, không block SELECT FOR SHARE
+-- FOR SHARE xung đột với FOR NO KEY UPDATE và FOR UPDATE, không xung đột FOR SHARE
 SELECT * FROM template_slots WHERE id = 1 FOR SHARE;
 ```
 
 ### Lock Types trong PostgreSQL
 
-| Lock | Mô tả | Blocked by |
-|------|-------|-----------|
-| `FOR UPDATE` | Exclusive row lock | Mọi loại lock khác |
-| `FOR SHARE` | Shared row lock | Chỉ bị block bởi FOR UPDATE |
-| `FOR NO KEY UPDATE` | Exclusive, nhưng không lock FK lookups | FOR SHARE, FOR UPDATE |
-| `FOR KEY SHARE` | Shared, chỉ cần cho FK checks | FOR UPDATE, FOR NO KEY UPDATE |
+Các row lock xung đột giữa **hai transaction khác nhau** trên cùng row:
+
+| Lock yêu cầu | Xung đột với lock đang giữ |
+|--------------|---------------------------|
+| `FOR UPDATE` | UPDATE, NO KEY UPDATE, SHARE, KEY SHARE |
+| `FOR NO KEY UPDATE` | UPDATE, NO KEY UPDATE, SHARE |
+| `FOR SHARE` | UPDATE, NO KEY UPDATE |
+| `FOR KEY SHARE` | UPDATE |
+
+`UPDATE` tự lấy row lock (thường NO KEY UPDATE; UPDATE nếu sửa khóa thuộc trường hợp
+PostgreSQL quy định). Row lock không chặn SELECT thường dùng MVCC. `NOWAIT`/`SKIP LOCKED`
+chỉ đổi cách đợi row lock, không loại bỏ mọi khả năng chờ table lock.
 
 ### Demo Pessimistic Lock — 2 Terminal
 
-**Setup:**
+**Setup (database thực hành, đóng các transaction demo cũ trước khi reset):**
 ```sql
 CREATE TABLE IF NOT EXISTS template_slots (
     id      SERIAL PRIMARY KEY,
     name    VARCHAR(100),
-    slots   INT NOT NULL DEFAULT 0,
-    version INT NOT NULL DEFAULT 0
+    slots   INT NOT NULL DEFAULT 0 CHECK (slots >= 0),
+    version INT NOT NULL DEFAULT 0,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
-INSERT INTO template_slots (name, slots) VALUES ('Limited Edition Pack', 1);
+INSERT INTO template_slots (id, name, slots, version)
+VALUES (1, 'Limited Edition Pack', 1, 0), (2, 'Second Pack', 10, 0)
+ON CONFLICT (id) DO UPDATE
+SET slots = EXCLUDED.slots, version = 0, updated_at = NOW();
 ```
 
 **Terminal 1:**
@@ -167,15 +188,15 @@ ROLLBACK;
 
 ### Ưu điểm Pessimistic
 
-- ✅ **Đảm bảo không conflict** — chắc chắn nhất quán
-- ✅ **Đơn giản:** không cần retry logic phức tạp
+- ✅ **Bảo vệ đoạn read-modify-write trên row đã khóa** nếu mọi luồng ghi tuân thủ quy tắc nghiệp vụ.
+- ⚠️ **Vẫn cần xử lý lỗi:** deadlock/serialization failure có thể yêu cầu retry transaction.
 - ✅ **Phù hợp conflict rate cao:** nhiều user cùng tranh 1 resource
 
 ### Nhược điểm Pessimistic
 
 - ❌ **Throughput thấp:** các session xếp hàng chờ nhau
 - ❌ **Nguy cơ Deadlock:** A chờ B, B chờ A
-- ❌ **Không phù hợp read-heavy:** lock ngay cả khi read-only không cần
+- ❌ **Giữ lock khi xử lý lâu làm tăng thời gian chờ:** SELECT thường không cần thêm FOR UPDATE cho đọc thuần túy.
 
 ---
 
@@ -186,7 +207,7 @@ ROLLBACK;
 **Optimistic Locking** (Khóa lạc quan) = giả định rằng **conflict hiếm khi xảy ra**,
 do đó **không khóa khi đọc** — chỉ kiểm tra conflict **tại thời điểm ghi**.
 
-Nếu phát hiện conflict → **retry** toàn bộ operation.
+Nếu phát hiện conflict → đọc lại và quyết định retry có giới hạn hoặc báo người dùng; không ghi đè mù.
 
 Tên gọi "lạc quan" vì: "tôi lạc quan, tôi nghĩ không ai tranh với tôi — nên tôi đọc mà không lock".
 
@@ -211,11 +232,17 @@ ALTER TABLE template_slots ADD COLUMN IF NOT EXISTS version INT NOT NULL DEFAULT
 
 4. Kiểm tra rowsAffected:
    - rowsAffected = 1 → THÀNH CÔNG (version vẫn là 3 khi ta ghi)
-   - rowsAffected = 0 → CONFLICT (ai đó đã UPDATE và version đã thay đổi)
-   → Retry từ bước 1
+   - rowsAffected = 0 → không còn row khớp điều kiện (version đổi, row bị xóa, hoặc ID không tồn tại)
+   → Xử lý nghiệp vụ, có thể đọc lại và retry có giới hạn
 ```
 
 ### Demo Optimistic Lock — 2 Terminal
+
+Đóng các transaction cũ, reset trước khi mở hai terminal:
+
+```sql
+UPDATE template_slots SET slots = 10, version = 0 WHERE id IN (1, 2);
+```
 
 **Terminal 1:**
 ```sql
@@ -262,7 +289,7 @@ Một số hệ thống dùng `updated_at` thay vì `version`:
 WHERE id = 1 AND updated_at = '2024-03-15 10:30:00.123456'
 ```
 
-**Rủi ro:** Clock precision — nếu 2 update xảy ra trong cùng 1 microsecond, timestamp giống nhau → không phát hiện conflict. Version counter đảm bảo unique hơn.
+**Rủi ro:** timestamp có thể lặp và mất độ chính xác khi chuyển qua client. `NOW()` là thời điểm bắt đầu transaction, nên nhiều UPDATE trong cùng transaction nhận cùng giá trị. Counter tăng đơn điệu trên mỗi row dễ kiểm soát hơn; mọi luồng ghi phải cùng cập nhật counter. `templates.version` trong schema thật là VARCHAR phiên bản nội dung, không dùng như counter INT của lab.
 
 ### Ưu điểm Optimistic
 
@@ -297,7 +324,7 @@ Transaction B: Đang giữ lock trên row 2, muốn lock row 1
 ### PostgreSQL phát hiện và xử lý Deadlock
 
 PostgreSQL chủ động **phát hiện deadlock** định kỳ.
-Khi phát hiện: **kill một trong hai transaction** (victim selection), transaction kia tiếp tục.
+Khi phát hiện, PostgreSQL hủy một transaction với `40P01`; không đóng connection. Session đó cần `ROLLBACK`; transaction còn lại có thể tiếp tục.
 
 ```
 ERROR: deadlock detected
@@ -309,6 +336,8 @@ HINT: See server log for query details.
 ```
 
 ### Tái tạo Deadlock
+
+Dùng setup hai row ở mục 5.3; kết thúc mỗi session bằng COMMIT hoặc ROLLBACK sau demo.
 
 **Terminal 1:**
 ```sql
@@ -334,7 +363,7 @@ SELECT * FROM template_slots WHERE id = 2 FOR UPDATE;
 
 ### Optimistic lock cũng có thể deadlock
 
-Ví dụ thứ tự lệnh trên **hai row đã tồn tại**, mỗi row bắt đầu ở `version = 0`:
+Đóng các transaction cũ, chạy `UPDATE template_slots SET version = 0 WHERE id IN (1, 2);` ở autocommit. Ví dụ thứ tự lệnh trên **hai row đã tồn tại**, mỗi row bắt đầu ở `version = 0`:
 
 | Bước | Session A | Session B |
 |------|-----------|-----------|
@@ -383,5 +412,5 @@ FOR UPDATE;
 | **Deadlock risk** | Có | Có, do lock của `UPDATE` |
 | **Retry logic** | Cần khi deadlock/serialization failure | Xử lý version conflict và lỗi transaction |
 | **Conflict rate cao** | ✅ Phù hợp | ❌ Nhiều retry |
-| **Read-heavy** | ❌ Lãng phí | ✅ Phù hợp |
+| **Read-heavy** | Chỉ lock đoạn cần read-modify-write | Thường phù hợp khi write conflict thấp |
 | **Use case EruSentia** | Mua template giới hạn | Edit profile, update template |

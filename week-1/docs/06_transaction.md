@@ -1,374 +1,202 @@
-﻿# 💳 PHẦN 6 — TRANSACTION (Lý thuyết ACID + Thực hành EruSentia)
+# 💳 PHẦN 6 — TRANSACTION (ACID + Thực hành EruSentia)
 
-> Đối chiếu thực hành: [Transaction trong seed](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/scripts/seed.ts). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
-
----
+> Mã thực thi: [transaction trong seed](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/scripts/seed.ts).
+> Setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
+> SQL dưới dùng schema hiện có; các hàm TypeScript là thiết kế minh họa, chưa phải endpoint đã triển khai.
 
 ## 6.1 Transaction là gì?
 
-**Transaction** là một đơn vị công việc logic bao gồm **một hoặc nhiều thao tác DB**
-được thực thi như một khối **không thể tách rời (atomic)**.
+Transaction gom các thao tác cần thành công cùng nhau thành một đơn vị công việc.
+`COMMIT` xác nhận thay đổi; `ROLLBACK` hủy thay đổi chưa commit. Ứng dụng phải phát hiện
+cả lỗi SQL và trường hợp nghiệp vụ như `UPDATE 0` — PostgreSQL không coi 0 rows là lỗi.
 
-Toàn bộ thao tác phải:
-- **Tất cả thành công** → COMMIT (lưu vĩnh viễn)
-- **Hoặc tất cả thất bại** → ROLLBACK (hoàn tác về trạng thái trước)
-
-### Tại sao cần Transaction?
-
-**Scenario: Publish template trên EruSentia**
-
-Khi creator publish template, hệ thống phải:
-1. UPDATE `templates.status = 'published'`
-2. UPDATE `profiles.reputation_score += 10`
-3. INSERT activity log
-
-Nếu step 1 thành công nhưng server crash tại step 2:
-- Template đã published nhưng reputation không được cộng
-- Database ở trạng thái **không nhất quán** (inconsistent)
-
-Với Transaction:
-- Nếu bất kỳ step nào fail → ROLLBACK tất cả về trạng thái trước
-- Database luôn ở trạng thái nhất quán
-
----
+Ví dụ phù hợp EruSentia: công khai một template, cộng điểm tác giả và ghi `audit_logs`.
+Đây là quy tắc nghiệp vụ minh họa, chưa phải luồng publish đã triển khai. Schema dùng
+`is_public`, không có `status`, `price` hoặc `activity_log`. `templates.version` là chuỗi
+phiên bản nội dung (`1.0.0`), không phải counter optimistic lock của bảng lab `template_slots`.
 
 ## 6.2 ACID Properties
 
-**ACID** là 4 tính chất cốt lõi của transaction trong CSDL quan hệ, đảm bảo data integrity.
+| Tính chất | Ý nghĩa và giới hạn |
+|-----------|---------------------|
+| Atomicity | Các thay đổi thuộc phạm vi commit cùng thành công hoặc bị hủy. Sequence/SERIAL không hoàn lại giá trị đã cấp khi rollback. |
+| Consistency | DB kiểm tra constraints đã khai báo; application chịu trách nhiệm quy tắc nghiệp vụ còn lại. Transaction không tự làm mọi logic đúng. |
+| Isolation | Cách các transaction thấy/tương tác với nhau phụ thuộc isolation level. READ COMMITTED ngăn dirty read nhưng không tương đương chạy tuần tự. |
+| Durability | Với cấu hình bền vững thông thường (`fsync`/`synchronous_commit` bật), WAL được flush trước khi xác nhận commit. Không thay thế backup hay bảo đảm trước mất toàn bộ ổ lưu trữ. |
 
-### A — Atomicity (Tính nguyên tử)
+PostgreSQL dùng MVCC để quản lý phiên bản row và WAL cho crash recovery. WAL replay
+khôi phục thay đổi; các phiên bản của transaction chưa commit không trở thành dữ liệu
+đã commit. Không nên mô tả recovery như việc phát lại một SQL `ROLLBACK` cho từng lệnh.
 
-**Định nghĩa:** Transaction là một đơn vị không thể chia nhỏ — hoặc tất cả thành công, hoặc tất cả thất bại. Không có trạng thái "thành công một phần".
-
-**Ví dụ EruSentia:**
-```sql
-BEGIN;
--- Step 1: publish template
-UPDATE templates SET status = 'published' WHERE id = 'T1';
--- Step 2: cộng reputation
-UPDATE profiles SET reputation_score = reputation_score + 10 WHERE user_id = 'U1';
--- Nếu step 2 fail vì bất kỳ lý do gì → ROLLBACK cả step 1
-COMMIT;
-```
-
-**Cơ chế:** PostgreSQL sử dụng **WAL (Write-Ahead Logging)** — ghi log trước khi thực sự ghi data. Nếu crash giữa chừng, WAL được dùng để replay hoặc rollback.
-
-### C — Consistency (Tính nhất quán)
-
-**Định nghĩa:** Transaction đưa database từ **trạng thái hợp lệ này sang trạng thái hợp lệ khác**. Tất cả constraints, rules, và triggers phải được thỏa mãn sau transaction.
-
-**Ví dụ EruSentia:**
-```sql
--- Constraint: templates.author_id phải tồn tại trong users.id
--- Nếu INSERT template với author_id không tồn tại → vi phạm FK constraint
--- → Transaction bị ROLLBACK tự động
--- → Database vẫn nhất quán
-INSERT INTO templates (author_id, ...) VALUES ('không_tồn_tại', ...);
--- ERROR: insert or update on table "templates" violates foreign key constraint
-```
-
-Consistency là trách nhiệm **chung** của database (constraints) và application (business rules).
-
-### I — Isolation (Tính cô lập)
-
-**Định nghĩa:** Các transaction đồng thời **không thấy kết quả trung gian của nhau**. Mỗi transaction thực thi như thể nó là transaction duy nhất đang chạy.
-
-**Ví dụ EruSentia:**
-```sql
--- T1 đang UPDATE template (chưa COMMIT)
-BEGIN;  -- T1
-UPDATE templates SET status = 'published' WHERE id = 'T1';
--- Chưa COMMIT
-
--- T2 đọc cùng lúc
-SELECT status FROM templates WHERE id = 'T1';
--- → Thấy 'draft' (không thấy uncommitted changes của T1)
--- → READ COMMITTED isolation level
-```
-
-Mức độ isolation được kiểm soát bởi **Isolation Level** (đã học ở phần Locking).
-
-### D — Durability (Tính bền vững)
-
-**Định nghĩa:** Sau khi transaction COMMIT thành công, dữ liệu **tồn tại vĩnh viễn** ngay cả khi server crash, mất điện, hay restart.
-
-**Cơ chế:** PostgreSQL ghi WAL log ra disk **trước** khi báo COMMIT success. Sau khi restart, WAL được replay để khôi phục trạng thái.
-
-**Ví dụ:**
-```sql
-BEGIN;
-UPDATE templates SET status = 'published' WHERE id = 'T1';
-COMMIT;
--- PostgreSQL đảm bảo: dù server tắt ngay sau COMMIT, template vẫn là published khi restart
-```
-
----
+Ở READ COMMITTED, mỗi statement có snapshot mới và nhìn thấy thay đổi trước đó của
+chính transaction mình. REPEATABLE READ giữ snapshot, nhưng vẫn có serialization anomaly
+như write skew. SERIALIZABLE bảo đảm các transaction commit có hiệu ứng tương đương
+một thứ tự tuần tự và có thể trả lỗi yêu cầu retry. Xem [bảng isolation](05_locking.md#52-transaction-isolation-levels).
 
 ## 6.3 Cú pháp Transaction
 
 ```sql
--- Bắt đầu transaction
+BEGIN;                         -- hoặc START TRANSACTION
+SELECT COUNT(*) FROM templates;
+COMMIT;                        -- hoặc END
+
 BEGIN;
--- hoặc
-START TRANSACTION;
-
--- Các thao tác DB...
-
--- Lưu tất cả thay đổi
-COMMIT;
--- hoặc
-END;  -- tương đương COMMIT
-
--- Hủy tất cả thay đổi
+SELECT COUNT(*) FROM templates;
 ROLLBACK;
 ```
 
-### Auto-commit
-
-Mặc định trong PostgreSQL, **mỗi lệnh SQL đơn lẻ là một transaction riêng** (auto-commit).
-
-```sql
--- Không có BEGIN/COMMIT → mỗi lệnh tự COMMIT ngay
-UPDATE templates SET status = 'published' WHERE id = 'T1';
--- → Auto COMMIT
-
--- Nếu muốn group nhiều lệnh → phải explicit BEGIN
-BEGIN;
-UPDATE templates SET status = 'published' WHERE id = 'T1';
-UPDATE profiles SET reputation_score = reputation_score + 10 WHERE user_id = 'U1';
-COMMIT;
-```
-
----
+Khi không có transaction block, mỗi statement thường được client thực hiện trong
+transaction riêng (autocommit). Trong transaction block, lỗi SQL thông thường làm
+transaction aborted: cần `ROLLBACK`, hoặc `ROLLBACK TO SAVEPOINT` hợp lệ, trước khi tiếp tục.
+Vi phạm constraint không tự gửi `ROLLBACK` thay cho ứng dụng.
 
 ## 6.4 Demo: Transaction với ROLLBACK
 
+Chạy trong database thực hành đã seed. Query chọn một profile cố định theo `id`;
+`ROLLBACK` giữ nguyên điểm sau demo:
+
 ```sql
--- Xem data trước
-SELECT id, reputation_score FROM profiles LIMIT 3;
-
 BEGIN;
-
--- Thử thay đổi
-UPDATE profiles SET reputation_score = reputation_score + 9999
-WHERE id = (SELECT id FROM profiles LIMIT 1);
-
--- Kiểm tra trong transaction (chỉ session này thấy)
-SELECT id, reputation_score FROM profiles LIMIT 3;
--- → reputation_score tăng thêm 9999
-
--- Quyết định: ROLLBACK
+WITH chosen AS (SELECT id FROM profiles ORDER BY id LIMIT 1)
+UPDATE profiles p
+SET reputation_score = reputation_score + 9999
+FROM chosen WHERE p.id = chosen.id
+RETURNING p.id, p.reputation_score;
 ROLLBACK;
-
--- Verify: reputation_score đã về lại
-SELECT id, reputation_score FROM profiles LIMIT 3;
--- → Không đổi gì cả
+SELECT id, reputation_score FROM profiles ORDER BY id LIMIT 1;
 ```
 
-**Ứng dụng thực tế:** Trước khi chạy migration lớn trong production, bọc trong transaction → kiểm tra kết quả → ROLLBACK (hoặc COMMIT nếu đúng).
+Nhiều DDL PostgreSQL cũng rollback được, nhưng không phải mọi lệnh đều chạy trong
+transaction block (ví dụ `CREATE INDEX CONCURRENTLY`, `CREATE DATABASE`). Không xem
+`ROLLBACK` là cơ chế hoàn tác email, file, API hoặc các tác động bên ngoài DB.
 
----
+## 6.5 Khi nào cần Transaction?
 
-## 6.5 Khi nào PHẢI dùng Transaction?
+Khi các thao tác DB phải thành công cùng nhau, dùng transaction và kiểm tra kết quả từng bước.
+Một statement SQL riêng lẻ vốn đã atomic; nhiều statement độc lập không nhất thiết cần gom chung.
 
-### Rule of thumb
-**Khi nào có 2+ thao tác DB phải thành công cùng nhau → cần Transaction.**
+### Tạo User + Profile
 
-### Scenario 1: Tạo User + Profile (EruSentia)
+Dùng CTE chuyển ID vừa tạo sang profile, không cần chép UUID bằng tay. Chạy thử rồi rollback:
 
 ```sql
 BEGIN;
-
--- Tạo user account
-INSERT INTO users (id, email, password_hash, role)
-VALUES (gen_random_uuid(), 'new@user.com', 'hash', 'user')
-RETURNING id;  -- lấy id vừa tạo
-
--- Tạo profile cho user đó (cần user_id vừa tạo)
-INSERT INTO profiles (id, user_id, username, display_name)
-VALUES (gen_random_uuid(), '<user_id_vừa_lấy>', 'newuser', 'New User');
-
--- Cả hai phải thành công cùng nhau
--- Nếu user tạo OK nhưng profile fail → ROLLBACK cả user
-COMMIT;
+WITH new_user AS (
+  INSERT INTO users (email, password_hash, role)
+  VALUES ('transaction-lab@example.test', 'demo-only-not-a-real-hash', 'user')
+  RETURNING id
+)
+INSERT INTO profiles (user_id, username, display_name)
+SELECT id, 'transaction_lab', 'Transaction Lab' FROM new_user
+RETURNING id, user_id;
+ROLLBACK;
 ```
 
-### Scenario 2: Publish Template (EruSentia)
+Nếu email/username lab đã tồn tại, statement trả lỗi UNIQUE; chạy `ROLLBACK` và dùng
+định danh lab khác. Chuỗi hash ở đây chỉ là dữ liệu giả cho bài SQL.
 
-```sql
-BEGIN;
+### Công khai hoặc xóa mềm Template
 
--- 1. Update trạng thái template
-UPDATE templates
-SET status = 'published', updated_at = NOW()
-WHERE id = '<template_id>'
-  AND author_id = '<user_id>'
-  AND status = 'draft';
-
--- Kiểm tra có thực sự update được không (nếu 0 rows → fail)
--- Trong psql: GET DIAGNOSTICS affected = ROW_COUNT;
-
--- 2. Cộng reputation
-UPDATE profiles
-SET reputation_score = reputation_score + 10
-WHERE user_id = '<user_id>';
-
--- 3. Ghi log (nếu có bảng activity_log)
--- INSERT INTO activity_log ...
-
-COMMIT;
-```
-
-### Scenario 3: Soft Delete Template
-
-```sql
-BEGIN;
-
--- Soft delete template
-UPDATE templates
-SET deleted_at = NOW(), status = 'archived'
-WHERE id = '<template_id>' AND author_id = '<user_id>';
-
--- Trừ reputation khi xóa template đã publish
-UPDATE profiles
-SET reputation_score = GREATEST(0, reputation_score - 5)  -- không để âm
-WHERE user_id = '<user_id>';
-
-COMMIT;
-```
-
----
+Cần kiểm tra quyền tác giả và trạng thái hiện tại trong `WHERE`, kiểm tra `rowCount`;
+chỉ cộng/trừ điểm sau khi thay đổi template thành công. Retry không được cộng điểm hai lần.
+Soft delete cần `deleted_at IS NULL` để lần gọi lặp không trừ điểm lần nữa. Đây là thiết kế
+minh họa; chưa có service/API thực thi trong backend tuần 1.
 
 ## 6.6 Savepoint — Checkpoint trong Transaction
 
-**Savepoint** là điểm kiểm tra trong transaction — có thể ROLLBACK về savepoint mà không ROLLBACK toàn bộ.
+Ví dụ độc lập, không phụ thuộc ID dữ liệu seed:
 
 ```sql
 BEGIN;
-
--- Thao tác 1: thành công
-UPDATE profiles SET reputation_score = reputation_score + 10 WHERE user_id = 'U1';
-
-SAVEPOINT after_reputation;  -- đánh dấu checkpoint
-
--- Thao tác 2: thử, có thể fail
-INSERT INTO activity_log (user_id, action) VALUES ('U1', 'publish');
-
--- Nếu thao tác 2 fail, rollback về savepoint (giữ kết quả thao tác 1)
-ROLLBACK TO SAVEPOINT after_reputation;
-
--- Thao tác 1 vẫn còn hiệu lực
-COMMIT;  -- chỉ commit thao tác 1
-
--- Xóa savepoint không cần nữa
--- RELEASE SAVEPOINT after_reputation;
+CREATE TEMP TABLE transaction_lab (id INT PRIMARY KEY, points INT NOT NULL) ON COMMIT DROP;
+INSERT INTO transaction_lab VALUES (1, 10);
+SAVEPOINT after_initial;
+UPDATE transaction_lab SET points = points + 1000 WHERE id = 1;
+ROLLBACK TO SAVEPOINT after_initial;
+SELECT * FROM transaction_lab;  -- points = 10
+RELEASE SAVEPOINT after_initial;
+COMMIT;                        -- bảng TEMP được dọn bởi ON COMMIT DROP
 ```
 
----
+Savepoint cho phép bỏ một phần công việc khi nghiệp vụ cho phép. Nó không làm thay đổi
+đã rollback xuất hiện trong kết quả commit. `GET DIAGNOSTICS ... ROW_COUNT` thuộc PL/pgSQL,
+không phải câu lệnh SQL độc lập để gõ trực tiếp trong psql; ở Node dùng `result.rowCount`.
 
 ## 6.7 Transaction trong Application Code (TypeScript)
 
-### Pattern 1: Manual transaction
+Helper minh họa dùng một `PoolClient` cho toàn bộ transaction, giữ lỗi gốc nếu rollback
+cũng lỗi, và loại connection lỗi khỏi pool. Import type tách riêng để dùng được với
+TypeScript strict. Callback chỉ dùng `client` được cấp, không dùng `pool.query()`:
 
 ```typescript
-// Ví dụ manual transaction; transaction thực thi hiện có nằm trong scripts/seed.ts
-import { Pool, PoolClient } from 'pg';
+import { Pool } from 'pg';
+import type { PoolClient } from 'pg';
 
-const pool = new Pool({ /* config */ });
-
-async function publishTemplate(templateId: string, authorId: string) {
-  const client: PoolClient = await pool.connect();
-
-  try {
-    await client.query('BEGIN');
-
-    // Step 1: Publish template
-    const result = await client.query(
-      `UPDATE templates
-       SET status = 'published', updated_at = NOW()
-       WHERE id = $1 AND author_id = $2 AND status = 'draft'
-       RETURNING id, title`,
-      [templateId, authorId]
-    );
-
-    if (result.rowCount === 0) {
-      await client.query('ROLLBACK');
-      throw new Error('Template not found, not yours, or not in draft status');
-    }
-
-    // Step 2: Add reputation
-    await client.query(
-      `UPDATE profiles
-       SET reputation_score = reputation_score + 10
-       WHERE user_id = $1`,
-      [authorId]
-    );
-
-    await client.query('COMMIT');
-    console.log(`Published: ${result.rows[0].title}`);
-    return result.rows[0];
-
-  } catch (error) {
-    await client.query('ROLLBACK');
-    throw error;  // re-throw để caller biết
-  } finally {
-    client.release();  // PHẢI release, nếu không pool bị cạn kiệt
-  }
-}
-```
-
-### Pattern 2: withTransaction helper (recommended)
-
-```typescript
-// Helper tái sử dụng — encapsulate BEGIN/COMMIT/ROLLBACK/release
 async function withTransaction<T>(
   pool: Pool,
-  operation: (client: PoolClient) => Promise<T>
+  operation: (client: PoolClient) => Promise<T>,
 ): Promise<T> {
   const client = await pool.connect();
+  let discardClient = false;
   try {
     await client.query('BEGIN');
-    const result = await operation(client);
+    const value = await operation(client);
     await client.query('COMMIT');
-    return result;
+    return value;
   } catch (error) {
-    await client.query('ROLLBACK');
+    try {
+      await client.query('ROLLBACK');
+    } catch {
+      discardClient = true;
+    }
     throw error;
   } finally {
-    client.release();
+    client.release(discardClient);
   }
 }
 
-// Sử dụng helper:
-const published = await withTransaction(pool, async (client) => {
-  const t = await client.query(
-    `UPDATE templates SET status='published' WHERE id=$1 RETURNING *`,
-    [templateId]
-  );
-  if (t.rowCount === 0) throw new Error('Not found');
+// Business rule minh họa: chỉ cộng điểm khi chuyển private → public thành công.
+async function publishTemplate(pool: Pool, templateId: string, authorId: string) {
+  return withTransaction(pool, async (client) => {
+    const changed = await client.query<{ id: string; title: string }>(
+      `UPDATE templates SET is_public = TRUE, updated_at = NOW()
+       WHERE id = $1 AND author_id = $2 AND is_public = FALSE AND deleted_at IS NULL
+       RETURNING id, title`,
+      [templateId, authorId],
+    );
+    if (changed.rowCount !== 1) throw new Error('Template absent, forbidden, or already public');
 
-  await client.query(
-    `UPDATE profiles SET reputation_score = reputation_score + 10 WHERE user_id=$1`,
-    [authorId]
-  );
+    const profile = await client.query(
+      `UPDATE profiles SET reputation_score = reputation_score + 10, updated_at = NOW()
+       WHERE user_id = $1`,
+      [authorId],
+    );
+    if (profile.rowCount !== 1) throw new Error('Author profile missing');
 
-  return t.rows[0];
-});
+    await client.query(
+      `INSERT INTO audit_logs (user_id, action, entity_type, entity_id)
+       VALUES ($1, 'template.published', 'template', $2)`,
+      [authorId, templateId],
+    );
+    return changed.rows[0];
+  });
+}
 ```
 
----
+Caller sở hữu và đóng `pool` khi kết thúc CLI/app. Trong API thực tế, `authorId` lấy từ
+ngữ cảnh xác thực đã kiểm tra. Các lỗi deadlock `40P01`/serialization `40001` có thể được
+retry toàn bộ transaction theo giới hạn và backoff phù hợp. Mất kết nối lúc COMMIT có thể
+khiến client không biết giao dịch đã commit hay chưa; cần cơ chế đối soát/idempotency,
+không retry mù. Không gửi email trực tiếp trong callback có thể retry; cần thiết kế outbox
+nếu đòi hỏi việc gửi gắn với commit.
 
 ## 6.8 Transaction và Connection Pool
 
-**Quan trọng:** Transaction phải ở trên **cùng một DB connection**.
+`pool.connect()` → `client.query('BEGIN')` → tất cả query dùng cùng `client` →
+`COMMIT`/`ROLLBACK` → `client.release()`. Dùng `pool.query()` cho từng bước có thể chọn
+các connection khác nhau, làm mất ranh giới transaction mong muốn.
 
-```
-Connection Pool:
-  conn-1: T1 (BEGIN → UPDATE → COMMIT)
-  conn-2: T2 (BEGIN → UPDATE → COMMIT)
-  conn-3: free
-
-Nếu T1 dùng conn-1 cho BEGIN, conn-2 cho UPDATE → sai! Chúng là 2 transaction khác nhau.
-```
-
-Vì vậy: luôn `pool.connect()` → `client.query(BEGIN)` → dùng `client` cho toàn bộ transaction → `client.release()`.
+Nguồn: [Transactions — node-postgres](https://node-postgres.com/features/transactions),
+[Transaction Isolation](https://www.postgresql.org/docs/16/transaction-iso.html),
+[WAL](https://www.postgresql.org/docs/16/wal-intro.html),
+[Asynchronous Commit](https://www.postgresql.org/docs/16/wal-async-commit.html).
