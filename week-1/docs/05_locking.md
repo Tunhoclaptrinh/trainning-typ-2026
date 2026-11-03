@@ -24,24 +24,24 @@ Kết quả: 120 (đúng ra phải là 130)
 
 #### 2. Dirty Read (Đọc dữ liệu bẩn)
 ```
-T1 bắt đầu: cập nhật balance = 0 (đang trong transaction, chưa COMMIT)
-T2 đọc: thấy balance = 0 (đọc uncommitted data!)
-T1 ROLLBACK: balance về lại giá trị cũ
-T2 đã hành động dựa trên dữ liệu không bao giờ tồn tại!
+T1 cập nhật reputation_score = 0 (đang trong transaction, chưa COMMIT)
+T2 đọc: thấy reputation_score = 0 (đọc uncommitted data)
+T1 ROLLBACK: reputation_score về lại giá trị cũ
+T2 đã sử dụng giá trị chưa từng được commit.
 ```
 
 #### 3. Non-Repeatable Read
 ```
-T1 đọc: price = 99000
-T2 UPDATE: price = 199000, COMMIT
-T1 đọc lại trong cùng transaction: price = 199000 (đã thay đổi!)
+T1 đọc template: title = 'Draft planner'
+T2 UPDATE: title = 'Weekly planner', COMMIT
+T1 đọc lại cùng template trong transaction: title = 'Weekly planner'
 ```
 
 #### 4. Phantom Read
 ```
-T1 đếm: SELECT COUNT(*) WHERE status='published' → 100
-T2 INSERT thêm 5 published templates, COMMIT
-T1 đếm lại: SELECT COUNT(*) WHERE status='published' → 105
+T1 đếm templates WHERE is_public = TRUE → 100
+T2 INSERT thêm 5 templates có is_public = TRUE, COMMIT
+T1 đếm lại cùng điều kiện → 105
 (records "ma" xuất hiện trong transaction của T1)
 ```
 

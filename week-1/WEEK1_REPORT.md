@@ -4,13 +4,14 @@
 **Thời gian:** 03/10/2026  
 **Dự án thực tế áp dụng:** [Sentia Hub Backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220)
 **Mốc nguồn đối chiếu sau dọn repo:** [`b851e15`](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220) — [cách mở và tải toàn bộ bản nguồn](SOURCE_SNAPSHOT.md)
-**Kho lưu trữ nộp bài:** [TYP tại mốc tuần 1](https://github.com/Tunhoclaptrinh/trainning-typ-2026/tree/typ-2026-week-1)
+**Bản lưu sau hiệu đính 20/10:** [TYP tuần 1 đã hiệu đính](https://github.com/Tunhoclaptrinh/trainning-typ-2026/tree/typ-2026-week-1-reviewed/week-1)
+**Bản nộp ban đầu:** [TYP tại mốc trước hiệu đính](https://github.com/Tunhoclaptrinh/trainning-typ-2026/tree/typ-2026-week-1)
 
 > Bổ sung ngày 20/10/2026: kết quả thực hành Docker trên Ubuntu và ảnh Adminer thật được ghi ở cuối báo cáo, tách khỏi lần thực hành ngày 03/10/2026.
 
 > Hiệu đính sau review ngày 20/10/2026: [những điểm đã sửa và giới hạn bằng chứng](REVIEW_UPDATES.md). Ảnh/số đo lịch sử giữ nguyên; nội dung giải thích được sửa trên nhánh hiện tại, tag cũ không đổi.
 
-> Báo cáo lưu kết quả và ảnh chụp của lần thực hành ngày 03/10/2026. Mã nguồn thực thi được quản lý tại [EruSentia-Server](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220); xem [hướng dẫn tái hiện](README.md#báo-cáo-và-hướng-dẫn-tái-hiện). Schema chính có 9 bảng; tổng 11 bảng trong ảnh bao gồm `users_no_index` và `template_slots` dùng riêng cho bài thực hành.
+> Báo cáo lưu kết quả và ảnh chụp của lần thực hành ngày 03/10/2026. Mã nguồn thực thi được quản lý tại [EruSentia-Server](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220); xem [hướng dẫn tái hiện](docs/00_GUIDE_INDEX.md#báo-cáo-và-hướng-dẫn-tái-hiện). Schema chính có 9 bảng; tổng 11 bảng trong ảnh bao gồm `users_no_index` và `template_slots` dùng riêng cho bài thực hành.
 
 ---
 
@@ -483,7 +484,8 @@ Giữ nguyên source TypeScript và cấu hình Compose hiện có.
 Database nghiệp vụ `sentia_hub_db` có 9 bảng, 10 users, 8 categories, 1.012 templates.
 Chạy seed lần hai không nhân đôi dữ liệu. Các lệnh hiện có `db:check`, `db:schema`,
 `db:indexes`, `db:seed`, `typecheck`, `test` (6/6), `build`, `start`, `demo:oop`,
-`demo:di`, `db:benchmark` đều thành công. `start` chỉ kiểm tra DB rồi thoát, chưa có API.
+`demo:di`, `db:benchmark` đều thành công. Tại mốc tuần 1, `start` chỉ kiểm tra DB rồi
+thoát. Từ tuần 2, server dùng `start` cho HTTP API và `db:check` cho kiểm tra DB.
 
 ![Adminer thật trên Ubuntu](screenshots/13_ubuntu_adminer_overview.png)
 *Hình 13: Database dự án trên Docker Ubuntu.*

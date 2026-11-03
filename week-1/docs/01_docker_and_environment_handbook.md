@@ -1,7 +1,7 @@
-# 🐳 SỔ TAY KỸ THUẬT TUẦN 1: DOCKER & MÔI TRƯỜNG DATABASE THỰC CHIẾN
+# Sổ tay tuần 1 — Docker và môi trường database
 
 > Đối chiếu thực hành: [Docker Compose](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/docker/docker-compose.dev.yml), [Biến môi trường mẫu](https://github.com/Tunhoclaptrinh/EruSentia-Server/blob/b851e1576ae48fe62efcec10dd2d912e011a6220/.env.example). Các lệnh shell trong bài chạy từ thư mục gốc repo `EruSentia-Server` sau khi setup theo [README backend](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/b851e1576ae48fe62efcec10dd2d912e011a6220).
-> Ghi chép các kiến thức "ngầm", bài học thực tế và thông số kết nối quan trọng cần nhớ trong Tuần 1.
+> Kiến thức nền, cách xử lý sự cố môi trường và thông số kết nối trong tuần 1.
 
 > Máy hiện tại đã chuyển sang Ubuntu native: xem [phần chạy thực tế trên Ubuntu](#7-chạy-thực-tế-trên-ubuntu-native). Mục WSL 2 phía dưới giữ ghi chép môi trường Windows cũ.
 
@@ -16,7 +16,7 @@ Mỗi khi cần mở giao diện quản trị Database hoặc kết nối code, 
 | **URL Giao diện Web** | `http://localhost:8080` | Mở bằng trình duyệt Chrome/Edge (Adminer GUI) |
 | **System** | `PostgreSQL` | Chọn trong dropdown của Adminer (mặc định hay là MySQL) |
 | **Server** *(Khi dùng Adminer)* | `postgres` | **Tên service** trong Docker network nội bộ (xem mục 3) |
-| **Server** *(Khi dùng code Node/DBeaver)* | `localhost` hoặc `127.0.0.1` | Vì truy cập từ ngoài máy tính của bạn vào |
+| **Server** *(Node/DBeaver chạy trên host)* | `localhost` hoặc `127.0.0.1` | Kết nối tới cổng được publish trên máy host |
 | **Port** | `5432` | Cổng mặc định của PostgreSQL |
 | **Username** | `postgres` | Tài khoản superuser mặc định |
 | **Password** | `postgres_dev_password` | Mật khẩu dev đang ghi trong Compose; `.env.example` phải khớp cấu hình này |
@@ -34,17 +34,17 @@ Intel VT-x / AMD-V              WSL 2 Subsystem                  Docker Desktop
 (Bật trong BIOS Mainboard)      (Lệnh: wsl --install)            (Chạy mượt mà)
 ```
 
-- **Sự cố vừa gặp:** Task Manager báo `Virtualization: Enabled` (phần cứng đã sẵn sàng), nhưng Docker vẫn báo `Virtualization support not detected`.
+- **Hiện tượng ghi nhận:** Task Manager báo `Virtualization: Enabled` (phần cứng đã sẵn sàng), nhưng Docker vẫn báo `Virtualization support not detected`.
 - **Bản chất nguyên nhân:** Với Linux containers và WSL 2 backend, Docker Desktop sử dụng môi trường Linux do WSL 2 cung cấp. CPU bật ảo hóa chưa đủ; cần kiểm tra cài đặt WSL và các Windows features liên quan. Docker Desktop còn có Hyper-V backend; không thể kết luận mọi lỗi ảo hóa đều do thiếu WSL.
-- **Câu lệnh thần thánh để sửa:**
+- **Lệnh cài WSL nếu chưa có:**
   ```powershell
   wsl --install --no-distribution
   ```
-  *(Cờ `--no-distribution` giúp cài nhân WSL 2 nhẹ nhất có thể mà không bị ép tải bản Ubuntu 1GB về máy).*
+  Cờ `--no-distribution` cài WSL mà không cài kèm bản phân phối Linux mặc định.
 
 ---
 
-## 🔌 3. BÍ MẬT CONTAINER NETWORKING: TẠI SAO LẠI LÀ `postgres` MÀ KHÔNG PHẢI `localhost`?
+## 3. Container networking: tên service và localhost
 
 Khi đăng nhập trên Adminer (`http://localhost:8080`), nhiều bạn hay gõ Server là `localhost` và bị báo lỗi **Connection Refused**. Tại sao?
 
@@ -67,11 +67,13 @@ Khi đăng nhập trên Adminer (`http://localhost:8080`), nhiều bạn hay gõ
 ```
 
 1. **Từ máy bạn (Host) gọi vào:** Bạn gõ `localhost:8080` (trình duyệt) hoặc kết nối Node.js `localhost:5432` vì cổng đã được **Map (chuyển tiếp)** ra ngoài máy tính.
-2. **Từ Adminer gọi sang PostgreSQL:** Cả 2 container nằm chung một **mạng riêng Docker**. Trong mạng riêng này, `localhost` của Adminer chính là... bản thân cái Adminer! Muốn nói chuyện với PostgreSQL, Adminer phải gọi theo **tên Service** được đặt trong file docker-compose: chính là chữ **`postgres`**!
+2. **Từ Adminer gọi sang PostgreSQL:** Hai container cùng mạng Compose. `localhost`
+   trong Adminer trỏ về chính container Adminer. Dùng hostname **`postgres`** theo
+   tên service để kết nối sang PostgreSQL qua cổng container 5432.
 
 ---
 
-## ✨ 4. "PHÉP MÀU" TỰ ĐỘNG CHẠY SQL (`/docker-entrypoint-initdb.d/`)
+## 4. Khởi tạo SQL bằng `/docker-entrypoint-initdb.d/`
 
 Hãy nhìn lại 2 dòng này trong file cấu hình `docker-compose.dev.yml`:
 
@@ -82,7 +84,9 @@ volumes:
 ```
 
 - **Nguyên lý hoạt động:** Image chính thức của PostgreSQL được lập trình sẵn một quy tắc: *Mỗi khi container được khởi tạo lần đầu tiên với volume trống, nó sẽ tự động xử lý các file init được hỗ trợ (như `.sql`, `.sh`) trong `/docker-entrypoint-initdb.d/` theo thứ tự tên file.*
-- **Lợi ích:** Bạn không cần phải mở giao diện lên rồi paste từng dòng lệnh SQL bằng tay. Chỉ cần `docker compose -f docker/docker-compose.dev.yml up -d`, toàn bộ 9 bảng nghiệp vụ và các Index đã được tạo sẵn trong nháy mắt!
+- **Lợi ích:** Với data directory mới, Compose khởi động PostgreSQL và chạy file
+  schema/index đã mount, tạo 9 bảng nghiệp vụ cùng các index. Volume đã có dữ liệu
+  không chạy lại init scripts; lệnh up không tự áp thay đổi SQL mới lên volume cũ.
 
 ---
 
@@ -96,15 +100,17 @@ volumes:
      ```bash
      docker ps
      ```
-  2. Dừng và xóa container chiếm cổng:
+  2. Xác định dịch vụ đang giữ cổng và kiểm tra có cần tiếp tục sử dụng hay không.
+     Chỉ dừng container không còn cần dùng:
      ```bash
      docker stop <ID_hoặc_Tên_container>
-     docker rm <ID_hoặc_Tên_container>
      ```
+     Nếu phải giữ dịch vụ đó, đổi cổng phía host trong Compose, rồi cập nhật URL
+     hoặc DB_PORT tương ứng. Không cần xóa container để giải phóng cổng.
 
 ---
 
-## 🛡️ 6. 4 LỆNH DOCKER THỰC CHIẾN NẰM LÒNG
+## 6. Các lệnh Docker thường dùng
 
 | Lệnh | Khi nào dùng? |
 |---|---|
@@ -171,7 +177,6 @@ pnpm db:seed
 pnpm typecheck
 pnpm test
 pnpm build
-pnpm start
 pnpm demo:oop
 pnpm demo:di
 pnpm db:benchmark
@@ -180,8 +185,9 @@ pnpm db:benchmark
 Nhóm lệnh kiểm chứng database/build/test/demo ở trên đã chạy đạt ngày 20/10/2026. Khi kiểm chứng, cấu hình `DB_*` được truyền
 cho riêng tiến trình để trỏ đúng container, không ghi đè `.env` cá nhân. Nếu `.env` của
 bạn đang trỏ DB khác, đối chiếu `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`,
-`DB_DATABASE` với Compose trước khi chạy seed. `pnpm start` hiện chỉ kiểm tra DB rồi
-thoát thành công, chưa mở HTTP API.
+`DB_DATABASE` với Compose trước khi chạy seed. **Ở mốc nguồn tuần 1** được dẫn đầu
+bài, `pnpm start` kiểm tra DB rồi thoát. Từ tuần 2, lệnh này khởi động HTTP API;
+dùng `pnpm db:check` khi chỉ cần kiểm tra kết nối DB trên mã server hiện tại.
 
 Kết nối từ Node chạy trên Ubuntu dùng `127.0.0.1:5432`; Adminer chạy **trong container**
 dùng server **postgres**, không dùng localhost. Truy cập [Adminer](http://localhost:8080):
@@ -198,6 +204,9 @@ database `sentia_hub_db`. Chỉ các thông tin dev của Compose được ghi �
   bảng slots vào DB nghiệp vụ. Kết quả được ghi trong báo cáo.
 - Container Portainer có sẵn được giữ nguyên. PostgreSQL/Adminer và volume dev được giữ
   chạy để tiếp tục sử dụng; không reset volume để lấy ảnh mới.
+
+Các trạng thái trên được ghi nhận ngày 20/10/2026, không mô tả trạng thái daemon
+hiện tại. Tham khảo [Compose networking](https://docs.docker.com/compose/how-tos/networking/).
 
 ### Xử lý các lỗi dễ gặp sau khi chuyển từ Windows
 

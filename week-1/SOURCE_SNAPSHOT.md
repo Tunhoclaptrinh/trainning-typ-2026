@@ -22,8 +22,15 @@ Link có mã commit đầy đủ trỏ tới đúng phiên bản file ở thời
 
 ## Báo cáo và ảnh trong TYP
 
+**Bản lưu sau hiệu đính ngày 20/10/2026:**
+
+- [Báo cáo, lý thuyết và ảnh đã hiệu đính](https://github.com/Tunhoclaptrinh/trainning-typ-2026/tree/typ-2026-week-1-reviewed/week-1).
+- [ZIP bản đã hiệu đính](https://github.com/Tunhoclaptrinh/trainning-typ-2026/archive/refs/tags/typ-2026-week-1-reviewed.zip).
+
+**Bản nộp ban đầu, trước hiệu đính:**
+
 - [Toàn bộ repo TYP tại tag tuần 1](https://github.com/Tunhoclaptrinh/trainning-typ-2026/tree/typ-2026-week-1).
-- [Báo cáo tuần 1 đã chốt](https://github.com/Tunhoclaptrinh/trainning-typ-2026/blob/typ-2026-week-1/week-1/WEEK1_REPORT.md).
+- [Báo cáo tuần 1 trước hiệu đính](https://github.com/Tunhoclaptrinh/trainning-typ-2026/blob/typ-2026-week-1/week-1/WEEK1_REPORT.md).
 - [Tài liệu và ảnh minh chứng đã chốt](https://github.com/Tunhoclaptrinh/trainning-typ-2026/tree/typ-2026-week-1/week-1).
 - [ZIP toàn bộ TYP tại tag tuần 1](https://github.com/Tunhoclaptrinh/trainning-typ-2026/archive/refs/tags/typ-2026-week-1.zip).
 

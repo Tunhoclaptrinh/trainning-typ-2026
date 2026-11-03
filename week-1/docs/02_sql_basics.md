@@ -23,7 +23,7 @@ trong đó các bảng có quan hệ với nhau thông qua **khóa (key)**.
 | **Row / Record (Hàng)** | Một bản ghi cụ thể trong bảng | 1 user cụ thể |
 | **Column / Field (Cột)** | Thuộc tính của bảng, có kiểu dữ liệu xác định | `email`, `created_at` |
 | **Primary Key (PK)** | Cột (hoặc tổ hợp cột) định danh DUY NHẤT mỗi row | `users.id` (UUID) |
-| **Foreign Key (FK)** | Cột tham chiếu đến PK của bảng khác, đảm bảo tính toàn vẹn | `templates.author_id → users.id` |
+| **Foreign Key (FK)** | Một hoặc nhiều cột tham chiếu khóa PK/UNIQUE của bảng đích, bảo vệ toàn vẹn tham chiếu | `templates.author_id → users.id` |
 | **Schema** | Cấu trúc tổng thể của DB: các bảng, cột, quan hệ, constraints | Toàn bộ file `sql/01_schema.sql` |
 
 ### Tại sao dùng CSDL quan hệ thay vì lưu file JSON?

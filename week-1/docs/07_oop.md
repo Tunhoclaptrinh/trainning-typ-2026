@@ -220,7 +220,7 @@ của class cha (superclass/parent)**, đồng thời có thể mở rộng ho�
 | `super()` | Gọi constructor của class cha |
 | `super.method()` | Gọi method của class cha |
 | `override` | TypeScript 4.3+: explicit khai báo override method cha |
-| `abstract` | Method/class phải được subclass implement |
+| `abstract` | Class không được khởi tạo trực tiếp; lớp con cụ thể phải triển khai các abstract member còn thiếu |
 
 ### Thực hành
 

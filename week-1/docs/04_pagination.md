@@ -15,10 +15,10 @@ trả về từng phần thay vì toàn bộ.
 ```sql
 SELECT * FROM templates;  -- Giả sử hệ thống tăng tới 500,000 templates
 ```
-- Server phải đọc 500,000 rows từ disk → tốn I/O
-- Server phải serialize 500,000 objects thành JSON → tốn CPU + RAM
-- Network phải truyền vài trăm MB → user chờ lâu, tốn bandwidth
-- Browser phải render 500,000 items → crash tab
+- Database cần đọc tập kết quả lớn; số lần đọc đĩa phụ thuộc cache và query plan.
+- Server phải serialize nhiều object thành JSON, tăng CPU và bộ nhớ sử dụng.
+- Dung lượng truyền phụ thuộc kích thước mỗi row và cơ chế nén.
+- Render toàn bộ danh sách lớn có thể khiến trình duyệt chậm hoặc thiếu bộ nhớ.
 
 **Với phân trang (20 items/trang):**
 - Client nhận tối đa 20 rows; DB vẫn có thể đọc/sort nhiều hơn tùy plan

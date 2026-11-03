@@ -15,14 +15,15 @@ lưu trữ giá trị của một hoặc nhiều cột kèm con trỏ (pointer) 
 
 ### Tại sao cần Index?
 
-Không có index, database phải thực hiện **Sequential Scan** (Full Table Scan):
-- Đọc từng row từ đầu đến cuối bảng
-- Độ phức tạp: **O(n)** — n là số rows
-- 1,000,000 rows: phải đọc qua 1,000,000 rows để tìm 1 kết quả
+Khi không có index phù hợp, PostgreSQL thường dùng **Sequential Scan** để xét các row:
+- Nếu cần tìm toàn bộ kết quả thỏa điều kiện, có thể phải quét hết bảng.
+- Chi phí quét tăng theo số page/row được xét; mô hình đơn giản là **O(n)**.
+- LIMIT có thể cho phép dừng sớm nếu đã đủ kết quả và không có thao tác phía trước
+  yêu cầu đọc hết dữ liệu. Row lấy từ cache không nhất thiết phát sinh đọc đĩa.
 
 Với Index (B-Tree):
 - Tra cứu theo cấu trúc cây cân bằng
-- Độ phức tạp: **O(log n)**
+- Chi phí tìm vị trí bắt đầu thường được mô tả là **O(log n)**; còn chi phí đọc kết quả.
 - B-tree có nhiều nhánh trên mỗi page; số tầng phụ thuộc fan-out/kích thước khóa, không phải cây nhị phân với `log₂(n)` tầng. Chi phí còn gồm đọc heap và số kết quả.
 
 ### Analogy — Mục lục sách
@@ -43,7 +44,8 @@ Có index = sách có mục lục
 **B-tree (cây tìm kiếm nhiều nhánh cân bằng)** là cấu trúc index mặc định trong PostgreSQL (và hầu hết DBMS).
 
 ### Đặc điểm B-Tree
-- **Balanced:** mọi node lá ở cùng độ sâu → thời gian tìm kiếm nhất quán
+- **Balanced:** các node lá ở cùng độ sâu; thời gian truy vấn vẫn phụ thuộc cache,
+  số kết quả và việc đọc heap.
 - **Ordered:** dữ liệu được sắp xếp → hỗ trợ range query (>, <, BETWEEN)
 - **Self-balancing:** tự cân bằng khi insert/delete
 
