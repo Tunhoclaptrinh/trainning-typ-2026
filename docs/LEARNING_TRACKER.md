@@ -7,7 +7,7 @@ Repo này lưu báo cáo, lý thuyết, hướng dẫn, ảnh demo và ví dụ 
 | 1 | Database, OOP và DI | Đã hiệu đính và kiểm chứng trên Docker Ubuntu / PostgreSQL 16 | [Báo cáo](../week-1/WEEK1_REPORT.md), [hướng dẫn](../week-1/docs/00_GUIDE_INDEX.md), [mốc nguồn](../week-1/SOURCE_SNAPSHOT.md) |
 | 2 | Framework, RESTful API và ORM | CRUD/ORM, kiểm thử, minh chứng Postman và Swagger cơ bản; nguồn ghim theo commit | [Yêu cầu](../week-2/README.md), [báo cáo](../week-2/WEEK2_REPORT.md), [nguồn](../week-2/SOURCE_SNAPSHOT.md) |
 | 3 | Authentication và Authorization | Đã chốt nguồn: JWT, Argon2id, RBAC/ownership, refresh rotation; đã kiểm chứng memory/PostgreSQL và Swagger | [Yêu cầu](../week-3/README.md), [báo cáo](../week-3/WEEK3_REPORT.md), [hướng dẫn](../week-3/docs/00_GUIDE_INDEX.md), [nguồn](../week-3/SOURCE_SNAPSHOT.md) |
-| 4 | Message Queue | Theo lộ trình | [Yêu cầu tuần 4](../week-4/README.md) |
+| 4 | Message Queue | Đã chốt nguồn: RabbitMQ, transactional outbox, welcome worker, retry/DLQ; đã kiểm chứng và có ảnh demo | [Yêu cầu](../week-4/README.md), [báo cáo](../week-4/WEEK4_REPORT.md), [hướng dẫn](../week-4/docs/00_GUIDE_INDEX.md), [nguồn](../week-4/SOURCE_SNAPSHOT.md) |
 | 5 | Caching và Redis | Theo lộ trình | [Yêu cầu tuần 5](../week-5/README.md) |
 | 6 | Project tổng hợp | Theo lộ trình | [Yêu cầu project](../week-6/README.md) |
 
