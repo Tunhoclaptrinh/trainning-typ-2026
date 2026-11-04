@@ -1,9 +1,47 @@
 # Kế hoạch project và tích hợp API
 
-**Ngày lập:** 04/11/2026. **Trạng thái:** chuẩn bị triển khai.
-[Đề gốc](README.md) · [Rà soát hiện trạng](PRE_PROJECT_REVIEW.md).
+**Ngày lập và rà soát:** 04/11/2026. **Trạng thái:** chuẩn bị triển khai.
+[Đề gốc](README.md) giữ nguyên; App chưa tích hợp API.
 
-## 1. Mục tiêu và hai chức năng trọng tâm
+## 1. Hiện trạng và kết quả rà soát
+
+| Tuần | Nền tảng đã có | Giới hạn khi chuyển sang project |
+|---|---|---|
+| [1 — Database/OOP/DI](../week-1/WEEK1_REPORT.md) | Schema/index, pagination, transaction/locking, OOP/DI TypeScript | Locking SQL chưa áp vào PATCH Template; adapter PostgreSQL trong demo DI là mô phỏng. Số đo index lịch sử được phân biệt với benchmark có kiểm soát. |
+| [2 — REST/ORM](../week-2/WEEK2_REPORT.md) | 5 operation Template, DTO/TypeORM, HTML envelope, Postman/Swagger | Collection thuộc hợp đồng trước JWT; seed legacy không phải HTML envelope; offset không giữ snapshot qua nhiều request. |
+| [3 — Auth](../week-3/WEEK3_REPORT.md) | Argon2id, JWT, RBAC/ownership, private 404, refresh rotation/replay | Chưa có auth client, rate limiting, verification/reset hoặc MFA; seed password không dùng được để login. |
+| [4 — Queue](../week-4/WEEK4_REPORT.md) | Outbox, RabbitMQ, welcome worker, confirm/ack, retry/DLQ và ledger | SMTP chỉ tới Mailpit local; còn cửa sổ gửi trùng. Dispatcher hiện chuyên route đăng ký. |
+| [5 — Redis](../week-5/WEEK5_REPORT.md) | Public detail cache, TTL/jitter, revision/invalidation và fallback | HIT vẫn query quyền/metadata DB; chưa cache list/private/auth, distributed single-flight hoặc HA/ACL/TLS. |
+
+Nguồn server: `9ebcd1376fd61c3a0304d72915c27f5cbd72c0dd`
+([toàn bộ cây nguồn](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/9ebcd1376fd61c3a0304d72915c27f5cbd72c0dd)),
+kế thừa [snapshot tuần 5](../week-5/SOURCE_SNAPSHOT.md). Nhánh server
+`feat/project-integration-prep`, TYP `week-6-project-plan`; commit/nhánh/tag tuần 5
+và các mốc chuẩn bị hiện còn ở local, cần push để mở permalink GitHub.
+
+Mốc dọn tài liệu giữ nguyên mã thực thi và tests của lượt kiểm chứng dưới đây.
+
+| Kiểm chứng lượt chuẩn bị | Kết quả |
+|---|---|
+| Server typecheck/build và bộ test mặc định | 39 pass, 0 fail; 4 suite opt-in skip |
+| PostgreSQL + RabbitMQ + Mailpit + Redis bật cùng nhau | 5/5 pass, tính cả parent/subtest: 12 bảng, auth/categories/Template, MISS/HIT/private, 2 welcome email và refresh/logout |
+| Chrome gọi API khác origin | Register 201, login 200, categories 200 từ trang thử `127.0.0.1:5173`; preflight localhost 204 |
+| TypeScript App và demo OOP/DI | Đạt; chưa App/Electron API E2E, demo DI không tính là DB integration |
+| Tham chiếu tuần 1–5 | 63 Markdown, 268 target file local không thiếu đích; 137 target Git local hợp lệ, 125 SHA-256 khớp blob đã ghim |
+
+Các suite riêng 19 test DB, 13 queue và 13 cache là kết quả đã ghi ở tuần 5, không
+tính thành lượt chạy lại mới. Kiểm tra link trên không bao gồm mọi heading anchor
+hoặc website ngoài. DB/namespace/email thử, API/worker/browser và file tạm đã dọn;
+container/volume dev giữ nguyên. Đề gốc, tài nguyên chung, snapshot/tag và ảnh các
+tuần không đổi; báo cáo cũ vẫn mô tả hành vi tại đúng mốc nguồn của tuần đó.
+
+Hai giới hạn đã kiểm chứng cần xử lý: fixture iframe scripts + same-origin đọc
+được sentinel giả ở parent storage, frame opaque bị chặn; hai GET rồi PATCH cùng
+version nội dung đều nhận 200 và bản cuối ghi đè. Phép thử dùng trang/dữ liệu độc
+lập, không đọc dữ liệu thật của App; đối chiếu PostgreSQL chưa có expected revision.
+Yêu cầu cô lập tham khảo [MDN iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/iframe).
+
+## 2. Mục tiêu và hai chức năng trọng tâm
 
 Domain tiếp tục là EruSentia — chia sẻ template cho công việc/học tập. Giữ stack
 NestJS, TypeORM, PostgreSQL, RabbitMQ và Redis đã thực hành; tích hợp từng phần vào
@@ -18,12 +56,12 @@ Welcome email đã có giúp kiểm chứng queue. Nếu bổ sung thông báo x
 cho project, phải hoàn thành dispatcher theo loại sự kiện trước. Không gọi thao tác
 lưu bản sao local là fork server khi chưa có API và quy tắc nghiệp vụ fork.
 
-## 2. Thứ tự triển khai theo phụ thuộc
+## 3. Thứ tự triển khai theo phụ thuộc
 
 | Bước | Công việc | Đầu ra bắt buộc trước khi sang bước tiếp theo | Trạng thái |
 |---|---|---|---|
-| 0 | Rà soát tuần 1–5, dữ liệu, nguồn và kiểm thử stack chung | Ghi rõ nền tảng có sẵn, giới hạn, trạng thái local/remote; không đổi mốc cũ | Đã kiểm tra, có hồ sơ rà soát |
-| 1 | Chuẩn bị server cho client web: CORS và category discovery | Origin chính xác, JWT cho danh mục, preflight và browser fetch đạt | Đã commit ở nhánh chuẩn bị server; xem mã nguồn trong hồ sơ rà soát |
+| 0 | Rà soát tuần 1–5, dữ liệu, nguồn và kiểm thử stack chung | Ghi rõ nền tảng có sẵn, giới hạn, trạng thái local/remote; không đổi mốc cũ | Đã rà soát, kết quả ở mục 1 |
+| 1 | Chuẩn bị server cho client web: CORS và category discovery | Origin chính xác, JWT cho danh mục, preflight và browser fetch đạt | Đã commit ở nhánh chuẩn bị server |
 | 2 | Chốt contract và database project | DB riêng, SQL 05/06/07, seed HTML trung tính; thống nhất đường dẫn API, summary list và filter format | Chưa triển khai |
 | 3 | Thiết kế và kiểm chứng runner cho HTML không tin cậy | Không đọc dữ liệu/truy cập quyền của trang cha; giới hạn mạng/điều hướng; message validation và provenance được kiểm tra | Chặn mở preview/chèn remote cho tới khi đạt |
 | 4 | Làm adapter HTTP và đăng nhập trên client | Base URL theo môi trường, token/session manager, refresh một lượt, logout/account switching; kiểm thử lỗi | Chưa triển khai; có thể làm song song bước 3 nhưng chưa chạy HTML remote |
@@ -36,7 +74,7 @@ Bước 2 chọn API hiện tại làm đường cơ sở: chưa có tiền tố
 versioning, cần alias hoặc kế hoạch chuyển client/tests/Swagger cùng lúc, không
 chỉ sửa URL trong tài liệu. Các mốc tuần 1–5 vẫn chạy theo snapshot riêng.
 
-## 3. Contract cần chốt trước khi viết màn hình
+## 4. Contract cần chốt trước khi viết màn hình
 
 1. **Danh sách:** DTO summary không mang toàn bộ HTML. Filter format/schema,
    taxonomy, visibility và search chạy trên server trước count/pagination. Kiểm
@@ -61,7 +99,11 @@ chỉ sửa URL trong tài liệu. Các mốc tuần 1–5 vẫn chạy theo sna
 Server hiện mặc định `isPublic=true` nếu bỏ trống. Quy tắc UI project phải gửi rõ
 giá trị người dùng đã chọn; không giả định server đang mặc định private.
 
-## 4. Tách dữ liệu thực hành và dữ liệu project
+## 5. Tách dữ liệu thực hành và dữ liệu project
+
+Tại lúc rà soát, `sentia_hub_db` có 10 users, 1.012 templates legacy, chưa áp SQL
+05/06/07. SQL 03 riêng có 12 templates; `db:seed` thêm 1.000 rows benchmark. Chưa
+có dữ liệu HTML project sẵn dùng và không tự migrate/reset DB nghiệp vụ.
 
 Tạo database mới cho project, kiểm tra DB_* trước mọi lệnh ghi. Bootstrap schema
 01/index02, seed taxonomy/tài khoản phù hợp, rồi auth05/queue06/cache07 theo thứ tự.
@@ -73,7 +115,7 @@ dữ liệu App. Dataset tích hợp mới cần HTML tự tạo, Unicode, `fals
 private/public, tác giả khác nhau và một case legacy có chủ đích. Admin mới tạo qua
 CLI; không tạo mật khẩu dùng chung trong repository.
 
-## 5. Ma trận kiểm thử nghiệm thu
+## 6. Ma trận kiểm thử nghiệm thu
 
 | Nhóm | Ca bắt buộc |
 |---|---|
@@ -89,7 +131,7 @@ CLI; không tạo mật khẩu dùng chung trong repository.
 Số đo latency/load ghi payload, dataset, warmup, concurrency, mẫu và phân vị. Không
 lấy tốc độ benchmark tuần 5 để hứa hiệu năng của project khi chưa đo lại.
 
-## 6. Backlog sau lát cắt đầu tiên
+## 7. Backlog sau lát cắt đầu tiên
 
 | Hạng mục | Khi nào cần |
 |---|---|
@@ -102,11 +144,14 @@ lấy tốc độ benchmark tuần 5 để hứa hiệu năng của project khi 
 | Cursor pagination/full-text search/distributed stampede control | Khi dữ liệu và phép đo chỉ ra cần thiết |
 | Đồng bộ vault/ghi chú, cộng tác thời gian thực, AI gateway, thanh toán | Dự án/phạm vi riêng sau khi thư viện đầu tiên ổn định |
 
-## 7. Tài liệu bàn giao
+## 8. Tài liệu bàn giao
 
 Source/SQL/tests và hướng dẫn vận hành ở server; TYP lưu yêu cầu, lý thuyết, báo cáo
 và minh chứng. Chi tiết App giữ trong repo riêng tư. Kế hoạch này là mốc hiện trạng,
 không đổi đề gốc hoặc biến các mục tương lai thành tính năng đã có.
+
+Hướng dẫn chạy/dọn suite tổng hợp ở `EruSentia-Server/docs/COMMANDS_AND_CHEATSHEET.md`,
+mục Kiểm thử stack project; mã test ở `test/project-stack.integration.test.cjs`.
 
 Khi chốt mốc triển khai, ghi commit đầy đủ, kết quả kiểm thử, giới hạn và cách mở
 toàn bộ cây nguồn tại đúng thời điểm. Commit/tag cũ giữ nguyên; kiểm tra remote đã
