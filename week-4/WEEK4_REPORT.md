@@ -2,8 +2,8 @@
 
 **Học viên:** Nguyễn Tiến Tuấn. **Ngày thực hành:** 04/11/2026, Asia/Bangkok.
 **Dự án:** EruSentia — Sentia Hub Backend.
-**Trạng thái:** đã chốt nguồn tuần 4. [Snapshot](SOURCE_SNAPSHOT.md) ghi commit
-backend đầy đủ, permalink và SHA-256 các file đã đối chiếu.
+**Trạng thái:** đã chốt nguồn tuần 4. [Mốc mã nguồn](SOURCE_SNAPSHOT.md) ghi commit
+server, link mở source và cách chạy lại đúng phiên bản.
 Tag lưu trữ báo cáo: `typ-2026-week-4`. [Đề gốc](README.md) giữ nguyên.
 
 ## 1. Mục tiêu và lựa chọn nghiệp vụ
@@ -95,8 +95,8 @@ container/volume dev được giữ.
 với từng bước và giải thích trạng thái Ready/Unacked/Consumers. Ảnh không có khoanh
 vùng, không sửa dữ liệu hoặc công bố token. RabbitMQ/Mailpit dùng giao diện dark thật.
 
-[Snapshot nguồn](SOURCE_SNAPSHOT.md) dẫn auth store, event, dispatcher/consumer,
-mailer, SQL, Compose, tests và hướng dẫn server bằng permalink commit đầy đủ.
+[Mốc mã nguồn](SOURCE_SNAPSHOT.md) dẫn phần đăng ký/outbox, worker, SQL, Compose và
+tests tại đúng commit server đã chốt.
 Báo cáo lưu tại tag `typ-2026-week-4`, giữ nguyên các mốc tuần 1–3.
 
 ## 6. Kết luận trong phạm vi bài và hướng tiếp theo

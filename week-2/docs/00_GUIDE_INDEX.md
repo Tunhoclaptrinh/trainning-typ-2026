@@ -52,7 +52,7 @@ hợp API**. Server nhận envelope HTML tương ứng trong content_json, chưa
 Nhóm chủ đề App khác categoryId taxonomy SQL; không tự đồng nhất hai khái niệm.
 Auth/authorization thuộc tuần 3, API tuần 2 chỉ là local management CRUD.
 
-Nguồn tuần 2 hiện được đối chiếu bằng đường dẫn local và SHA-256 trong
-SOURCE_SNAPSHOT; permalink GitHub sẽ được bổ sung khi công bố commit nguồn.
+[Mốc mã nguồn tuần 2](../SOURCE_SNAPSHOT.md) dẫn tới toàn bộ server tại đúng commit
+đã nộp, kèm link tải ZIP và cách chọn phiên bản để chạy lại.
 Swagger UI cơ bản ở `/docs`, đặc tả OpenAPI ở `/docs-json`, cùng host/port với API.
 Dùng Try it out để gửi request; xem cấu hình bật/tắt trong README server.

@@ -2,8 +2,8 @@
 
 **Học viên:** Nguyễn Tiến Tuấn. **Ngày thực hành:** 04/11/2026, Asia/Bangkok.
 **Dự án:** EruSentia — Sentia Hub Backend.
-**Trạng thái:** đã chốt nguồn tuần 5. [Snapshot](SOURCE_SNAPSHOT.md) ghi commit
-backend đầy đủ, permalink và SHA-256 nguồn đã đối chiếu.
+**Trạng thái:** đã chốt nguồn tuần 5. [Mốc mã nguồn](SOURCE_SNAPSHOT.md) ghi commit
+server, link mở source và cách chạy lại đúng phiên bản.
 Tag lưu trữ báo cáo: `typ-2026-week-5`. [Đề gốc](README.md) giữ nguyên.
 
 ## 1. Mục tiêu và lựa chọn
@@ -100,7 +100,7 @@ hoặc bảo đảm cache luôn nhanh hơn. [Phương pháp và tái hiện](doc
 [Hướng dẫn Swagger](docs/07_swagger_demo.md) có 5 ảnh response thật, thấy body và
 X-Cache; JSON được mở rộng khi chụp, không sửa dữ liệu hoặc công bố token/cURL.
 Các ảnh và benchmark dùng dữ liệu server tự tạo, không lấy source/template riêng App.
-[Snapshot](SOURCE_SNAPSHOT.md) dẫn từng file SQL/client/cache/controller/test/script.
+[Mốc mã nguồn](SOURCE_SNAPSHOT.md) dẫn phần cache/API, SQL, tests và script thực hành.
 
 DB test: week5_test_20261104_cache_1, cache_2, cache_final và hai DB hồi quy
 week3_test_20261104_week5_regression / week4_test_20261104_week5_regression. Đã dọn

@@ -22,6 +22,9 @@ Hướng dẫn thực hành bổ sung nằm trong mục lục tài liệu từng
 
 Mỗi báo cáo giữ ngày đo, điều kiện thử nghiệm và bằng chứng thực tế. Khi tái hiện, ghi thêm commit của backend để phân biệt kết quả lịch sử với phiên bản hiện tại.
 
+Các trang `SOURCE_SNAPSHOT.md` ghi commit và link mở/tải mã nguồn server của từng
+tuần. Dùng để xem hoặc chạy lại đúng bản đã nộp; mã nguồn được giữ trong Git của server.
+
 Mỗi mốc báo cáo đã chốt ghim commit backend đầy đủ. Một số mốc có thêm tag lưu trữ
 của TYP; tuần 2 hiện dùng commit ghim và chưa có archive tag riêng. Giữ nguyên tag
 cũ; cập nhật báo cáo thành mốc mới khi cần đối chiếu phiên bản mới. Mốc tuần 5 đã

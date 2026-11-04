@@ -2,8 +2,8 @@
 
 **Học viên:** Nguyễn Tiến Tuấn. **Ngày thực hành:** 04/11/2026, Asia/Bangkok.
 **Dự án:** EruSentia — Sentia Hub Backend.
-**Trạng thái:** đã chốt nguồn tuần 3; [snapshot](SOURCE_SNAPSHOT.md)
-ghi commit backend đầy đủ, permalink và SHA-256 của nguồn đã đối chiếu.
+**Trạng thái:** đã chốt nguồn tuần 3; [mốc mã nguồn](SOURCE_SNAPSHOT.md)
+ghi commit server, link mở source và cách chạy lại đúng phiên bản.
 Tag lưu trữ báo cáo: `typ-2026-week-3`. [Đề gốc](README.md) được giữ nguyên.
 
 ## 1. Mục tiêu và phạm vi

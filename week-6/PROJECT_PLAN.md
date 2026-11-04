@@ -27,13 +27,13 @@ Mốc dọn tài liệu giữ nguyên mã thực thi và tests của lượt ki�
 | PostgreSQL + RabbitMQ + Mailpit + Redis bật cùng nhau | 5/5 pass, tính cả parent/subtest: 12 bảng, auth/categories/Template, MISS/HIT/private, 2 welcome email và refresh/logout |
 | Chrome gọi API khác origin | Register 201, login 200, categories 200 từ trang thử `127.0.0.1:5173`; preflight localhost 204 |
 | TypeScript App và demo OOP/DI | Đạt; chưa App/Electron API E2E, demo DI không tính là DB integration |
-| Tham chiếu tuần 1–5 | 63 Markdown, 268 target file local không thiếu đích; 137 target Git local hợp lệ, 125 SHA-256 khớp blob đã ghim |
+| Tham chiếu tuần 1–5 trước khi rút gọn trang mốc nguồn | 63 Markdown, 268 target file local không thiếu đích; 137 target Git local hợp lệ, 125 SHA-256 khớp blob đã ghim |
 
 Các suite riêng 19 test DB, 13 queue và 13 cache là kết quả đã ghi ở tuần 5, không
 tính thành lượt chạy lại mới. Kiểm tra link trên không bao gồm mọi heading anchor
 hoặc website ngoài. DB/namespace/email thử, API/worker/browser và file tạm đã dọn;
-container/volume dev giữ nguyên. Đề gốc, tài nguyên chung, snapshot/tag và ảnh các
-tuần không đổi; báo cáo cũ vẫn mô tả hành vi tại đúng mốc nguồn của tuần đó.
+container/volume dev giữ nguyên. Đề gốc, tài nguyên chung, commit/tag lưu trữ và ảnh
+các tuần không đổi; báo cáo cũ vẫn mô tả hành vi tại đúng mốc nguồn của tuần đó.
 
 Hai giới hạn đã kiểm chứng cần xử lý: fixture iframe scripts + same-origin đọc
 được sentinel giả ở parent storage, frame opaque bị chặn; hai GET rồi PATCH cùng
@@ -126,7 +126,7 @@ CLI; không tạo mật khẩu dùng chung trong repository.
 | Mutation/concurrency | Hai phiên PATCH cùng revision; một thành công, một conflict; giữ nháp; slug trùng; double-click/mất response; rollback không để lịch sử/event dở dang |
 | Queue/cache | Queue+cache bật chung; retry/DLQ/redelivery, duplicate event; private/delete sau HIT; Redis down fallback; broker/SMTP lỗi không rollback user đã commit |
 | Platform | Browser trước, Electron dev/packaged sau; không cho phép Origin:null đại trà hoặc tắt web security để vượt CORS |
-| Đóng gói | Snapshot source/report, SHA-256/permalink, README tái hiện, ảnh thao tác thật, DB/queue/key/email/tiến trình test được dọn |
+| Đóng gói | Mốc source/report và permalink commit, README tái hiện, ảnh thao tác thật, DB/queue/key/email/tiến trình test được dọn |
 
 Số đo latency/load ghi payload, dataset, warmup, concurrency, mẫu và phân vị. Không
 lấy tốc độ benchmark tuần 5 để hứa hiệu năng của project khi chưa đo lại.

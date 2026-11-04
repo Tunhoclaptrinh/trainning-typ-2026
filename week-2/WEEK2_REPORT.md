@@ -4,7 +4,7 @@
 **Bổ sung và kiểm tra Swagger:** 04/11/2026.
 **Dự án áp dụng:** EruSentia — Sentia Hub Backend.
 **Trạng thái:** đã triển khai và kiểm thử; nguồn server được ghim theo commit trong
-[snapshot](SOURCE_SNAPSHOT.md), kèm SHA-256 của từng file đối chiếu.
+[mốc mã nguồn](SOURCE_SNAPSHOT.md), có link mở và tải toàn bộ bản server tương ứng.
 [Mục lục lý thuyết](docs/00_GUIDE_INDEX.md) gồm 8 chuyên đề và hướng dẫn Postman.
 
 ## 1. Mục tiêu và phạm vi áp dụng

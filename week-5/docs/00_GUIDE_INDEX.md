@@ -17,7 +17,7 @@ App chưa tích hợp API. [Đề gốc](../README.md) giữ nguyên; source ở
 [Báo cáo](../WEEK5_REPORT.md) · [Nguồn đối chiếu](../SOURCE_SNAPSHOT.md) ·
 [Tiến độ](../../docs/LEARNING_TRACKER.md).
 
-Nhánh server feat/week-5-redis-cache, TYP week-5. Snapshot ghim commit server đầy đủ
-và hash nội dung; tag báo cáo typ-2026-week-5. Commit/tag cần được push để các link
-GitHub truy cập được. Các mốc tuần trước giữ nguyên.
+Nhánh server feat/week-5-redis-cache, TYP week-5. Trang mốc mã nguồn ghi commit server,
+link mở/tải source và cách chạy lại. Tag báo cáo typ-2026-week-5; các mốc tuần trước
+giữ nguyên.
 Mở bài 07 để chạy thực hành bằng Swagger; không cần Postman hoặc Redis Cloud.

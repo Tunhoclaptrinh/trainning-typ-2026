@@ -26,4 +26,5 @@ Dùng DB riêng khi tái hiện có ghi dữ liệu. README server dẫn trong s
 đủ biến môi trường, migration, lệnh start/test và giới hạn.
 
 Không cần Postman. Swagger vẫn dùng JWT tuần 3 cho protected API; register là public.
-Snapshot ghim commit server tuần 4 và SHA-256; báo cáo lưu tại tag typ-2026-week-4.
+Trang mốc mã nguồn ghim commit server tuần 4 và cách mở/chạy lại bản đó;
+báo cáo lưu tại tag typ-2026-week-4.

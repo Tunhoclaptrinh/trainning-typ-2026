@@ -87,7 +87,7 @@ HTTP và quan hệ, tách biệt với ITemplateRepository domain tuần 1. App 
 template HTML/localStorage; tuần 2
 không sửa App và chưa kiểm thử tích hợp UI với API.
 
-Đọc [mốc nguồn và từng file](../SOURCE_SNAPSHOT.md), [hướng dẫn chạy](00_GUIDE_INDEX.md#chạy-thực-hành-erusentia).
+Đọc [mốc mã nguồn server](../SOURCE_SNAPSHOT.md), [hướng dẫn chạy](00_GUIDE_INDEX.md#chạy-thực-hành-erusentia).
 Tham khảo: [Nest modules](https://docs.nestjs.com/modules),
 [custom providers](https://docs.nestjs.com/fundamentals/custom-providers),
 [injection scopes](https://docs.nestjs.com/fundamentals/injection-scopes).
