@@ -24,5 +24,5 @@ Mỗi báo cáo giữ ngày đo, điều kiện thử nghiệm và bằng chứn
 
 Mỗi mốc báo cáo đã chốt ghim commit backend đầy đủ. Một số mốc có thêm tag lưu trữ
 của TYP; tuần 2 hiện dùng commit ghim và chưa có archive tag riêng. Giữ nguyên tag
-cũ; cập nhật báo cáo thành mốc mới khi cần đối chiếu phiên bản mới. Mốc tuần 5 đang
-có trong local, cần push commit/nhánh/tag để người khác mở được permalink GitHub.
+cũ; cập nhật báo cáo thành mốc mới khi cần đối chiếu phiên bản mới. Mốc tuần 5 đã
+được push, gồm nguồn server, nhánh báo cáo và tag `typ-2026-week-5`.

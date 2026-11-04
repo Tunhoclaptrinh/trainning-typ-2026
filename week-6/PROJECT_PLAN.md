@@ -16,8 +16,8 @@
 Nguồn server: `9ebcd1376fd61c3a0304d72915c27f5cbd72c0dd`
 ([toàn bộ cây nguồn](https://github.com/Tunhoclaptrinh/EruSentia-Server/tree/9ebcd1376fd61c3a0304d72915c27f5cbd72c0dd)),
 kế thừa [snapshot tuần 5](../week-5/SOURCE_SNAPSHOT.md). Nhánh server
-`feat/project-integration-prep`, TYP `week-6-project-plan`; commit/nhánh/tag tuần 5
-và các mốc chuẩn bị hiện còn ở local, cần push để mở permalink GitHub.
+`feat/project-integration-prep`, TYP `week-6-project-plan`; các nhánh chuẩn bị và
+mốc tuần 5 đã được push, gồm tag lưu trữ TYP `typ-2026-week-5`.
 
 Mốc dọn tài liệu giữ nguyên mã thực thi và tests của lượt kiểm chứng dưới đây.
 
