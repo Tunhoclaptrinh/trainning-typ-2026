@@ -9,7 +9,7 @@ Repo này lưu báo cáo, lý thuyết, hướng dẫn, ảnh demo và ví dụ 
 | 3 | Authentication và Authorization | Đã chốt nguồn: JWT, Argon2id, RBAC/ownership, refresh rotation; đã kiểm chứng memory/PostgreSQL và Swagger | [Yêu cầu](../week-3/README.md), [báo cáo](../week-3/WEEK3_REPORT.md), [hướng dẫn](../week-3/docs/00_GUIDE_INDEX.md), [nguồn](../week-3/SOURCE_SNAPSHOT.md) |
 | 4 | Message Queue | Đã chốt nguồn: RabbitMQ, transactional outbox, welcome worker, retry/DLQ; đã kiểm chứng và có ảnh demo | [Yêu cầu](../week-4/README.md), [báo cáo](../week-4/WEEK4_REPORT.md), [hướng dẫn](../week-4/docs/00_GUIDE_INDEX.md), [nguồn](../week-4/SOURCE_SNAPSHOT.md) |
 | 5 | Caching và Redis | Đã chốt nguồn: public Template cache, revision/TTL/invalidation, Redis data types; đã đo và kiểm chứng | [Yêu cầu](../week-5/README.md), [báo cáo](../week-5/WEEK5_REPORT.md), [hướng dẫn](../week-5/docs/00_GUIDE_INDEX.md), [nguồn](../week-5/SOURCE_SNAPSHOT.md) |
-| 6 | Project tổng hợp | Theo lộ trình | [Yêu cầu project](../week-6/README.md) |
+| 6 | Project tổng hợp | Đã rà soát nền tảng; chuẩn bị contract/dữ liệu/cô lập HTML trước tích hợp App | [Yêu cầu project](../week-6/README.md), [rà soát](../week-6/PRE_PROJECT_REVIEW.md), [kế hoạch](../week-6/PROJECT_PLAN.md) |
 
 - [Lộ trình đào tạo](TRAINING_SCHEDULE.md).
 - [Tài liệu tham khảo](LEARNING_RESOURCES.md).
@@ -22,4 +22,7 @@ Hướng dẫn thực hành bổ sung nằm trong mục lục tài liệu từng
 
 Mỗi báo cáo giữ ngày đo, điều kiện thử nghiệm và bằng chứng thực tế. Khi tái hiện, ghi thêm commit của backend để phân biệt kết quả lịch sử với phiên bản hiện tại.
 
-Mỗi mốc báo cáo đã chốt dùng commit backend đầy đủ và một tag lưu trữ của TYP. Giữ nguyên tag cũ; cập nhật báo cáo thành mốc mới khi cần đối chiếu phiên bản mới.
+Mỗi mốc báo cáo đã chốt ghim commit backend đầy đủ. Một số mốc có thêm tag lưu trữ
+của TYP; tuần 2 hiện dùng commit ghim và chưa có archive tag riêng. Giữ nguyên tag
+cũ; cập nhật báo cáo thành mốc mới khi cần đối chiếu phiên bản mới. Mốc tuần 5 đang
+có trong local, cần push commit/nhánh/tag để người khác mở được permalink GitHub.
