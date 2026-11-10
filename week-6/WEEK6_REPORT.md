@@ -141,6 +141,10 @@ Các hình ảnh minh chứng kiểm thử thực tế được lưu trữ tại
 7. **[07-api-request-dark.png](screenshots/07-api-request-dark.png):** Giao diện Dark Theme đồng bộ 100% của công cụ tương tác.
 8. **[08-full-api-gateway.png](screenshots/08-full-api-gateway.png):** Cấu hình và bảng điều khiển Resource Gateway proxy.
 9. **[09-hosted-resource-file.png](screenshots/09-hosted-resource-file.png):** File HTML mở từ `file://` gọi API thành công qua hosted relay mà không bị chặn CORS.
+10. **[10-matching-template-store-full.png](screenshots/10-matching-template-store-full.png):** Thẻ mẫu "Bài tập ghép cặp" trong Thư viện Mẫu hiển thị huy hiệu `Full` chuẩn kiến trúc Full Interactive Template.
+11. **[11-matching-exercise-initial.png](screenshots/11-matching-exercise-initial.png):** Giao diện bài tập ghép cặp thông minh 2 cột đối xứng, ngay ngắn với thanh tiến độ, cột câu hỏi/khái niệm (1–4) và ngân hàng đáp án (A–D).
+12. **[12-matching-exercise-interactive.png](screenshots/12-matching-exercise-interactive.png):** Tương tác ghép cặp đa phương thức (Click-to-match, Kéo thả trực tiếp, Hộp chọn bàn phím) với chip hiển thị gắn trực tiếp và nút hủy ghép nhanh `✕`.
+13. **[13-matching-exercise-graded.png](screenshots/13-matching-exercise-graded.png):** Kết quả chấm bài 4/4 câu đúng (100%) kèm banner đánh giá thành tích, huy hiệu xanh lá và bảng đối chiếu đáp án chi tiết.
 
 ---
 
