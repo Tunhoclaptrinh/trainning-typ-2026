@@ -332,6 +332,14 @@ Nội dung báo cáo này được kiểm thêm ở desktop, 390 px, sáng/tối
 
 **Hình 6.** API Explorer trong báo cáo nhận HTTP 200 và JSON `status: "ok"` từ backend kiểm thử. Địa chỉ cổng trong ảnh thuộc phiên thử cục bộ; ảnh không chứng minh một deployment công khai đang hoạt động.
 
+### 10.4. Kiểm tra hình thức giữa editor, standalone, trình chiếu và PDF
+
+Bài ghép cặp có hai biến thể chọn ngay trước khi chèn: **Thẻ hai cột** cho chạm/kéo thả, **Danh sách gọn** cho thao tác chọn đáp án và khung hẹp. Đổi biến thể hoặc tiêu đề giữ nguyên bài làm và điểm đã chấm; sửa nội dung cặp mới bắt đầu lại. Instance trong báo cáo dùng Danh sách gọn; catalog vẫn giữ Thẻ hai cột.
+
+Đợt rà soát engine 3.5.0 chụp đối chứng năm khối trong báo cáo. Ô văn bản utility tự xuống dòng. Snapshot PDF lấy trạng thái utility hiện tại, đổi ô nhập thành chữ có thể xuống dòng trên bản sao, giữ nguyên ghi chú đang soạn. API Explorer in danh mục endpoint đã lưu thay vì một khung trắng phụ thuộc JavaScript; credential và dữ liệu request/response trong phiên không được đưa vào PDF.
+
+**Chưa kết luận WYSIWYG tuyệt đối cho A4**: cùng số trang hoặc đủ tiêu đề chưa chứng minh cùng vị trí dòng và cỡ chữ hữu dụng. Khối ghép cặp lớn vẫn có thể bị co nhỏ theo cơ chế nguyên tử hiện tại. Phân trang, tách trang và phép co khối chỉ được đọc mã/đánh giá rủi ro trong đợt này, chưa thay thuật toán. Tài liệu đối chiếu và ảnh gốc nằm trong repo app: `docs/TEMPLATE_FIDELITY_REVIEW.md`, `docs/PAGINATION_RISK_REVIEW.md`, `docs/evidence/2026-11-11-template-fidelity/`.
+
 ## 11. Phương pháp kiểm chứng và kết quả
 
 ### 11.1. Tách lớp bằng chứng

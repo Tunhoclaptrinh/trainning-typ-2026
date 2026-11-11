@@ -1,19 +1,39 @@
 {
-  "generatedAt": "2026-11-11T04:01:13.653Z",
+  "generatedAt": "2026-11-11T08:33:32.861Z",
   "timezone": "Asia/Bangkok",
   "repositories": {
     "app": {
-      "commit": "c318fbb307a60cdebbaa7b5abe811f0eb2ad6cc9",
+      "commit": "d600243797ac32c6c635a1797a990774b73838c6",
       "branch": "feat/typ-week6-advanced-features",
       "dirty": true,
       "files": [
+        {
+          "path": "scripts/check-wysiwyg.mjs",
+          "sha256": "7fa8a2ca8ec923f40debb3a5a1cbfc19138aec0019aa68f004bbcc1e81c7b097"
+        },
+        {
+          "path": "scripts/check-wysiwyg-content.mjs",
+          "sha256": "098f0db0ca2166b17528f2cc582faef26d08758ea86dd764fec9c654eb63a82a"
+        },
+        {
+          "path": "scripts/audit-week6-fidelity.mjs",
+          "sha256": "3f6657afd059a20b4fa51dfa1527eed1f180ba6922fef70e59127aaa04a038ee"
+        },
+        {
+          "path": "scripts/check-template-fidelity-production.mjs",
+          "sha256": "6d71c67a785090a44d07a061e7766282ff4a216eac646fecb8f5c544d277d34d"
+        },
+        {
+          "path": "scripts/template-fidelity-gallery.mjs",
+          "sha256": "157ad3b445c23e9780013ac40f3ff30e1b78ea3c9d4ebe4515e6fbe266e350a3"
+        },
         {
           "path": "scripts/generate-native-eru-report.mjs",
           "sha256": "aa80120ab7a03f82b1f72ed7f5adaf6765eca068f6451a63fc8862f1600002de"
         },
         {
           "path": "scripts/week6/data.mjs",
-          "sha256": "a4e1dcc46c507d5faf02a31aa63f4f7e3c7e9b090f010d85433e028fc350cb04"
+          "sha256": "fd2640d465d848ff2a693f9956f8e62fabfb5ebaadf192cb83c9e99e8f817122"
         },
         {
           "path": "scripts/week6/content.mjs",
@@ -45,7 +65,7 @@
         },
         {
           "path": "src/config/defaultTemplates/contract.ts",
-          "sha256": "9fc16b65b298a2b6610be41e93bab04911fcaca50c8af33933000020a46e8d5b"
+          "sha256": "c2e989e2bdf0a6cdfe708d4ef3743e67dd4de9b1b179cdbd729917d334cf1ebd"
         },
         {
           "path": "src/components/NoteEditor/utils/templateGenerators.ts",
@@ -53,11 +73,11 @@
         },
         {
           "path": "scripts/week6/verification.mjs",
-          "sha256": "cebe935e8cd65b20aa509efdd00577dade1739d6101c4bf6ad953774c4447c6f"
+          "sha256": "79a0ec10f7515eed0107f2647a5be9c30cf2524ce92797b211e328c2856c2269"
         },
         {
           "path": "scripts/week6/finalize.mjs",
-          "sha256": "c56b6bc8e44766e1f009be1b7b760b3c3ef062c8f0f0bed26b74ec3dd538e5f1"
+          "sha256": "03e484d3f2ebd38a94695fd3cec00f4e36134457f2b469d48196f20f864172c8"
         },
         {
           "path": "playwright.week6-docs.config.ts",
@@ -89,15 +109,55 @@
         },
         {
           "path": "docs/week-6/report.md",
-          "sha256": "941ba9d552aeb1346fe287caa487c94f8482ed9402c8263ad64deec01cdb5c9b"
+          "sha256": "8a5e171d313b17d03c98caab20df565c45ca6a9326e06a2578f7ed3957738bdc"
+        },
+        {
+          "path": "src/components/NoteEditor/utils/templatePrint.ts",
+          "sha256": "b56e5a730cba772671f9db337c962b589d33233cee93ec4e230da66346cb1c53"
+        },
+        {
+          "path": "src/components/NoteEditor/utils/printSnapshot.ts",
+          "sha256": "8fe8ade199de892aade435320d4b9951cc1fc6e1db33e5ea08081f930f9fea42"
+        },
+        {
+          "path": "src/components/PrintPreviewModal/index.tsx",
+          "sha256": "c4ec275df0f4b12e98769457160edb530cc1e898a265e0bff08ccc884e5fc0a8"
+        },
+        {
+          "path": "src/config/defaultTemplates/templates/api/printView.ts",
+          "sha256": "b9429574b5a9f8ac27af4d1d900e7a79b4e0e395fab04b6819fb61b7b6573a3e"
+        },
+        {
+          "path": "src/config/defaultTemplates/templates/api/starterSpec.ts",
+          "sha256": "d6b8a3983f73d2d95779f68adb76d1c09a621cd90c443bfbfbaa1c3e84b65923"
+        },
+        {
+          "path": "src/config/defaultTemplates/templates/utilities/matching.ts",
+          "sha256": "e2396231bd29a2616d82ea07b933c75eb7fdc482a4739e233d94f030d7a91c00"
+        },
+        {
+          "path": "playright/template-fidelity.spec.ts",
+          "sha256": "9ab0f76b6f276719f3867cb536e2c46276b5f876e87c893cfb52d89b23b190c1"
+        },
+        {
+          "path": "docs/PAGINATION_RISK_REVIEW.md",
+          "sha256": "e61810f0938ad3770e73db4060ddbb0272615a810176043633dad4687f7f91c6"
+        },
+        {
+          "path": "docs/TEMPLATE_FIDELITY_REVIEW.md",
+          "sha256": "8a8bd1f5d67836ba1b189716db0b0d32be85e0c071ae5b3a586d1ef3542f7c5a"
+        },
+        {
+          "path": "docs/architecture/extensions-e2e-antigravity.mmd",
+          "sha256": "0089f968bae54d7bd3ad603de62506c8580e3fa78949db395f5b3df98a2df92f"
         },
         {
           "path": "src/config/engine.json",
-          "sha256": "e0ff0d1bf3b362dfc22005925494aa199ddb0232809de8ae0a21c76f706e74be"
+          "sha256": "edaf4ced70bb038dd557bab0390767251864c057100a653a4702c8257a4e9e54"
         },
         {
           "path": "scripts/vite-engine-source.ts",
-          "sha256": "6414d844bc472e5d738372cc63045145e25f723d5c8ccfe15800e6a453ecae54"
+          "sha256": "e41867f3d906ff33f0e74897c6303c8a4d3e3b2434acf312311fd744837b01ea"
         },
         {
           "path": "src/services/singleFileService.ts",
@@ -121,7 +181,7 @@
         },
         {
           "path": "src/components/NoteEditor/utils/htmlWrapper.ts",
-          "sha256": "3be9342125645be64e930ff55652ed20079fbe55087f7a88f12cc053c2149798"
+          "sha256": "b5527de474568493addb881c736e98425059a15f72f3d0d2cd6fe9ff8e265831"
         },
         {
           "path": "src/components/NoteEditor/utils/noteWidths.ts",
@@ -157,7 +217,7 @@
         },
         {
           "path": "src/components/NoteEditor/index.tsx",
-          "sha256": "bbd6db0949427c3c3814c526bf7b7292e6f41590e22a815201bddba1b2d1a296"
+          "sha256": "1e364c06539fbddf7f07f9c431c543e02eaf76844ea3ebe2bff0660fe3f7b920"
         },
         {
           "path": "src/components/NoteEditor/NoteEditor.scss",
@@ -181,7 +241,7 @@
         },
         {
           "path": "src/config/defaultTemplates/templates/utilities/shared.ts",
-          "sha256": "da7bb5ad4ee9870daf1760a9dec9e2eb9536d970230d2db0ee0344747ce1f737"
+          "sha256": "1c4e4f79c18f9cde26dfaa27d32f825b9b7e7c036b4d4af9dac5be395b7fcbad"
         },
         {
           "path": "shared/resources/hosted.runtime.js",
@@ -190,7 +250,7 @@
       ]
     },
     "server": {
-      "commit": "65e87f6b4f3ddc46f4441a3d7898aecec0707cf6",
+      "commit": "810c63a60243661f8c9363c9e7fc3d159462ff47",
       "branch": "feat/typ-week6-advanced-features",
       "dirty": true,
       "files": [
