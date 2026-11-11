@@ -1,5 +1,7 @@
 # Kế hoạch project và tích hợp API
 
+> **Ghi chú 11/11/2026:** Đây là kế hoạch lịch sử ngày 04/11. Phần triển khai và kiểm chứng mới được trình bày trong [báo cáo tuần 6](WEEK6_REPORT.md), [bản HTML](WEEK6_REPORT.html) và [mốc nguồn](SOURCE_SNAPSHOT.md). Các trạng thái “chưa triển khai” bên dưới mô tả thời điểm lập kế hoạch.
+
 **Ngày lập và rà soát:** 04/11/2026. **Trạng thái:** chuẩn bị triển khai.
 [Đề gốc](README.md) giữ nguyên; App chưa tích hợp API.
 

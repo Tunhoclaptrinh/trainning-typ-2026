@@ -13,7 +13,7 @@ Chương trình training Backend trong 6 tuần, gồm 5 tuần học lý thuy�
 | 3 | Authentication & Authorization | [week-3](./week-3) |
 | 4 | Message Queue | [week-4](./week-4) |
 | 5 | Caching & Redis | [week-5](./week-5) |
-| 6 | Project tổng hợp | [project](./project) |
+| 6 | Project tổng hợp | [week-6](./week-6) |
 
 ## Nộp bài
 

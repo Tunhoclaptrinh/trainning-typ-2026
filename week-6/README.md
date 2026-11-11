@@ -25,3 +25,12 @@ Xây dựng một Backend Project dựa trên kiến thức đã học trong 5 t
 
 - Source code chạy được
 - Trình bày kiến trúc, các chức năng chính và những vấn đề kỹ thuật đã xử lý dưới dạng 1 báo cáo
+
+
+## Bài nộp EruSentia · cập nhật 11/11/2026
+
+[Báo cáo Markdown](WEEK6_REPORT.md) · [Bản HTML tương tác](WEEK6_REPORT.html) · [PDF để đọc/in](WEEK6_REPORT.pdf) · [Mốc nguồn và SHA-256](SOURCE_SNAPSHOT.md).
+
+Báo cáo có 16 chương và phụ lục: kiến trúc, mô hình dữ liệu, Transactional Outbox, idempotency, workspace/RBAC, Resource Gateway, API, UI/UX, kiểm chứng và kịch bản demo 12–15 phút. Bốn sơ đồ được lưu trong `assets/`; bản HTML chứa sẵn tài nguyên để đọc độc lập. Công cụ API cần một backend đang chạy và phiên kiểm thử riêng.
+
+`PROJECT_PLAN.md` là kế hoạch lịch sử ngày 04/11, giữ để đối chiếu dự kiến ban đầu. Trạng thái hiện tại và giới hạn nghiệm thu nằm trong báo cáo và bảng kết quả có nguồn; không coi kế hoạch cũ là danh sách công việc hiện còn nguyên.
