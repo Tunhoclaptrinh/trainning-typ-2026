@@ -306,9 +306,9 @@ Báo cáo dùng lại bài giảng, ma trận quyết định, bài ghép cặp 
 ### 10.1. Những thay đổi đã được đối chiếu
 
 - Ghi chú mới mặc định rộng. Standalone ở dạng web có các độ rộng dùng chung định nghĩa với editor: Chuẩn (794 px), Rộng (1200 px), Tràn viền (100% cửa sổ) và Tùy chỉnh (320–2560 px). Chế độ Tùy chỉnh có tay nắm kéo hai mép, thanh kéo và ô nhập số; app lưu vào ghi chú và mang giá trị theo khi xuất HTML. Mặc định dùng Tràn viền với lề đọc; độ rộng độc lập với zoom, còn trang giấy giữ khổ đã chọn.
-- Khi dùng giấy, thông số khổ, lề và cỡ chữ được giữ. Vị trí ngắt trang đo trong editor được dùng cho đường xuất thực tế; khung template dùng cùng cách thu vừa trang.
+- Khi dùng giấy, thông số khổ, lề và cỡ chữ được giữ. Mốc ngắt đo trong editor có thể được lưu vào HTML; đường PDF đo lại nội dung. Cần đối chiếu từng trang và cỡ chữ của template sau khi co.
 - Mục lục editor/standalone dùng chung style: cây H1–H6, nhãn cấp, đường nối, thu/mở nhánh, bộ lọc và tab Trang. Nút ghim, tab và nhánh gấp có state riêng theo file.
-- Engine 3.4.0 là bản minor cho đợt thay đổi hiện tại. File HTML có manifest schema 1, capability/patch IDs và dấu nguồn SHA-256; xem trong menu Tùy chọn → Engine. Phiên bản App độc lập với phiên bản engine.
+- File HTML ghi phiên bản engine thực trong manifest schema 1, capability/patch IDs và dấu nguồn SHA-256; xem trong menu Tùy chọn → Engine. Phiên bản App độc lập với engine; mức tăng patch/minor được đánh giá trước commit.
 - Tệp → Mở tệp… (Ctrl+O) mở HTML/Markdown riêng lẻ, không chuyển vault. Electron và trình duyệt có quyền file lưu về file gốc; trình duyệt không hỗ trợ quyền trực tiếp mở bản sao và thông báo rõ.
 - Heading H1–H6 trong standalone gập/mở được nội dung, giữ trạng thái nhánh con và nhớ theo file. Chọn mục lục tự mở phần đang ẩn; A4 tính lại số trang. Bản in mở đầy đủ nội dung rồi khôi phục trạng thái đọc.
 - Blockquote dùng cùng lề, padding và khoảng cách đoạn trên app/standalone; khoảng trắng định dạng mã HTML không làm khối phình cao. Typography tài liệu không áp vào tiêu đề bên trong template; slide A4 dùng đủ hai cột và mở ghi chú theo chiều cao nội dung.
@@ -338,7 +338,9 @@ Bài ghép cặp có hai biến thể chọn ngay trước khi chèn: **Thẻ ha
 
 Đợt rà soát engine 3.5.0 chụp đối chứng năm khối trong báo cáo. Ô văn bản utility tự xuống dòng. Snapshot PDF lấy trạng thái utility hiện tại, đổi ô nhập thành chữ có thể xuống dòng trên bản sao, giữ nguyên ghi chú đang soạn. API Explorer in danh mục endpoint đã lưu thay vì một khung trắng phụ thuộc JavaScript; credential và dữ liệu request/response trong phiên không được đưa vào PDF.
 
-**Chưa kết luận WYSIWYG tuyệt đối cho A4**: cùng số trang hoặc đủ tiêu đề chưa chứng minh cùng vị trí dòng và cỡ chữ hữu dụng. Khối ghép cặp lớn vẫn có thể bị co nhỏ theo cơ chế nguyên tử hiện tại. Phân trang, tách trang và phép co khối chỉ được đọc mã/đánh giá rủi ro trong đợt này, chưa thay thuật toán. Tài liệu đối chiếu và ảnh gốc nằm trong repo app: `docs/TEMPLATE_FIDELITY_REVIEW.md`, `docs/PAGINATION_RISK_REVIEW.md`, `docs/evidence/2026-11-11-template-fidelity/`.
+**Đợt mở rộng engine 3.6.0** bổ sung hợp đồng publication, adapter snapshot công khai và font đóng gói ngoại tuyến. Quiz giữ câu hỏi đang xem; thẻ nhớ in mặt đang mở; bảng tính in giá trị hiển thị. Bản xem PDF và đường in standalone sử dụng chung bộ dựng trang. Utility và thuật ngữ có điểm tách theo cấu trúc; khối không tách được dừng xuất với diagnostic nếu phải co quá mức đọc được. Ngắt trang thủ công, lề và footer là dữ liệu của từng sheet vật lý, độc lập với kiểu cuộn.
+
+Cùng số trang vẫn chưa đủ chứng minh WYSIWYG: phải kiểm cả nội dung, hình học, cỡ chữ và ảnh từng trang. Hợp đồng cho công cụ Agent và đánh đổi HTML/canvas nằm ở `docs/DOCUMENT_RENDERING_ARCHITECTURE.md`; CLI `document:validate` kiểm cấu trúc, còn nghiệm thu hình thức cần các gate browser/PDF. Tài liệu đối chiếu và ảnh gốc nằm trong repo app: `docs/TEMPLATE_FIDELITY_REVIEW.md`, `docs/PAGINATION_RISK_REVIEW.md`, `docs/evidence/2026-11-11-template-fidelity/`.
 
 ## 11. Phương pháp kiểm chứng và kết quả
 
