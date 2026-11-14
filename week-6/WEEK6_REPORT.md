@@ -342,6 +342,27 @@ Bài ghép cặp có hai biến thể chọn ngay trước khi chèn: **Thẻ ha
 
 Cùng số trang vẫn chưa đủ chứng minh WYSIWYG: phải kiểm cả nội dung, hình học, cỡ chữ và ảnh từng trang. Hợp đồng cho công cụ Agent và đánh đổi HTML/canvas nằm ở `docs/DOCUMENT_RENDERING_ARCHITECTURE.md`; CLI `document:validate` kiểm cấu trúc, còn nghiệm thu hình thức cần các gate browser/PDF. Tài liệu đối chiếu và ảnh gốc nằm trong repo app: `docs/TEMPLATE_FIDELITY_REVIEW.md`, `docs/PAGINATION_RISK_REVIEW.md`, `docs/evidence/2026-11-11-template-fidelity/`.
 
+### 10.5. Nền tảng PagePlan 3.7.0 và điều kiện nghiệm thu
+
+Engine 3.7.0 đang phát triển dùng một bộ phân mảnh để tạo **PagePlan v1** từ HTML ngữ nghĩa và trạng thái công khai của template. Kế hoạch giữ revision nội dung, khổ/lề/font, identity tài nguyên, engine digest và các fragment/mốc trang. Editor và reader chiếu các mốc đó lên bề mặt đang dùng; khoảng cách giữa tờ, zoom và thanh công cụ không phải một thuật toán chia trang khác. Những mô tả lưu mốc editor hoặc số pass của các đợt 3.5/3.6 ở trên là bằng chứng lịch sử, không thay receipt của runtime hiện tại.
+
+Hai biến thể có cam kết riêng: **interactive** giữ công cụ, focus, iframe và undo; **publication** dựng nội dung công khai để đọc/in. Template có form khác hình thức in sẽ dùng sheet HTML chỉ đọc với nhãn **Bản in** ở chế độ giấy, cùng profile với preview/PDF. Chọn **Dạng web** để tiếp tục thao tác; dữ liệu đang dùng phải được giữ. Không đòi chiều cao form còn nút giống hệt bản in đã bỏ nút, cũng không cắt dữ liệu để ép bằng số trang.
+
+Mỗi lần dựng lại bắt đầu từ nguồn bất biến, đợi font/ảnh cần dùng và bỏ kết quả cũ khi revision thay đổi. Khởi tạo template không phải thao tác sửa tài liệu. Template mới phải khai báo public/private state, kiểu phân mảnh, tài nguyên và mapper Markdown shadow, kèm fixture sửa/lưu/mở lại, nội dung dài/rỗng/Unicode, khung hẹp, A4 và xuất offline. Chỉ đăng ký template hoặc qua schema chưa chứng minh hình thức đạt; schema/migration đầy đủ cho mọi cấu hình tương lai vẫn là phần cần phát triển.
+
+Kiểm phân trang phải dùng cùng tệp nguồn và profile: đối chiếu cả ba chế độ trong app, HTML trên browser, HTML tách trang rồi PDF thật. Cần kiểm đủ/thứ tự chữ, hàng bảng/ID cuối từng trang, vị trí word boxes, overflow và raster; trang thừa cũng phải làm gate thất bại. Công cụ Agent có gate cấu trúc và gate render với SHA-256/receipt, nhưng vẫn trả `visualVerified:false` khi chưa có baseline hình học/ảnh độc lập. Kết quả local không đồng nghĩa workflow remote đã chạy hoặc bộ cài đã phát hành.
+
+Tài liệu và receipt được tra trong **repo app**, theo đúng digest của tệp đang kiểm:
+
+| Nguồn | Dùng để đối chiếu |
+|---|---|
+| `docs/PUBLICATION_PAGEPLAN_IMPLEMENTATION.md` và `docs/diagrams/publication-pageplan-v1.mmd` | Module, luồng end-to-end, identity, hai variant và giới hạn triển khai |
+| `docs/WYSIWYG_CURRENT_STATUS.md` và `docs/evidence/wysiwyg-current/summary.json` | Kết quả hiện tại, source/profile/renderer và những gate còn lỗi; không cộng lại số pass lịch sử |
+| `docs/WYSIWYG_MANUAL_QA.html` | Mở đúng bộ mẫu, kiểm từng ranh giới trang, thước/zoom, template và PDF bằng thao tác thật |
+| `docs/evidence/publication/3.7.0/summary.json` và `comparison.json` | Bằng chứng đại diện và kết quả chuỗi theo nguồn đã giữ; phải đối chiếu engine digest trước khi áp cho HTML/PDF mới |
+
+Lệnh `pnpm docs:week6 --no-dev-vault` hiện sinh lại cả HTML và `WEEK6_REPORT.pdf` bằng runtime thật; PDF cũ được sao lưu trước khi thay. `PUBLICATION_VERIFICATION.json` ở thư mục bài nộp gắn SHA-256 của đúng HTML/PDF, plan hash, renderer và số trang đã đọc lại. Receipt kiểm nguồn, số sheet và nội dung cuối không thay cho gate hình học/pixel xuyên renderer. Giữ tên tệp hoặc cùng phiên bản engine chưa đủ chứng minh hai bản khớp.
+
 ## 11. Phương pháp kiểm chứng và kết quả
 
 ### 11.1. Tách lớp bằng chứng

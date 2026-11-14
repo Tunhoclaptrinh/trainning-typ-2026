@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "kind": "week6-html-pdf-deliverable",
+  "generatedAt": "2026-11-14T13:41:42.982Z",
+  "engine": {
+    "schemaVersion": 1,
+    "engine": "3.7.0",
+    "sourceDigest": "sha256:df19665511a51b67dad462c024ddfc7a5feeda5e4ad12f7d842556f0bfb6ac5f",
+    "fontIdentity": {
+      "Inter": "5.3.0",
+      "JetBrains Mono": "5.3.0"
+    }
+  },
+  "renderer": {
+    "chrome": "156.0.8078.47"
+  },
+  "profile": {
+    "schemaVersion": 1,
+    "surface": "pages",
+    "theme": "erusentia-light-v1",
+    "paper": {
+      "width": 793.7007874015749,
+      "height": 1122.5196850393702,
+      "unit": "px"
+    },
+    "margins": {
+      "top": 76,
+      "right": 76,
+      "bottom": 76,
+      "left": 76
+    },
+    "firstLineIndent": 0,
+    "lineHeight": 1.75,
+    "headingStyles": {
+      "preset": "custom",
+      "autoNumbering": false,
+      "h1": {
+        "fontSize": "32px",
+        "fontWeight": "700",
+        "marginTop": "0px",
+        "marginBottom": "18px",
+        "lineHeight": "1.25",
+        "color": "var(--text-primary)"
+      },
+      "h2": {
+        "fontSize": "23px",
+        "fontWeight": "650",
+        "marginTop": "30px",
+        "marginBottom": "12px",
+        "lineHeight": "1.35",
+        "color": "var(--text-primary)"
+      },
+      "h3": {
+        "fontSize": "18px",
+        "fontWeight": "650",
+        "marginTop": "22px",
+        "marginBottom": "10px",
+        "lineHeight": "1.4",
+        "color": "var(--text-primary)"
+      }
+    },
+    "fontSize": 16.8,
+    "footer": true,
+    "color": "color"
+  },
+  "htmlSha256": "b08c3611ffe24976faf45670cd0aca35d8351e856dcd9220ce91a806dfe0d647",
+  "pdfSha256": "cddd3e1c2db58aa21b36482f96a81098bd90b8d4e02933a5493128663699c4b6",
+  "planHash": "sha256:865aa4112934dd93443362a01fc33931e8f2db452c3d351aeb2ea73072190c90",
+  "contentRevision": "sha256:563a26e86ddaf91d7ce321516a9782e24c8f7ecbe24cd9d74cee28f45804f96a",
+  "pages": 38,
+  "diagnostics": [
+    {
+      "code": "PUB_TEMPLATE_LEGACY",
+      "path": "blocks[1]",
+      "surface": "pdf",
+      "severity": "warning",
+      "expected": "versioned template ID",
+      "actual": null
+    },
+    {
+      "code": "PUB_CONTRACT_MISSING",
+      "path": "blocks[1]",
+      "surface": "pdf",
+      "severity": "warning",
+      "expected": "1",
+      "actual": null
+    },
+    {
+      "code": "PUB_SHADOW_MISSING",
+      "path": "blocks[1]",
+      "surface": "pdf",
+      "severity": "warning",
+      "expected": "semantic Markdown mapper",
+      "actual": null
+    }
+  ],
+  "status": "rendered-and-checked",
+  "visualVerified": false,
+  "limitations": [
+    "This receipt checks source identity, prepared sheet count and the end marker; cross-renderer/word-geometry acceptance is recorded by the separate strict publication chain."
+  ]
+}
