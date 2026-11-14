@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-11-14T13:41:29.466Z",
+  "generatedAt": "2026-11-14T15:56:36.895Z",
   "timezone": "Asia/Bangkok",
   "repositories": {
     "app": {
-      "commit": "491d2a9e93a65aa98d8a2fffa3843bd280e7c3d9",
+      "commit": "24ee7ff5162fbd7bc6e3e53173cf4cecf084d2ac",
       "branch": "feat/typ-week6-advanced-features",
       "dirty": true,
       "files": [
@@ -117,7 +117,7 @@
         },
         {
           "path": "src/components/NoteEditor/utils/printSnapshot.ts",
-          "sha256": "3cc49220132ca9818ad9be78ec36debc7cbae97a11e5eef6f271011c4a0a3e9e"
+          "sha256": "a2e26ca282c4ee56f12f80833507c38da39731634ca4863daaf8e4ed26dae1e4"
         },
         {
           "path": "src/components/PrintPreviewModal/index.tsx",
@@ -153,7 +153,7 @@
         },
         {
           "path": "src/config/engine.json",
-          "sha256": "3c7c41412cdfbf7e4a232560b72f480bb78ae0a987e5dc2f58b3f115a77f3b17"
+          "sha256": "a9a974e347914f71600b2505fe6928636a7183bbdb29f7c26dcdb949be0db871"
         },
         {
           "path": "scripts/vite-engine-source.ts",
@@ -181,7 +181,7 @@
         },
         {
           "path": "src/components/NoteEditor/utils/htmlWrapper.ts",
-          "sha256": "49e819954904a863e496782adfa1509b34525f8d4d2b1117e9a311dc3be6cc76"
+          "sha256": "f3037fd2ce35aa1f8afcfacd0d5e9000d8d2734626df02e69c17f1004cb31b73"
         },
         {
           "path": "src/components/NoteEditor/utils/noteWidths.ts",
@@ -193,7 +193,7 @@
         },
         {
           "path": "src/components/NoteEditor/styles/_documentContent.scss",
-          "sha256": "bced6fe6b256f79efb1a7776d70b26768c03325e2b1d9073b08ecfbd4b28297e"
+          "sha256": "229f5649f1b3266994c0cf386ec4cb96baca4e80d9bde6d6f341fdbec7dc063c"
         },
         {
           "path": "src/components/NoteEditor/styles/nativeDocument.scss",
@@ -213,11 +213,11 @@
         },
         {
           "path": "src/components/NoteEditor/index.tsx",
-          "sha256": "99801faa7d7c201f1909ffc64e796956a63fecec70113f0881b6349f903e2c72"
+          "sha256": "3654183f21845a557b9771be9b437e904d2c22e72c6ab9a4c4f7f74a95855960"
         },
         {
           "path": "src/components/NoteEditor/NoteEditor.scss",
-          "sha256": "fddce7bfa5734d88bd26dcbddd7f76942a356419fbe17194db68b3d73f7636e4"
+          "sha256": "2af2ce4092ed96790c6d3f9c5a8713066ba982efe80f2726bb413069eaf26b3b"
         },
         {
           "path": "playright/content-width.spec.ts",
@@ -233,7 +233,7 @@
         },
         {
           "path": "src/components/NoteEditor/utils/standaloneReader.ts",
-          "sha256": "e40e334eb29ba87ce36ff3ec981f421d7b2f1a6b5b35329a33171e7324e4edf6"
+          "sha256": "1cbb9868df1f495f90dd8f8685f23528af152efa3340cf5c8a27345353e386ed"
         },
         {
           "path": "src/config/defaultTemplates/templates/utilities/shared.ts",
@@ -253,7 +253,7 @@
         },
         {
           "path": "src/components/NoteEditor/utils/standalonePublication.ts",
-          "sha256": "f6149ba00f61fee6e5b215a78b4d1826855df1a0ad2186a157ec7050e8ec54c1"
+          "sha256": "55f29ad3d85d4dffe0c3520c4402f22471b5142d8e5b5871fdb44e3b0d643dab"
         },
         {
           "path": "src/components/NoteEditor/utils/templateSnapshot.ts",
@@ -293,7 +293,7 @@
         },
         {
           "path": "scripts/audit-pdf-pages.mjs",
-          "sha256": "4ff86dbf249e75319f96323e6786836d4091cfcce99a6b0cd2dfe445c3d3b52d"
+          "sha256": "bec885436fe0bcff245c34886bbfdd81df01b24d5d9f33d8871c3e5e56d78d67"
         },
         {
           "path": "scripts/audit-standalone-paper-pdf.mjs",
@@ -313,7 +313,7 @@
         },
         {
           "path": ".github/workflows/publication.yml",
-          "sha256": "9181eb84e25ce2ea02f059fa16cf9161d643e4a8c1de8659d811f8d424638674"
+          "sha256": "2c2abde5a8e5fffdd02d5c184fc5969f626f871d8795ccf8d610e5107e735b7d"
         },
         {
           "path": "scripts/render-publication-gallery.mjs",
@@ -329,7 +329,7 @@
         },
         {
           "path": "playwright.publication.config.ts",
-          "sha256": "5d73c9b9a9614fdc70fe19937d1885113adb4c99a6a8ea038bc4b9c5b1160b05"
+          "sha256": "06002756b3f1aea4ff9d22ad9308e95f57c50b984670603080ceaf151ca44410"
         },
         {
           "path": "playwright.fidelity.config.ts",
@@ -342,7 +342,7 @@
       ]
     },
     "server": {
-      "commit": "437a9ceb95c2e63ccf395ea3a0267a4b17494b12",
+      "commit": "045cb6b74d1b2276f56edeeb3285f4d91af7a1a8",
       "branch": "feat/typ-week6-advanced-features",
       "dirty": true,
       "files": [
