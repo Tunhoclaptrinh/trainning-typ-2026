@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "distinct": 220,
+  "minChars": 2731,
+  "maxChars": 3492,
+  "layout": [
+    {
+      "width": 375,
+      "weeks": 6,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "weeks": 6,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "weeks": 6,
+      "overflow": false
+    }
+  ],
+  "clipboard": [
+    "exact content",
+    "preflight",
+    "fallback",
+    "manual selection"
+  ],
+  "keyboard": true,
+  "weekDefaults": true,
+  "mirrorIdentical": true,
+  "pageErrors": [],
+  "externalRequests": [],
+  "sourcePaths": "44 documents and all code references checked against local pinned Git objects (weeks 1–5) or working tree (week 6)",
+  "scope": "HTML/prompt checks only; no NotebookLM generation, benchmark, server tests or App E2E was run"
+}

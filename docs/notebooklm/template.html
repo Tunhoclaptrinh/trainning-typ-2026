@@ -1,0 +1,177 @@
+<!--
+---
+title: "{{TITLE}}"
+tags: ["da-dung", "notebooklm", "prompts-hub", "tu-hoc"]
+_width: "standard"
+_paper_size: "A4"
+_paper_orientation: "portrait"
+---
+-->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}}</title>
+  <style>
+{{CSS}}
+    a { color: #be123c; text-underline-offset: 3px; overflow-wrap: anywhere; }
+    button { touch-action: manipulation; }
+    button:focus-visible, a:focus-visible, summary:focus-visible, pre:focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
+    .header-desc { margin-top: 12px; }
+    .guide { padding: 18px 20px; border: 1px solid var(--border-subtle); border-radius: 10px; margin-bottom: 22px; background: var(--bg-soft); }
+    .guide summary { cursor: pointer; font-weight: 650; }
+    .guide ol, .guide ul { margin: 12px 0 12px 22px; }
+    .guide li { margin: 7px 0; }
+    .guide p { margin-top: 10px; }
+    .guide table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+    .guide th, .guide td { padding: 9px; border: 1px solid var(--border-normal); text-align: left; vertical-align: top; }
+    .guide th { background: #fff; }
+    .table-scroll { overflow-x: auto; }
+    .sources-pills-wrap .source-pill { font-family: var(--font-family); white-space: normal; }
+    .source-detail { margin-top: 12px; font-size: 13px; color: var(--text-secondary); }
+    .source-detail p { margin: 7px 0; }
+    #sourceVersion { overflow-wrap: anywhere; font-family: var(--font-mono); font-size: 12px; }
+    .lesson-meta-top { flex-wrap: wrap; }
+    .lesson-meta-card p { margin-top: 10px; }
+    .lesson-repo-box { display: block; overflow-wrap: anywhere; }
+    .lesson-links { font-size: 13px; }
+    .boundary { color: #854d0e; background: #fefce8; border-left: 3px solid #eab308; padding: 10px 12px; font-size: 13px; }
+    .prompt-card-header { flex-wrap: wrap; }
+    .prompt-header-left { flex-wrap: wrap; min-width: 0; }
+    .prompt-tip-strip { align-items: flex-start; }
+    .prompt-code-box { tab-size: 2; min-height: 220px; max-height: 660px; }
+    .prompt-code-box code { font: inherit; }
+    .modality-tabs-nav { overflow-x: auto; }
+    .modality-tab { white-space: nowrap; }
+    #promptLength, #copyStatus { font-size: 12px; color: var(--text-muted); padding: 8px 0; }
+    #copyStatus { color: #166534; min-height: 30px; }
+    #copyStatus[data-error] { color: #9a3412; }
+    .preflight-button { border: 1px solid var(--accent-border); background: #fff; border-radius: 7px; color: #be123c; font: inherit; padding: 8px 12px; cursor: pointer; margin-top: 10px; }
+    .eru-doc-footer { flex-wrap: wrap; gap: 8px; }
+    noscript { display: block; padding: 16px; background: #fffbeb; }
+    @media (max-width: 640px) {
+      body { margin: 20px auto; padding: 0 14px 36px; }
+      .header-title { font-size: 23px; }
+      .embedded-template.eru-tool-widget { padding: 14px; }
+      .ant-segmented-item { padding: 8px; text-align: left; }
+      .sources-banner, .guide { padding: 14px; }
+      .prompt-code-box { padding: 14px; font-size: 13px; }
+      .lesson-meta-card { padding: 14px; }
+      .prompt-card-header { padding: 12px; }
+    }
+    @media print {
+      .ant-segmented-wrapper, .modality-tabs-nav, .ant-btn-copy, .preflight-button, #copyStatus, .guide { display: none; }
+      .prompt-code-box { max-height: none; overflow: visible; background: white; color: black; }
+      .embedded-template.eru-tool-widget { box-shadow: none; padding: 0; border: 0; }
+    }
+  </style>
+</head>
+<body class="eru-standalone-content eru-native-document">
+  <header class="eru-doc-header">
+    <div class="header-top-row">
+      <div class="header-icon-box" aria-hidden="true">{{BOOK_ICON}}</div>
+      <div>
+        <p class="header-eyebrow">EruSentia · TYP 2026 · Tự học từ nguồn</p>
+        <h1 class="header-title" id="headerTitle">{{TITLE}}</h1>
+      </div>
+    </div>
+    <p class="header-desc" id="headerDesc">44 bài trong 6 tuần, mỗi bài có 5 prompt đã điền sẵn.</p>
+  </header>
+
+  <details class="guide">
+    <summary>Cách dùng: chọn đúng nguồn, dán đúng chỗ</summary>
+    <ol>
+      <li>Chọn tuần và bài bên dưới. Trong NotebookLM, chọn nguồn có <strong>nội dung bài đó</strong>, báo cáo và mốc nguồn của tuần. Có thể giữ cả <code>week-N-docs</code> nếu đã gộp tài liệu; prompt sẽ giới hạn đúng bài. Bỏ chọn nguồn của tuần khác.</li>
+      <li>Để học qua code, mở từng file cần đối chiếu trong repo đúng snapshot, rồi nhập nội dung thành nguồn văn bản nếu chưa có. Một URL trang chủ GitHub không bảo đảm NotebookLM đã đọc mọi file. Hai repo là nguồn đối chiếu khi đã nhập nội dung liên quan, không phải kết nối đọc toàn bộ repository.</li>
+      <li>Chọn một trong 5 định dạng, bấm <strong>Sao chép prompt</strong>, dán đúng nơi hiện trong dải hướng dẫn rồi tạo. Mỗi bài có bộ riêng; không cần thay tham số. Chỉ tạo các đầu ra bạn muốn sử dụng.</li>
+      <li>Muốn bổ sung internet: dùng chức năng tìm/khám phá nguồn nếu tài khoản có, ưu tiên tài liệu chính thức được dẫn trong bài; mở kiểm tra rồi thêm nguồn vào notebook trước khi tạo. Prompt không tự bảo đảm đã duyệt web.</li>
+    </ol>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Định dạng</th><th>Nơi dán và kết quả</th></tr></thead>
+        <tbody>
+          <tr><td>Video</td><td>Studio → Video Overview → Tùy chỉnh. Chọn Explainer và tiếng Việt nếu có. NotebookLM có thể tạo video; prompt hướng nội dung, không cam kết thời lượng đúng 15 phút hay quay màn hình chạy code.</td></tr>
+          <tr><td>Slide</td><td>Studio → Slide Deck → ô mô tả. Ưu tiên Detailed Deck để tự đọc. Không cần đưa qua Marp hoặc một công cụ sản xuất khác.</td></tr>
+          <tr><td>Âm thanh</td><td>Studio → Audio Overview → ô tùy chỉnh. Chọn tiếng Việt và Deep Dive nếu giao diện hỗ trợ.</td></tr>
+          <tr><td>Tư duy</td><td>Prompt trong tab tạo cây Markdown qua Chat. Muốn Mind Map tương tác, chọn nguồn riêng của bài rồi bấm Mind Map. Nếu giao diện không có ô chỉ dẫn, không có chỗ dán prompt; dùng notebook riêng cho bài để giới hạn phạm vi. Cây Chat không tự biến thành Mind Map.</td></tr>
+          <tr><td>Kiểm tra</td><td>Studio → Quizzes → tùy chỉnh chủ đề/độ khó. Dùng “Explain” để xem giải thích. Số câu và hình thức cuối phụ thuộc giao diện; bài thực hành tự luận có thể hỏi tiếp qua Chat.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Video để học:</strong> ưu tiên hiểu cơ chế, ví dụ, chỗ dễ sai và câu hỏi tự kiểm tra. Nếu một video bỏ sót phần khó, tạo phần bổ sung cho riêng phần đó; không ép công cụ bằng số từ tương đương thời lượng.</p>
+    <p><strong>Kiểm tra nguồn trước khi tạo:</strong> nút dưới sao chép một yêu cầu đối chiếu bài/code/bằng chứng vào Chat. Bổ sung nguồn còn thiếu trước khi dùng Studio; các phiên tạo khác nhau không mặc nhiên kế thừa kết quả Chat. Nếu cần dùng bản tổng hợp đã kiểm tra, lưu và thêm nó thành nguồn khi giao diện hỗ trợ.</p>
+    <button type="button" id="preflightBtn" class="preflight-button">Sao chép lệnh kiểm tra nguồn của bài</button>
+    <div id="preflightFallback" hidden><p>Lệnh kiểm tra nguồn để sao chép thủ công:</p><pre class="prompt-code-box" id="preflightText" tabindex="0"></pre></div>
+    <p class="source-detail">Đối chiếu hướng dẫn Google ngày 14/11/2026:
+      <a href="https://support.google.com/gemininotebook/answer/16454555?hl=en" target="_blank" rel="noopener noreferrer">Video Overview</a> ·
+      <a href="https://support.google.com/gemininotebook/answer/16757456" target="_blank" rel="noopener noreferrer">Slide Deck</a> ·
+      <a href="https://support.google.com/gemininotebook/answer/16212820" target="_blank" rel="noopener noreferrer">Audio Overview</a> ·
+      <a href="https://support.google.com/gemininotebook/answer/16212283" target="_blank" rel="noopener noreferrer">Mind Maps</a> ·
+      <a href="https://support.google.com/gemininotebook/answer/16958963" target="_blank" rel="noopener noreferrer">Quizzes</a>.
+      Tên tùy chọn có thể khác theo tài khoản/phiên bản; giữ tên NotebookLM theo bộ tài liệu của bạn.
+    </p>
+  </details>
+
+  <main class="embedded-template eru-tool-widget" data-eru-tool="prompts-hub">
+    <noscript>Bật JavaScript để chọn tuần, bài và sao chép prompt. File hoạt động độc lập, không cần tải thư viện bên ngoài.</noscript>
+    <div class="ant-segmented-wrapper">
+      <p class="ant-segmented-title" id="weekLabel">1 · Chọn tuần</p>
+      <div class="ant-segmented" id="weekSelector" role="group" aria-labelledby="weekLabel"></div>
+    </div>
+    <div class="ant-segmented-wrapper">
+      <p class="ant-segmented-title" id="lessonLabel">2 · Chọn bài</p>
+      <div class="ant-segmented" id="lessonSelector" role="group" aria-labelledby="lessonLabel"></div>
+    </div>
+
+    <section class="sources-banner" aria-label="Nguồn cần chọn cho bài">
+      <p class="sources-banner-title">Nguồn cho bài đang chọn</p>
+      <div class="sources-pills-wrap">
+        <span class="source-pill checked" id="sourceLesson"></span>
+        <span class="source-pill checked" id="sourceReport"></span>
+        <span class="source-pill checked">Code liên quan đã nhập · 2 repo đối chiếu</span>
+      </div>
+      <div class="source-detail">
+        <p><a id="lessonDoc"></a></p>
+        <p><a id="reportLink"></a> · <a id="snapshotLink"></a></p>
+        <p id="sourceVersion"></p>
+        <p>Chỉ chọn những nguồn có nội dung thực sự đã nhập và đọc được; tên ở trên là nhãn gợi ý, không phải trạng thái kết nối.</p>
+      </div>
+    </section>
+
+    <section class="lesson-meta-card" aria-labelledby="lessonTitle">
+      <span class="ant-tag-badge" id="lessonBadge"></span>
+      <h2 class="lesson-title" id="lessonTitle"></h2>
+      <p class="lesson-desc" id="lessonSub"></p>
+      <p><strong>Trọng tâm:</strong> <span id="lessonTopics"></span></p>
+      <p class="lesson-repo-box"><strong>Điểm đọc code:</strong> <span id="codeLinks"></span></p>
+      <p class="boundary" id="lessonBoundary"></p>
+    </section>
+
+    <p class="ant-segmented-title">3 · Chọn định dạng và sao chép</p>
+    <nav class="modality-tabs-nav" role="tablist" aria-label="Định dạng học tập">
+{{MODE_BUTTONS}}
+    </nav>
+    <article class="prompt-card" id="promptPanel" role="tabpanel" tabindex="0" aria-labelledby="tab-video">
+      <header class="prompt-card-header">
+        <div class="prompt-header-left">
+          <span class="prompt-badge"><span class="anticon" id="promptTypeIcon" aria-hidden="true"></span><span id="promptBadgeText"></span></span>
+          <span class="prompt-title-text" id="promptTitleText"></span>
+        </div>
+        <button type="button" class="ant-btn-copy" id="copyBtn"><span class="anticon" id="copyIcon" aria-hidden="true"></span><span id="copyBtnText">Sao chép prompt</span></button>
+      </header>
+      <div class="prompt-tip-strip"><span id="promptTipText"></span></div>
+      <pre class="prompt-code-box" id="promptScroller" tabindex="0" aria-label="Nội dung prompt"><code id="promptContent"></code></pre>
+    </article>
+    <p id="promptLength"></p>
+    <p id="copyStatus" role="status" aria-live="polite"></p>
+  </main>
+  <footer class="eru-doc-footer"><span>EruSentia · Mẫu tài liệu tương tác · 6 tuần / 44 bài / 220 prompt</span><span>HTML độc lập · Bản biên tập 14/11/2026</span></footer>
+  <script>
+const WEEKS = {{DATA}};
+const INITIAL_WEEK = {{INITIAL_WEEK}};
+{{ICONS}}
+{{RUNTIME}}
+  </script>
+</body>
+</html>

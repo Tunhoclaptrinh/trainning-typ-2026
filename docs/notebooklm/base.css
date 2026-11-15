@@ -1,0 +1,471 @@
+:root {
+      --accent: #F2274C;
+      --accent-hover: #d91b3e;
+      --accent-subtle: #fff1f0;
+      --accent-border: #fecdd3;
+      --bg-page: #ffffff;
+      --bg-card: #ffffff;
+      --bg-soft: #f8fafc;
+      --text-primary: #172033;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border-normal: #cbd5e1;
+      --border-subtle: #e2e8f0;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text-primary);
+      max-width: 1040px;
+      margin: 40px auto;
+      padding: 0 32px 80px;
+      background: var(--bg-page);
+    }
+
+    /* EruSentia Document Header */
+    .eru-doc-header {
+      margin-bottom: 24px;
+    }
+
+    .header-top-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    .header-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--accent-subtle);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .header-eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 2px;
+    }
+
+    .header-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .header-desc {
+      font-size: 14.5px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Sources Checklist Banner */
+    .sources-banner {
+      background: #ffffff;
+      border: 1px solid #fed7aa;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 20px 0 28px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+    }
+
+    .sources-banner-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #9a3412;
+      margin-bottom: 6px;
+    }
+
+    .sources-banner-sub {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .sources-pills-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .source-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-family: var(--font-mono);
+    }
+
+    .source-pill.checked {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+    }
+
+    .source-pill.unchecked {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      font-weight: 500;
+      font-family: var(--font-family);
+    }
+
+    /* Embedded Template Tool Widget */
+    .embedded-template.eru-tool-widget {
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      background: var(--bg-card);
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      margin-bottom: 32px;
+    }
+
+    /* Ant Design Segmented Control for Lessons */
+    .ant-segmented-wrapper {
+      margin-bottom: 20px;
+    }
+
+    .ant-segmented-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .ant-segmented {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border-subtle);
+      padding: 5px;
+      border-radius: 8px;
+    }
+
+    .ant-segmented-item {
+      border: 1px solid transparent;
+      background: transparent;
+      padding: 7px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      font-family: var(--font-family);
+    }
+
+    .ant-segmented-item:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .ant-segmented-item.active {
+      background: #ffffff;
+      color: var(--accent);
+      border-color: var(--accent-border);
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(242, 39, 76, 0.12);
+    }
+
+    .ant-badge-num {
+      font-size: 11px;
+      font-weight: 700;
+      background: #e2e8f0;
+      color: #475569;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .ant-segmented-item.active .ant-badge-num {
+      background: var(--accent-subtle);
+      color: var(--accent);
+    }
+
+    .ant-segmented-item.special {
+      background: #fff7ed;
+      border-color: #ffedd5;
+      color: #c2410c;
+    }
+
+    .ant-segmented-item.special.active {
+      background: #ea580c;
+      color: #ffffff;
+      border-color: #c2410c;
+    }
+
+    .ant-segmented-item.special.active .anticon {
+      color: #ffffff;
+    }
+
+    /* Lesson Meta Card */
+    .lesson-meta-card {
+      background: var(--bg-soft);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 22px;
+    }
+
+    .lesson-meta-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .ant-tag-badge {
+      background: var(--accent-subtle);
+      border: 1px solid var(--accent-border);
+      color: var(--accent);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .lesson-doc-ref {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .lesson-doc-ref code {
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .lesson-title {
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 4px 0 6px;
+    }
+
+    .lesson-desc {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .lesson-repo-box {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 7px 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .repo-code {
+      color: #e11d48;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    /* Modality Tabs - 5 Horizontal Tabs */
+    .modality-tabs-nav {
+      display: flex;
+      gap: 4px;
+      border-bottom: 2px solid var(--border-subtle);
+      margin-bottom: 18px;
+      overflow-x: auto;
+    }
+
+    .modality-tab {
+      padding: 11px 18px;
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+      white-space: nowrap;
+      font-family: var(--font-family);
+    }
+
+    .modality-tab:hover {
+      color: var(--text-primary);
+    }
+
+    .modality-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      font-weight: 700;
+    }
+
+    .modality-tab .anticon {
+      font-size: 16px;
+    }
+
+    /* Prompt Box Container */
+    .prompt-card {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--accent-border);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    .prompt-card-header {
+      background: #fff1f2;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #fecdd3;
+    }
+
+    .prompt-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .prompt-badge {
+      background: #ffe4e6;
+      color: #e11d48;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .prompt-title-text {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .ant-btn-copy {
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      font-family: var(--font-family);
+      box-shadow: 0 1px 2px rgba(242, 39, 76, 0.25);
+    }
+
+    .ant-btn-copy:hover {
+      background: var(--accent-hover);
+    }
+
+    .ant-btn-copy.copied {
+      background: #16a34a !important;
+      color: #ffffff !important;
+    }
+
+    .prompt-tip-strip {
+      background: #fffbeb;
+      border-bottom: 1px solid #fef3c7;
+      padding: 9px 16px;
+      font-size: 13px;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .prompt-code-box {
+      background: #18181b;
+      padding: 22px;
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: #f4f4f5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+      max-height: 580px;
+      overflow-y: auto;
+    }
+
+    /* Ant Design Anticon Base */
+    .anticon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 0;
+      vertical-align: -0.125em;
+    }
+
+    .anticon svg {
+      width: 1em;
+      height: 1em;
+    }
+
+    /* Footer Note */
+    .eru-doc-footer {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    @media print {
+      body {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+      }
+    }
