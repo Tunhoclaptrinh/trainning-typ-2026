@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-15T04:19:59.123Z",
+  "generatedAt": "2026-11-15T13:41:31.632Z",
   "timezone": "Asia/Bangkok",
   "repositories": {
     "app": {
-      "commit": "7067fad7aa6e8b2e1ca0a678bb48473307029516",
-      "branch": "feat/typ-week6-advanced-features",
+      "commit": "7319612804c071bca144ebbb17b629a5476d938f",
+      "branch": "perf/document-runtime",
       "dirty": true,
       "files": [
         {
@@ -153,7 +153,7 @@
         },
         {
           "path": "src/config/engine.json",
-          "sha256": "b6927efd7747b53e5328cd6570e66ce7c314c2a33e3f327961cf8f72e380eb92"
+          "sha256": "da18c170f95e9dd80cd39ada662ea6e00efcc3fe7d55062eda3bfcc64cf1e5be"
         },
         {
           "path": "scripts/vite-engine-source.ts",
@@ -161,7 +161,7 @@
         },
         {
           "path": "src/services/singleFileService.ts",
-          "sha256": "9d7dc7d4f23853d777d51586080acca2b6a3895337a643f9fa45694235359a33"
+          "sha256": "62ffcae22b69c30439999abf285699b3a93503aed5737a86772a6f10b5a63469"
         },
         {
           "path": "electron/preload.cjs",
@@ -169,11 +169,11 @@
         },
         {
           "path": "electron/main.js",
-          "sha256": "55304da053a9d68af736d46cea7eab875232e46ee3f52417787e6a4f2e095773"
+          "sha256": "d9420ef27d6c1fc4395a13eac878226035c2141de28153bad3441da10ce8b291"
         },
         {
           "path": "src/components/MenuBar/index.tsx",
-          "sha256": "515a1db2ebeb41bf87562101cfe88b66b7a874ea7ba13200bdc6f6a1c88f1ec1"
+          "sha256": "48045a2872e03d066b3b3fcc72e888f75a7c2005046cc8a01f0e8bb212639413"
         },
         {
           "path": "playright/engine-file.spec.ts",
@@ -193,7 +193,7 @@
         },
         {
           "path": "src/components/NoteEditor/styles/_documentContent.scss",
-          "sha256": "a4cc737ff662da0fabcb6445725f89fc26a6ebbe357279fe3c5364f1811621d0"
+          "sha256": "8aee49557f082c1e01d8d1d7ee3322157ee9141f9070b95d58e3c02d8a95c6f1"
         },
         {
           "path": "src/components/NoteEditor/styles/nativeDocument.scss",
@@ -213,7 +213,7 @@
         },
         {
           "path": "src/components/NoteEditor/index.tsx",
-          "sha256": "e9439d86a63b3437e258dbf216f6b87766b94e839eeccecb372bfe624b5be560"
+          "sha256": "52b24cce11446b3a78bf06e1dd5ff70f996e9730dd2a5ed2900731ad01511338"
         },
         {
           "path": "src/components/NoteEditor/NoteEditor.scss",
@@ -229,11 +229,11 @@
         },
         {
           "path": "src/components/NoteEditor/components/bars/EditorHeader/index.tsx",
-          "sha256": "8f116be55530a1cb42610e9e05689df692791c130f108d2e04e7fc58b1e7810f"
+          "sha256": "63f6f8759a7fbc98cc4eaaaf36725c0fb47371b91a826cc63c0f5cfb15b7e76c"
         },
         {
           "path": "src/components/NoteEditor/utils/standaloneReader.ts",
-          "sha256": "beed2204c43cb5827cd2cc1675c327c3556837b07b17ca9c5531cfcf053c7fcc"
+          "sha256": "c890083b91e4c62d72e7c2b923964c443f427c402446c04a08b9f6749328fb54"
         },
         {
           "path": "src/config/defaultTemplates/templates/utilities/shared.ts",
@@ -313,7 +313,7 @@
         },
         {
           "path": ".github/workflows/publication.yml",
-          "sha256": "03e37571af4d489c4c279f4d9dd90871864b38dfe11a0584795500839dacb3bc"
+          "sha256": "4277c36db0c74f650799030c39d5b8b320a98265d4da44c247d41cba8ddd098e"
         },
         {
           "path": "scripts/render-publication-gallery.mjs",
@@ -342,8 +342,8 @@
       ]
     },
     "server": {
-      "commit": "e5ef71e950285b358d318509c452dc5bfef19166",
-      "branch": "feat/typ-week6-advanced-features",
+      "commit": "3ebaa6bc8ffd0c26942fda4069912010665807e4",
+      "branch": "perf/document-runtime",
       "dirty": true,
       "files": [
         {

@@ -4,11 +4,11 @@ Cập nhật 15/11/2026. Bản HTML, Markdown và example được tạo bằng 
 
 | Repo | Nhánh | Commit nền | Có thay đổi chưa commit |
 |---|---|---|---|
-| app | `feat/typ-week6-advanced-features` | `7067fad7aa6e8b2e1ca0a678bb48473307029516` | Có |
-| server | `feat/typ-week6-advanced-features` | `e5ef71e950285b358d318509c452dc5bfef19166` | Có |
+| app | `perf/document-runtime` | `7319612804c071bca144ebbb17b629a5476d938f` | Có |
+| server | `perf/document-runtime` | `3ebaa6bc8ffd0c26942fda4069912010665807e4` | Có |
 
 Commit nền không đại diện toàn bộ bytes của đầu ra khi working tree còn thay đổi. [SOURCE_SNAPSHOT.json](SOURCE_SNAPSHOT.json) ghi SHA-256 các tệp trọng tâm; không coi checkout riêng commit nền là đã có các thay đổi chưa commit. Không tạo commit hoặc publish tự động khi sinh tài liệu.
 
-Nguồn nội dung: repo app `docs/week-6/report.md`, `scripts/week6/`, `scripts/showcase/`. Sinh lại với `pnpm docs:week6`; xuất bộ mới bằng `pnpm samples:export --output <thư-mục-mới>`. Gói cũ và vault đã sửa được giữ. Lượt này dùng --no-dev-vault: không cập nhật dev-samples; mở bản sao vault mới để kiểm runtime mới. Các HTML server/training bị thay có backup tại report-backups cục bộ.
+Nguồn nội dung: repo app `docs/week-6/report.md`, `scripts/week6/`, `scripts/showcase/`. Sinh lại với `pnpm docs:week6`; xuất bộ mới bằng `pnpm samples:export --output <thư-mục-mới>`. Gói cũ và vault đã sửa được giữ. Các tệp tuần 6 cập nhật trong dev-samples có bản sao trước đó tại report-backups cục bộ.
 
 [Báo cáo Markdown](WEEK6_REPORT.md) · [Báo cáo HTML](WEEK6_REPORT.html) · [PDF cùng revision](WEEK6_REPORT.pdf) · [Receipt HTML/PDF](PUBLICATION_VERIFICATION.json) · [Kế hoạch ban đầu](PROJECT_PLAN.md)
