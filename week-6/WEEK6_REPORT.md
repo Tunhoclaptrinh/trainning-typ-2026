@@ -1,7 +1,7 @@
 # EruSentia · Báo cáo dự án tuần 6
 
 **Chương trình:** Backend Training TYP 2026 · Project thực hành tổng hợp<br>
-**Học viên:** Nguyễn Tiến Tuấn · **Cập nhật:** 11/11/2026, Asia/Bangkok<br>
+**Học viên:** Nguyễn Tiến Tuấn · **Cập nhật:** 16/11/2026, Asia/Bangkok<br>
 **Sản phẩm:** Sentia Hub Backend, EruSentia App và tài liệu HTML độc lập
 
 > **Một bản cập nhật không chỉ là một lệnh UPDATE.** Nó phải giữ đúng quyền truy cập, phiên bản và sự kiện nghiệp vụ; đến được người theo dõi; không sinh thông báo trùng khi xử lý lại; và vẫn có cách kiểm chứng từ giao diện người dùng. Project tuần 6 dùng chính bài toán đó để nối kiến thức của năm tuần trước thành một hệ thống có thể trình diễn và kiểm tra lại.
@@ -517,3 +517,48 @@ Project đã có cả mã backend, công cụ tương tác, ví dụ và các ph
 | Nguồn báo cáo và example | App: `docs/week-6/report.md`, `scripts/week6/`, `scripts/showcase/` |
 
 Mốc nguồn và trạng thái working tree được ghi trong `SOURCE_SNAPSHOT.md` và manifest của gói example. Khi chưa commit/push các thay đổi, commit nền không đại diện toàn bộ bytes của bản xuất; không gắn nhãn một SHA cũ như thể nó đã chứa bản báo cáo mới.
+
+## Phụ lục B · Bộ bàn giao và kịch bản bảo vệ beta.3
+
+### B.1. Thành phần và cách sử dụng
+
+Bộ nộp bài dành cho người đánh giá gồm ứng dụng EruSentia **1.1.0-beta.3**, báo cáo HTML tương tác, PDF dài được xuất qua luồng xuất bản của EruSentia, ba bài demo và hướng dẫn thao tác. Các installer Windows/Linux được build bằng Tauri 2; trạng thái build và checksum được ghi riêng. Chỉ gọi một hệ điều hành là đã kiểm khi có artifact và biên bản tương ứng. Thư mục mã nguồn, Git, biến môi trường, khóa ký JWT và token đăng nhập không phải thành phần của bộ bàn giao.
+
+Ứng dụng đóng gói frontend vào binary native. Việc không kèm repo hoặc source map giúp tránh phát hành mã nguồn dự án ngoài ý muốn, nhưng tài nguyên frontend vẫn có thể bị trích xuất. HTML demo là tài liệu tương tác có thể xem mã; không sử dụng nó để giữ bí mật. Kiến trúc cấp quyền vẫn đặt ở backend.
+
+| Thành phần | Giá trị khi bảo vệ | Cách kiểm chứng |
+|---|---|---|
+| Báo cáo HTML | Mục lục, sáng/tối, khổ giấy, nội dung và template tương tác | Mở bằng app hoặc trình duyệt; chuyển trang tách rồi mở bản in |
+| PDF từ EruSentia | Tài liệu cố định để đọc, in và chấm | Kiểm checksum, chương đầu/cuối, bảng nhiều trang và end marker |
+| Artboard kiến trúc | Trình bày các ranh giới app, API, transaction và worker | Mở file artboard; bật tương tác, chuyển các bảng trình bày |
+| Artboard Outbox | Giải thích commit/rollback, retry và idempotency | Thực hiện một lần commit, giao lại cùng sự kiện; số thông báo không tăng trùng |
+| API Explorer | Gửi request HTTP thật, xem status/body và kiểm endpoint | GET `/health`; sau đăng nhập thử các endpoint đúng quyền |
+| Hướng dẫn bàn giao | Thứ tự thao tác và các bước cần người dùng thực hiện | Đọc START-HERE trước; không nhập mật khẩu vào cấu hình được lưu |
+
+### B.2. Bài trình diễn 12 phút
+
+**Phút 0–2 — Bài toán và kiến trúc.** Mở artboard kiến trúc. Nêu tình huống người dùng cập nhật template, thành viên workspace nhận thông báo và người nhận tài liệu mở HTML ngoài app. Chỉ rõ phần nào là local-first, phần nào cần backend, và vì sao một sự kiện nghiệp vụ phải bền vững qua lỗi hạ tầng.
+
+**Phút 2–5 — Transaction và Outbox.** Mở artboard Outbox ở chế độ tương tác. Thực hiện commit để thấy revision và sự kiện thay đổi cùng nhau; thử rollback để thấy chúng không bị cập nhật riêng lẻ. Cho dispatcher thất bại một lần rồi retry. Giao lại cùng event để minh họa dedupe ở consumer. Đây là mô phỏng offline của bất biến nghiệp vụ, không phải một kết nối RabbitMQ thật. Đối chiếu với phần SQL, repository và kiểm thử ở chương 5–6 để phân biệt giải thích mô hình với bằng chứng triển khai.
+
+**Phút 5–8 — API thật.** Mở API Explorer. Với bản HTML từ máy, dùng dịch vụ Render/Resource Gateway như hướng dẫn. Kiểm tra trạng thái dịch vụ; gửi GET `/health` và đọc HTTP status cùng response JSON. Với endpoint có xác thực, người trình bày tự đăng nhập tài khoản được cấp quyền; thông tin xác thực chỉ nằm trong phiên. Không coi response 401 của endpoint bảo vệ khi chưa đăng nhập là lỗi của API Explorer. Trình bày được vì sao viewer bị từ chối sửa, owner được quản lý thành viên và quyền phải được xác minh ở server.
+
+**Phút 8–10 — Tài liệu và xuất bản.** Mở báo cáo trong EruSentia. Chuyển giữa mặc định/liền/tách, tới phần bảng dài và các khối lệnh. Mở bản in chuẩn, xem preview rồi xuất PDF. Kiểm một đoạn ở đầu, một bảng giữa tài liệu và mã đánh dấu kết thúc ở cuối. Không lấy số trang bằng nhau làm bằng chứng duy nhất của WYSIWYG.
+
+**Phút 10–12 — Bằng chứng và giới hạn.** Mở hồ sơ kiểm thử đi kèm. Nêu rõ các kiểm thử unit/integration/UI/native và nguồn HTML/PDF được ràng buộc bằng hash. Báo cáo số liệu theo đúng phạm vi và phiên bản; các kiểm thử lịch sử không được gán thành kết quả của beta mới. Nêu những phần chưa kiểm ở target OS hoặc môi trường vận hành.
+
+### B.3. Những điểm đã cải thiện ở đường tài liệu
+
+Editor đã giảm subscription toàn store, tách con trỏ/thống kê khỏi workspace và hoãn sinh source HTML tới lúc cần. Standalone bỏ đo toàn bộ heading khi mục lục đóng. Bộ phân trang dùng lại chỉ mục DOM trong cùng lượt ánh xạ ranh giới. Những tối ưu này giảm công việc thực tế; skeleton chỉ giúp thể hiện trạng thái chờ, không thay thế tối ưu main thread.
+
+Lỗi tràn cuối báo cáo được khoanh vùng ở các code block có newline cuối: editor giữ dòng đặt caret nhưng bản đo tĩnh bỏ dòng đó. Dấu hình học trong publication giữ đúng dòng mà không thêm ký tự vào nội dung/shadow. Một lỗi khác khiến PDF từ chế độ giấy lệch 3pt được xác định là lề bảng tạm thời lọt vào snapshot; khoảng cách dùng cho xuất bản phải đến từ ngữ nghĩa và style của tài liệu, không từ page decorations.
+
+Các gate kiểm nội dung, phân bổ theo trang, hình học và pixel được ghi riêng. Khi standalone giữa hai renderer khớp pixel nhưng native PDF còn sai lệch, kết quả phải tiếp tục ghi là chưa đạt toàn chuỗi. Các giới hạn này không được che bằng tăng tolerance, ép số trang hoặc cập nhật golden theo đầu ra sai.
+
+### B.4. Các bước cần người trình bày chuẩn bị
+
+1. Tải đúng installer cho hệ điều hành, đối chiếu checksum và mở app một lần trước buổi bảo vệ. Bản Tauri dùng WebView của nền tảng; kết quả kiểm Electron không tự chứng nhận WebKitGTK/WebView2.
+2. Mở bản sao thư mục demo; không thao tác trên dữ liệu cá nhân. Artboard offline có thể trình bày khi không có mạng.
+3. Kiểm dịch vụ Render trước phiên live. Nếu dịch vụ ngủ hoặc chưa phản hồi, chờ khởi động và thử lại; không đổi sang dữ liệu giả rồi gọi đó là kết quả backend thật.
+4. Chuẩn bị tài khoản riêng để demo các endpoint có quyền. Không đưa email/mật khẩu/token thực vào file HTML, artboard, ZIP, ảnh chụp hoặc repo.
+5. Với in qua hộp thoại hệ điều hành, người dùng cần chọn máy in PDF/Save as PDF nếu host hỗ trợ. Bản PDF bàn giao đã được xuất và kiểm riêng bằng đường native của EruSentia; khả năng print của Tauri được nghiệm thu theo target OS.
