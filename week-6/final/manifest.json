@@ -1,0 +1,69 @@
+{
+  "reportDate": "2026-11-12",
+  "timezone": "Asia/Bangkok",
+  "author": "Nguyễn Tiến Tuấn",
+  "title": "Báo cáo tổng kết đào tạo Backend – EruSentia",
+  "pages": 3,
+  "paper": "A4",
+  "font": "Times New Roman",
+  "bodyFontPt": 12,
+  "tableFontPt": 11.5,
+  "marginsCm": 2,
+  "renderedWith": "LibreOffice 26.2.6.3",
+  "checks": {
+    "docxArchiveValid": true,
+    "docxTextMatchesSource": true,
+    "pdfTextMatchesSource": true,
+    "pdfTextExtractionMode": "pdftotext -raw preserves table-cell reading order",
+    "allThreePagesVisuallyReviewed": true,
+    "oldArtifactsUnchanged": [
+      "trainning-typ-2026/week-6/WEEK6_REPORT.html",
+      "erusentia-server/docs/WEEK_6_TECHNICAL_REPORT.html",
+      "erusentia-app/docs/evidence/2026-11-11-week6/WEEK6_REPORT.html",
+      "trainning-typ-2026/week-6/WEEK6_REPORT.pdf"
+    ],
+    "applicationTestsRerun": false
+  },
+  "testEvidence": {
+    "reportedDate": "11/11/2026",
+    "server": {
+      "passed": 44,
+      "failed": 0,
+      "scope": "Temporary PostgreSQL database; publisher/Redis test doubles where used.",
+      "source": "../../../erusentia-app/docs/evidence/2026-11-11-week6/server-week6.txt"
+    },
+    "session": {
+      "passed": 91,
+      "failed": 0,
+      "scope": "Session/bridge/transport tests.",
+      "source": "../../../erusentia-app/docs/evidence/2026-11-11-week6/app-session.txt"
+    }
+  },
+  "files": [
+    {
+      "path": "REPORT_FINAL.md",
+      "bytes": 10744,
+      "sha256": "5a9e10ea061e73673f0f27d4d20fcc8ec0ccbbc80f162b7d47ab69c7a5efb768"
+    },
+    {
+      "path": "NguyenTienTuan_BaoCaoTongKet_TYP2026_Final.docx",
+      "bytes": 15954,
+      "sha256": "1a6889f079278016466645601e2dd19706840cf83b87066b03576e2977b9797e"
+    },
+    {
+      "path": "NguyenTienTuan_BaoCaoTongKet_TYP2026_Final.pdf",
+      "bytes": 107413,
+      "sha256": "bce3e339e163ca38662971a94b51e8c7d52c5fae3bf85a8349b3c5d8ccbd1396"
+    },
+    {
+      "path": "build-report.cjs",
+      "bytes": 6299,
+      "sha256": "b7468191ecc0fdc03ab78833534de10b5c8adf78aace2f39744e125d5c0bdf97"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1491,
+      "sha256": "88c149388ecfd6db182c5398ebda0314c6c1b4c6220f6f91b4162a5eff0d18fe"
+    }
+  ]
+}

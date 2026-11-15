@@ -1,0 +1,70 @@
+{
+  "reviewedDate": "2026-11-12",
+  "timezone": "Asia/Bangkok",
+  "scope": "Local document, evidence, source-hash and artifact consistency review; no new application test run or external-access verification. Excludes the newly added plan from the Markdown count.",
+  "report": {
+    "path": "trainning-typ-2026/week-6/WEEK6_REPORT.md",
+    "lines": 498,
+    "whitespaceSeparatedWords": 7968,
+    "pdfPages": 36
+  },
+  "localMarkdownLinks": {
+    "documents": 72,
+    "targets": 330,
+    "missing": [],
+    "anchorsChecked": false,
+    "externalLinksChecked": false
+  },
+  "sourceSnapshotHashes": {
+    "app": {
+      "checked": 83,
+      "missing": [],
+      "mismatched": []
+    },
+    "server": {
+      "checked": 10,
+      "missing": [],
+      "mismatched": []
+    }
+  },
+  "artifacts": [
+    {
+      "path": "trainning-typ-2026/week-6/WEEK6_REPORT.html",
+      "bytes": 3048985,
+      "sha256": "d47bf9bbdfa8153c37ef4652f01409270a43cdc1bef222c5cffbf6003bd4b3e4"
+    },
+    {
+      "path": "erusentia-server/docs/WEEK_6_TECHNICAL_REPORT.html",
+      "bytes": 3048985,
+      "sha256": "d47bf9bbdfa8153c37ef4652f01409270a43cdc1bef222c5cffbf6003bd4b3e4"
+    },
+    {
+      "path": "erusentia-app/docs/evidence/2026-11-11-week6/WEEK6_REPORT.html",
+      "bytes": 1148122,
+      "sha256": "67197e7990fd73d57a1a6be1bca1df695d1aa2f9afd32731b401c8007153813c"
+    },
+    {
+      "path": "trainning-typ-2026/week-6/WEEK6_REPORT.pdf",
+      "bytes": 2339451,
+      "sha256": "000f9c85c42ecc8098091fa2de9b7033581550de6fb81833390e041bcea317d9"
+    }
+  ],
+  "consistency": {
+    "trainingAndServerHtmlIdentical": true,
+    "legacyPdfChecksPages": 34,
+    "legacyHtmlHashMatchesCurrent": false,
+    "currentPdfMatchesPublicationReview": true,
+    "publicationVisualStatus": "reviewed-with-findings"
+  },
+  "testsRerun": false,
+  "changesInThisReview": [
+    "Added SUBMISSION_REVISION_PLAN.md",
+    "Added SUBMISSION_AUDIT.json"
+  ],
+  "limitations": [
+    "DOCX has not yet been created.",
+    "Current interactive HTML has not been manually exercised in this review.",
+    "Only PDF page 1 and one historical desktop screenshot were visually inspected directly; other page findings come from the saved publication review.",
+    "Remote repository access and hosted API availability have not been verified."
+  ]
+}
