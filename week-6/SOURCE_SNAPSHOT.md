@@ -4,8 +4,8 @@ Cập nhật 15/11/2026. Bản HTML, Markdown và example được tạo bằng 
 
 | Repo | Nhánh | Commit nền | Có thay đổi chưa commit |
 |---|---|---|---|
-| app | `feat/typ-week6-advanced-features` | `8944941dc80c342b2f16f4255d32c4d6f6e578b4` | Có |
-| server | `feat/typ-week6-advanced-features` | `04366e95c9dc83255772a28729df7902a01eac96` | Có |
+| app | `feat/typ-week6-advanced-features` | `7067fad7aa6e8b2e1ca0a678bb48473307029516` | Có |
+| server | `feat/typ-week6-advanced-features` | `e5ef71e950285b358d318509c452dc5bfef19166` | Có |
 
 Commit nền không đại diện toàn bộ bytes của đầu ra khi working tree còn thay đổi. [SOURCE_SNAPSHOT.json](SOURCE_SNAPSHOT.json) ghi SHA-256 các tệp trọng tâm; không coi checkout riêng commit nền là đã có các thay đổi chưa commit. Không tạo commit hoặc publish tự động khi sinh tài liệu.
 
