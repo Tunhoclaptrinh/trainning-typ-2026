@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-11-14T15:56:36.895Z",
+  "generatedAt": "2026-11-15T03:38:15.778Z",
   "timezone": "Asia/Bangkok",
   "repositories": {
     "app": {
-      "commit": "24ee7ff5162fbd7bc6e3e53173cf4cecf084d2ac",
+      "commit": "8944941dc80c342b2f16f4255d32c4d6f6e578b4",
       "branch": "feat/typ-week6-advanced-features",
       "dirty": true,
       "files": [
@@ -37,7 +37,7 @@
         },
         {
           "path": "scripts/week6/content.mjs",
-          "sha256": "09814b967bdebcc3dd6c40a08b93af0226c332a273eaaf2597c49b0280f26748"
+          "sha256": "f7aa2af3f67608ad31226bd367ff22407914f434ea6ceac882d78724c4d0a06e"
         },
         {
           "path": "scripts/week6/diagrams.mjs",
@@ -109,11 +109,11 @@
         },
         {
           "path": "docs/week-6/report.md",
-          "sha256": "a02563762c28f391aabac1643e536e6ae148703480a5c39be50be8d4f02a31d8"
+          "sha256": "7d33e19c11ea13fc083522cd5429616d2ecfb8abd020d9b780b77c91cbbe6b0e"
         },
         {
           "path": "src/components/NoteEditor/utils/templatePrint.ts",
-          "sha256": "4cbf8e7ce73ac5cddecede9dba69b7f442618ae9f61827cf2513eebd3ca7f485"
+          "sha256": "7b3500e169f638b1a4fd5b6cba680ed16f17161b09b0849a716aa6441beca40f"
         },
         {
           "path": "src/components/NoteEditor/utils/printSnapshot.ts",
@@ -121,11 +121,11 @@
         },
         {
           "path": "src/components/PrintPreviewModal/index.tsx",
-          "sha256": "d4de7287a3031c7cc9835762ef55757f51bf6ab03b66474e548a07315c2d3892"
+          "sha256": "09d7e41b275d52272305a865856e46e79027294fa448d4b860a7233bcd51ded1"
         },
         {
           "path": "src/config/defaultTemplates/templates/api/printView.ts",
-          "sha256": "b9429574b5a9f8ac27af4d1d900e7a79b4e0e395fab04b6819fb61b7b6573a3e"
+          "sha256": "99f9cb1abbb24b9325e5b13534e714e51c23c4bae84ff1a3649fb273ddf881f3"
         },
         {
           "path": "src/config/defaultTemplates/templates/api/starterSpec.ts",
@@ -153,7 +153,7 @@
         },
         {
           "path": "src/config/engine.json",
-          "sha256": "a9a974e347914f71600b2505fe6928636a7183bbdb29f7c26dcdb949be0db871"
+          "sha256": "23c78675357fb9571d292d1d37bba604979e836d65107f2ec0174c71923012b0"
         },
         {
           "path": "scripts/vite-engine-source.ts",
@@ -173,7 +173,7 @@
         },
         {
           "path": "src/components/MenuBar/index.tsx",
-          "sha256": "e861d25f17d4a09a661477f67f922681866368180895197a419aab3d7cdb36ea"
+          "sha256": "515a1db2ebeb41bf87562101cfe88b66b7a874ea7ba13200bdc6f6a1c88f1ec1"
         },
         {
           "path": "playright/engine-file.spec.ts",
@@ -181,7 +181,7 @@
         },
         {
           "path": "src/components/NoteEditor/utils/htmlWrapper.ts",
-          "sha256": "f3037fd2ce35aa1f8afcfacd0d5e9000d8d2734626df02e69c17f1004cb31b73"
+          "sha256": "897409d89e34bc16a2887daa1cf3091e2cc8a5e87eb8b22d49d8ede1740fc9f1"
         },
         {
           "path": "src/components/NoteEditor/utils/noteWidths.ts",
@@ -193,11 +193,11 @@
         },
         {
           "path": "src/components/NoteEditor/styles/_documentContent.scss",
-          "sha256": "229f5649f1b3266994c0cf386ec4cb96baca4e80d9bde6d6f341fdbec7dc063c"
+          "sha256": "a4cc737ff662da0fabcb6445725f89fc26a6ebbe357279fe3c5364f1811621d0"
         },
         {
           "path": "src/components/NoteEditor/styles/nativeDocument.scss",
-          "sha256": "460285b62aa50a07bada25bb3e40dbde58ebf64768492877fb5f315c185467f9"
+          "sha256": "218d81a2cc6b515f597a18fee22a732072a0087558e4a7d3c6c421dd69fa9ba8"
         },
         {
           "path": "playright/reader-polish.spec.ts",
@@ -213,7 +213,7 @@
         },
         {
           "path": "src/components/NoteEditor/index.tsx",
-          "sha256": "3654183f21845a557b9771be9b437e904d2c22e72c6ab9a4c4f7f74a95855960"
+          "sha256": "ee02661e5f94688561200a648e0ec72bd5eb0cf3ba2862f7c3557558350e4040"
         },
         {
           "path": "src/components/NoteEditor/NoteEditor.scss",
@@ -229,11 +229,11 @@
         },
         {
           "path": "src/components/NoteEditor/components/bars/EditorHeader/index.tsx",
-          "sha256": "d49ec74867c8235fb6460ec56919885769e54b0af60adf399c309716d2471323"
+          "sha256": "8f116be55530a1cb42610e9e05689df692791c130f108d2e04e7fc58b1e7810f"
         },
         {
           "path": "src/components/NoteEditor/utils/standaloneReader.ts",
-          "sha256": "1cbb9868df1f495f90dd8f8685f23528af152efa3340cf5c8a27345353e386ed"
+          "sha256": "beed2204c43cb5827cd2cc1675c327c3556837b07b17ca9c5531cfcf053c7fcc"
         },
         {
           "path": "src/config/defaultTemplates/templates/utilities/shared.ts",
@@ -253,7 +253,7 @@
         },
         {
           "path": "src/components/NoteEditor/utils/standalonePublication.ts",
-          "sha256": "55f29ad3d85d4dffe0c3520c4402f22471b5142d8e5b5871fdb44e3b0d643dab"
+          "sha256": "2ff6e68ddb4a00db65f356a09e07532c19f5a95d0e0bdfdbdf5c28565b839969"
         },
         {
           "path": "src/components/NoteEditor/utils/templateSnapshot.ts",
@@ -293,11 +293,11 @@
         },
         {
           "path": "scripts/audit-pdf-pages.mjs",
-          "sha256": "bec885436fe0bcff245c34886bbfdd81df01b24d5d9f33d8871c3e5e56d78d67"
+          "sha256": "84ea99c161c15dd313b230d1ce70ca5fce29edbaca9bbfc937c0e2348b30fa6b"
         },
         {
           "path": "scripts/audit-standalone-paper-pdf.mjs",
-          "sha256": "7a697980ab327e68ea1f0dcdabc9e83a3ae58204fa8b89b61f2acbc282fe9bf5"
+          "sha256": "4037f6bccb08e85f4db28a3591200a33f1d1170a276926ca24915cc5e6c1dd54"
         },
         {
           "path": "scripts/verify-publication-audit.mjs",
@@ -313,7 +313,7 @@
         },
         {
           "path": ".github/workflows/publication.yml",
-          "sha256": "2c2abde5a8e5fffdd02d5c184fc5969f626f871d8795ccf8d610e5107e735b7d"
+          "sha256": "03e37571af4d489c4c279f4d9dd90871864b38dfe11a0584795500839dacb3bc"
         },
         {
           "path": "scripts/render-publication-gallery.mjs",
@@ -329,7 +329,7 @@
         },
         {
           "path": "playwright.publication.config.ts",
-          "sha256": "06002756b3f1aea4ff9d22ad9308e95f57c50b984670603080ceaf151ca44410"
+          "sha256": "b1aa19fdfb7232e1c4e4da5d254557b91dfd1a6582e901061f2dcdffc6f7e56e"
         },
         {
           "path": "playwright.fidelity.config.ts",
@@ -342,7 +342,7 @@
       ]
     },
     "server": {
-      "commit": "045cb6b74d1b2276f56edeeb3285f4d91af7a1a8",
+      "commit": "04366e95c9dc83255772a28729df7902a01eac96",
       "branch": "feat/typ-week6-advanced-features",
       "dirty": true,
       "files": [

@@ -247,7 +247,7 @@ Các endpoint bảo mật dùng Bearer token. Swagger có thể được tắt t
 
 ### 8.2. API Explorer hoạt động thật
 
-Khối sau được tạo từ **cùng renderer của template API Explorer trong thư viện**. Nó có thêm/sửa/xóa endpoint, tham số, JSON body mẫu, nạp OpenAPI, nhập/xuất collection và hoàn tác. Bộ collection có thể lưu cùng note; mật khẩu, token và response là dữ liệu transient.
+Khối sau được tạo từ **cùng renderer của template API Explorer trong thư viện**. Nó có thêm/sửa/xóa endpoint, tham số, JSON body mẫu, nạp OpenAPI, nhập/xuất collection và hoàn tác. Bộ collection có thể lưu cùng note; mật khẩu, token và response là dữ liệu transient. **Dạng web** dùng công cụ tương tác; **Trang liền/Trang tách — Bản in** hiển thị danh mục endpoint chỉ đọc, cùng nội dung với PDF.
 
 [Mở công cụ tương tác tương ứng trong bản HTML của báo cáo](WEEK6_REPORT.html).
 

@@ -1,11 +1,11 @@
 # Mốc nguồn báo cáo tuần 6
 
-Cập nhật 14/11/2026. Bản HTML, Markdown và example được tạo bằng mã trong working tree hiện tại.
+Cập nhật 15/11/2026. Bản HTML, Markdown và example được tạo bằng mã trong working tree hiện tại.
 
 | Repo | Nhánh | Commit nền | Có thay đổi chưa commit |
 |---|---|---|---|
-| app | `feat/typ-week6-advanced-features` | `24ee7ff5162fbd7bc6e3e53173cf4cecf084d2ac` | Có |
-| server | `feat/typ-week6-advanced-features` | `045cb6b74d1b2276f56edeeb3285f4d91af7a1a8` | Có |
+| app | `feat/typ-week6-advanced-features` | `8944941dc80c342b2f16f4255d32c4d6f6e578b4` | Có |
+| server | `feat/typ-week6-advanced-features` | `04366e95c9dc83255772a28729df7902a01eac96` | Có |
 
 Commit nền không đại diện toàn bộ bytes của đầu ra khi working tree còn thay đổi. [SOURCE_SNAPSHOT.json](SOURCE_SNAPSHOT.json) ghi SHA-256 các tệp trọng tâm; không coi checkout riêng commit nền là đã có các thay đổi chưa commit. Không tạo commit hoặc publish tự động khi sinh tài liệu.
 
