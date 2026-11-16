@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "kind": "week6-html-pdf-deliverable",
-  "generatedAt": "2026-11-15T19:12:01.942Z",
+  "generatedAt": "2026-11-16T03:22:58.771Z",
   "engine": {
     "schemaVersion": 1,
-    "engine": "3.10.2",
-    "sourceDigest": "sha256:5b39d132cf9887346c31884baf50e034bcfabd654c2a5b0ee40477e6c44ceabc",
+    "engine": "3.11.0",
+    "sourceDigest": "sha256:1537adeedb3007f573d9633113f0e53a4fdbbdef59db6e1a5ec0eb1243018762",
     "fontIdentity": {
       "Inter": "5.3.0",
       "JetBrains Mono": "5.3.0"
@@ -63,10 +63,10 @@
     "footer": true,
     "color": "color"
   },
-  "htmlSha256": "a2b92e3826edb5e5552bf56bf51b38782f539bd9fec7fad162923026ef9dfd9b",
-  "pdfSha256": "e7af0332d629e2927f8f358a0b3014d4c1ea3c6a06de0c313d47d65fd4b27064",
-  "planHash": "sha256:7a630d2d1e829d86888790ce9f6e2b273a0d3f123f29e80991bbc858045b6823",
-  "contentRevision": "sha256:687360002d77e0adc5539398a69c62e6bdf065f1a4babe3d034e09231ae30f6a",
+  "htmlSha256": "96a61120202067508fa26e2c8f99a5e10ef18245e324ea367f66715c35561bfb",
+  "pdfSha256": "a961de93e70971b3668ce5d25706e6e86079ebb25c872d3e760a2f160497b00f",
+  "planHash": "sha256:d8ea5b7117a11939975e72cda81579366e041fdcb38f33d426d0560eb70d54a9",
+  "contentRevision": "sha256:dbe9a97ae0b6e135920e70dfb17c8b60481d9c01cbbc3240ab457b3383c49b5f",
   "pages": 41,
   "diagnostics": [
     {

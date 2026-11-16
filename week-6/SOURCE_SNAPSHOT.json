@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-11-15T19:11:52.357Z",
+  "generatedAt": "2026-11-16T03:22:44.815Z",
   "timezone": "Asia/Bangkok",
   "repositories": {
     "app": {
-      "commit": "2203b5fff300da34ad62fc0c4ce53973a3264bcd",
-      "branch": "release/1.1.0-beta.3-week6",
+      "commit": "1a31763ca92f180fc78e96f12fc043ac31844c34",
+      "branch": "feat/template-library-preview-authoring",
       "dirty": true,
       "files": [
         {
@@ -69,7 +69,7 @@
         },
         {
           "path": "src/components/NoteEditor/utils/templateGenerators.ts",
-          "sha256": "5b368fbce4239fef9ae28ea871c4d4e01e17b192d30883161c4a326c9568be4a"
+          "sha256": "3f92caa252997ab63ec19cea7b85b6d42cc515652839d9b75fc9519f10266576"
         },
         {
           "path": "scripts/week6/verification.mjs",
@@ -133,7 +133,7 @@
         },
         {
           "path": "src/config/defaultTemplates/templates/utilities/matching.ts",
-          "sha256": "e2396231bd29a2616d82ea07b933c75eb7fdc482a4739e233d94f030d7a91c00"
+          "sha256": "e558beda2c2b9047bcc0128b62c0d2cace7a67546de25e387620a1c4828f5f34"
         },
         {
           "path": "playright/template-fidelity.spec.ts",
@@ -153,7 +153,7 @@
         },
         {
           "path": "src/config/engine.json",
-          "sha256": "42992b40325acbca0fad5988f342fea8b4cbc19cfc5c18a92b0116eb58723f80"
+          "sha256": "b9f949e5806e37f8290dfcf7360ad8781740384196334cf5b8cc9b8a46dffddd"
         },
         {
           "path": "scripts/vite-engine-source.ts",
@@ -181,7 +181,7 @@
         },
         {
           "path": "src/components/NoteEditor/utils/htmlWrapper.ts",
-          "sha256": "256980c2a4929e7057548b44fd7f080874e2b3dccf084aaef65838837fbac67c"
+          "sha256": "4983851bb3fc4f5faf455b4d5dfebe2212b5262bf47a5bdd05365ee2bdea89ff"
         },
         {
           "path": "src/components/NoteEditor/utils/noteWidths.ts",
@@ -313,7 +313,7 @@
         },
         {
           "path": ".github/workflows/publication.yml",
-          "sha256": "8020e76a1bf2217c1d8174c513f6709885d52adfa8b57942ee9f74dc5300396c"
+          "sha256": "56436cb03ecb8dcb187138261a33fc1079f519904c49e36dfc0be4527f57f181"
         },
         {
           "path": "scripts/render-publication-gallery.mjs",
@@ -342,8 +342,8 @@
       ]
     },
     "server": {
-      "commit": "58a46d7ad971dffaaaa9febeaf61634a1de255db",
-      "branch": "perf/document-runtime",
+      "commit": "5e81d8ba1e089c9a6a7ef0c453392508b3047da0",
+      "branch": "main",
       "dirty": true,
       "files": [
         {
@@ -364,7 +364,7 @@
         },
         {
           "path": "src/resources/resources.service.ts",
-          "sha256": "baed7033abc2bd4fb08f8fe33ca3474200b587525a6040f4b4fe8fc64d399b62"
+          "sha256": "a9a80de3c3004000f23c29cdaf767a66d91b08ba9e5d91682ff627f1f6bb6d73"
         },
         {
           "path": "src/resources/resource-relay.ts",
