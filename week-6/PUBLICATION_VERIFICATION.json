@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
   "kind": "week6-html-pdf-deliverable",
-  "generatedAt": "2026-11-16T03:22:58.771Z",
+  "generatedAt": "2026-11-18T11:31:43.289Z",
   "engine": {
     "schemaVersion": 1,
-    "engine": "3.11.0",
-    "sourceDigest": "sha256:1537adeedb3007f573d9633113f0e53a4fdbbdef59db6e1a5ec0eb1243018762",
+    "engine": "3.14.4",
+    "sourceDigest": "sha256:7445222d6876ac6c7e080b7156fca7cdeb22eeab3d282416b0454f4b582060d2",
     "fontIdentity": {
       "Inter": "5.3.0",
       "JetBrains Mono": "5.3.0"
     }
   },
   "renderer": {
-    "chrome": "156.0.8078.47"
+    "chrome": "158.0.8127.36"
   },
   "profile": {
     "schemaVersion": 1,
@@ -61,39 +61,21 @@
     },
     "fontSize": 16,
     "footer": true,
-    "color": "color"
-  },
-  "htmlSha256": "96a61120202067508fa26e2c8f99a5e10ef18245e324ea367f66715c35561bfb",
-  "pdfSha256": "a961de93e70971b3668ce5d25706e6e86079ebb25c872d3e760a2f160497b00f",
-  "planHash": "sha256:d8ea5b7117a11939975e72cda81579366e041fdcb38f33d426d0560eb70d54a9",
-  "contentRevision": "sha256:dbe9a97ae0b6e135920e70dfb17c8b60481d9c01cbbc3240ab457b3383c49b5f",
-  "pages": 41,
-  "diagnostics": [
-    {
-      "code": "PUB_TEMPLATE_LEGACY",
-      "path": "blocks[1]",
-      "surface": "pdf",
-      "severity": "warning",
-      "expected": "versioned template ID",
-      "actual": null
-    },
-    {
-      "code": "PUB_CONTRACT_MISSING",
-      "path": "blocks[1]",
-      "surface": "pdf",
-      "severity": "warning",
-      "expected": "1",
-      "actual": null
-    },
-    {
-      "code": "PUB_SHADOW_MISSING",
-      "path": "blocks[1]",
-      "surface": "pdf",
-      "severity": "warning",
-      "expected": "semantic Markdown mapper",
-      "actual": null
+    "color": "color",
+    "pageNumbers": {
+      "format": "full",
+      "align": "right",
+      "hideFirstPage": false,
+      "startOffset": 1,
+      "customTemplate": ""
     }
-  ],
+  },
+  "htmlSha256": "fadfff6ffb4ae1fd49f9597daea163b23c294bb32b59361f05ea9f71c911fc6f",
+  "pdfSha256": "8ac212da3252bde9a2499990844a283ca13df22660be2fe5a45c993f128ecf99",
+  "planHash": "sha256:2b309b753aab65e9041d06fa039c3a61ab3f6ed2900e51fe0ec78249594aca4b",
+  "contentRevision": "sha256:e3eb88e67821ed9d3b92aad1453d6de7de958030d0a4ce91fec2686595f6f0aa",
+  "pages": 40,
+  "diagnostics": [],
   "status": "rendered-and-checked",
   "visualVerified": false,
   "limitations": [
