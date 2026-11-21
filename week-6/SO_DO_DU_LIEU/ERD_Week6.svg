@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1450" height="1420" viewBox="0 0 1450 1420">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/></marker></defs>
+<rect width="100%" height="100%" fill="#f7f9fc"/>
+<text x="35" y="40" font-family="Arial" font-size="25" font-weight="bold" fill="#172554">ERD — EruSentia / Tuần 6</text>
+<text x="35" y="68" font-family="Arial" font-size="15" fill="#475569">Bảng con → bảng cha (mũi tên FK). PK: khóa chính · FK: khóa ngoại · ?: có thể NULL. Xem chú giải bên dưới.</text>
+<path d="M345.0,217.5 L750.0,217.5" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M705.0,217.5 L750.0,217.5" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M907.5,440.0 L907.5,330.0" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M750.0,552.5 L345.0,552.5" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M1110.0,217.5 L1065.0,217.5" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M705.0,479.21875 L1110.0,290.78125" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M668.3955223880597,440.0 L786.6044776119403,330.0" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M1267.5,440.0 L1267.5,330.0" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M345.0,814.21875 L750.0,625.78125" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M668.3955223880597,775.0 L786.6044776119403,665.0" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M607.9477611940299,775.0 L847.0522388059701,330.0" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M907.5,775.0 L907.5,330.0" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M907.5,775.0 L907.5,665.0" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M907.5,1000.0 L907.5,1110.0" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M1267.5,775.0 L1267.5,330.0" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<path d="M1146.6044776119402,775.0 L1028.3955223880598,665.0" fill="none" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrow)" opacity="0.7"/>
+<rect x="30" y="105" width="315" height="225" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M40,105 h295 q10,0 10,10 v28 h-315 v-28 q0,-10 10,-10" fill="#164e80"/>
+<text x="44" y="131" font-family="Arial" font-size="16" font-weight="bold" fill="white">profiles</text>
+<text x="43" y="170" font-family="Arial" font-size="13" fill="#1e293b">PK id: uuid</text>
+<text x="43" y="195" font-family="Arial" font-size="13" fill="#1e293b">FK user_id: uuid UNIQUE</text>
+<text x="43" y="220" font-family="Arial" font-size="13" fill="#1e293b">username: varchar UNIQUE</text>
+<text x="43" y="245" font-family="Arial" font-size="13" fill="#1e293b">display_name: varchar</text>
+<rect x="390" y="105" width="315" height="225" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M400,105 h295 q10,0 10,10 v28 h-315 v-28 q0,-10 10,-10" fill="#164e80"/>
+<text x="404" y="131" font-family="Arial" font-size="16" font-weight="bold" fill="white">auth_refresh_sessions</text>
+<text x="403" y="170" font-family="Arial" font-size="13" fill="#1e293b">PK id: uuid</text>
+<text x="403" y="195" font-family="Arial" font-size="13" fill="#1e293b">FK user_id: uuid</text>
+<text x="403" y="220" font-family="Arial" font-size="13" fill="#1e293b">family_id: uuid</text>
+<text x="403" y="245" font-family="Arial" font-size="13" fill="#1e293b">token_hash: varchar UNIQUE</text>
+<text x="403" y="270" font-family="Arial" font-size="13" fill="#1e293b">expires_at / revoked_at</text>
+<rect x="750" y="105" width="315" height="225" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M760,105 h295 q10,0 10,10 v28 h-315 v-28 q0,-10 10,-10" fill="#164e80"/>
+<text x="764" y="131" font-family="Arial" font-size="16" font-weight="bold" fill="white">users</text>
+<text x="763" y="170" font-family="Arial" font-size="13" fill="#1e293b">PK id: uuid</text>
+<text x="763" y="195" font-family="Arial" font-size="13" fill="#1e293b">email: varchar UNIQUE</text>
+<text x="763" y="220" font-family="Arial" font-size="13" fill="#1e293b">password_hash: varchar</text>
+<text x="763" y="245" font-family="Arial" font-size="13" fill="#1e293b">role: user | creator | admin</text>
+<text x="763" y="270" font-family="Arial" font-size="13" fill="#1e293b">is_active: boolean</text>
+<rect x="1110" y="105" width="315" height="225" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M1120,105 h295 q10,0 10,10 v28 h-315 v-28 q0,-10 10,-10" fill="#164e80"/>
+<text x="1124" y="131" font-family="Arial" font-size="16" font-weight="bold" fill="white">workspaces</text>
+<text x="1123" y="170" font-family="Arial" font-size="13" fill="#1e293b">PK id: uuid</text>
+<text x="1123" y="195" font-family="Arial" font-size="13" fill="#1e293b">FK owner_id: uuid</text>
+<text x="1123" y="220" font-family="Arial" font-size="13" fill="#1e293b">slug: varchar UNIQUE</text>
+<text x="1123" y="245" font-family="Arial" font-size="13" fill="#1e293b">name: varchar</text>
+<text x="1123" y="270" font-family="Arial" font-size="13" fill="#1e293b">deleted_at: timestamptz?</text>
+<rect x="30" y="440" width="315" height="225" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M40,440 h295 q10,0 10,10 v28 h-315 v-28 q0,-10 10,-10" fill="#164e80"/>
+<text x="44" y="466" font-family="Arial" font-size="16" font-weight="bold" fill="white">categories</text>
+<text x="43" y="505" font-family="Arial" font-size="13" fill="#1e293b">PK id: uuid</text>
+<text x="43" y="530" font-family="Arial" font-size="13" fill="#1e293b">name: varchar UNIQUE</text>
+<text x="43" y="555" font-family="Arial" font-size="13" fill="#1e293b">slug: varchar UNIQUE</text>
+<rect x="390" y="440" width="315" height="225" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M400,440 h295 q10,0 10,10 v28 h-315 v-28 q0,-10 10,-10" fill="#164e80"/>
+<text x="404" y="466" font-family="Arial" font-size="16" font-weight="bold" fill="white">workspace_members</text>
+<text x="403" y="505" font-family="Arial" font-size="13" fill="#1e293b">PK, FK workspace_id: uuid</text>
+<text x="403" y="530" font-family="Arial" font-size="13" fill="#1e293b">PK, FK user_id: uuid</text>
+<text x="403" y="555" font-family="Arial" font-size="13" fill="#1e293b">role: owner | editor | viewer</text>
+<text x="403" y="580" font-family="Arial" font-size="13" fill="#1e293b">created_at: timestamptz</text>
+<rect x="750" y="440" width="315" height="225" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M760,440 h295 q10,0 10,10 v28 h-315 v-28 q0,-10 10,-10" fill="#164e80"/>
+<text x="764" y="466" font-family="Arial" font-size="16" font-weight="bold" fill="white">templates</text>
+<text x="763" y="505" font-family="Arial" font-size="13" fill="#1e293b">PK id: uuid</text>
+<text x="763" y="530" font-family="Arial" font-size="13" fill="#1e293b">FK author_id: uuid</text>
+<text x="763" y="555" font-family="Arial" font-size="13" fill="#1e293b">FK category_id: uuid</text>
+<text x="763" y="580" font-family="Arial" font-size="13" fill="#1e293b">title / slug / content_json</text>
+<text x="763" y="605" font-family="Arial" font-size="13" fill="#1e293b">revision / version / is_public</text>
+<rect x="1110" y="440" width="315" height="225" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M1120,440 h295 q10,0 10,10 v28 h-315 v-28 q0,-10 10,-10" fill="#164e80"/>
+<text x="1124" y="466" font-family="Arial" font-size="16" font-weight="bold" fill="white">workspace_invites</text>
+<text x="1123" y="505" font-family="Arial" font-size="13" fill="#1e293b">PK id: uuid</text>
+<text x="1123" y="530" font-family="Arial" font-size="13" fill="#1e293b">FK workspace_id: uuid</text>
+<text x="1123" y="555" font-family="Arial" font-size="13" fill="#1e293b">FK invited_by: uuid</text>
+<text x="1123" y="580" font-family="Arial" font-size="13" fill="#1e293b">FK accepted_by: uuid?</text>
+<text x="1123" y="605" font-family="Arial" font-size="13" fill="#1e293b">email / role / expires_at</text>
+<rect x="30" y="775" width="315" height="225" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M40,775 h295 q10,0 10,10 v28 h-315 v-28 q0,-10 10,-10" fill="#164e80"/>
+<text x="44" y="801" font-family="Arial" font-size="16" font-weight="bold" fill="white">template_revisions</text>
+<text x="43" y="840" font-family="Arial" font-size="13" fill="#1e293b">PK, FK template_id: uuid</text>
+<text x="43" y="865" font-family="Arial" font-size="13" fill="#1e293b">PK revision: integer</text>
+<text x="43" y="890" font-family="Arial" font-size="13" fill="#1e293b">FK actor_id: uuid?</text>
+<text x="43" y="915" font-family="Arial" font-size="13" fill="#1e293b">operation: varchar</text>
+<text x="43" y="940" font-family="Arial" font-size="13" fill="#1e293b">snapshot: jsonb</text>
+<rect x="390" y="775" width="315" height="225" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M400,775 h295 q10,0 10,10 v28 h-315 v-28 q0,-10 10,-10" fill="#164e80"/>
+<text x="404" y="801" font-family="Arial" font-size="16" font-weight="bold" fill="white">template_follows</text>
+<text x="403" y="840" font-family="Arial" font-size="13" fill="#1e293b">PK, FK user_id: uuid</text>
+<text x="403" y="865" font-family="Arial" font-size="13" fill="#1e293b">PK, FK template_id: uuid</text>
+<text x="403" y="890" font-family="Arial" font-size="13" fill="#1e293b">created_at: timestamptz</text>
+<rect x="750" y="775" width="315" height="225" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M760,775 h295 q10,0 10,10 v28 h-315 v-28 q0,-10 10,-10" fill="#164e80"/>
+<text x="764" y="801" font-family="Arial" font-size="16" font-weight="bold" fill="white">notifications</text>
+<text x="763" y="840" font-family="Arial" font-size="13" fill="#1e293b">PK id: uuid</text>
+<text x="763" y="865" font-family="Arial" font-size="13" fill="#1e293b">FK recipient_id: uuid</text>
+<text x="763" y="890" font-family="Arial" font-size="13" fill="#1e293b">FK actor_id: uuid?</text>
+<text x="763" y="915" font-family="Arial" font-size="13" fill="#1e293b">FK template_id: uuid?</text>
+<text x="763" y="940" font-family="Arial" font-size="13" fill="#1e293b">FK event_id: uuid?</text>
+<text x="763" y="965" font-family="Arial" font-size="13" fill="#1e293b">revision / is_read / read_at</text>
+<rect x="1110" y="775" width="315" height="225" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M1120,775 h295 q10,0 10,10 v28 h-315 v-28 q0,-10 10,-10" fill="#164e80"/>
+<text x="1124" y="801" font-family="Arial" font-size="16" font-weight="bold" fill="white">workspace_resources</text>
+<text x="1123" y="840" font-family="Arial" font-size="13" fill="#1e293b">PK, FK workspace_id: uuid</text>
+<text x="1123" y="865" font-family="Arial" font-size="13" fill="#1e293b">PK, FK template_id: uuid</text>
+<text x="1123" y="890" font-family="Arial" font-size="13" fill="#1e293b">FK added_by: uuid</text>
+<text x="1123" y="915" font-family="Arial" font-size="13" fill="#1e293b">permission: read_only | read_write</text>
+<rect x="750" y="1110" width="315" height="225" rx="10" fill="#fff" stroke="#94a3b8" stroke-width="1.5"/>
+<path d="M760,1110 h295 q10,0 10,10 v28 h-315 v-28 q0,-10 10,-10" fill="#164e80"/>
+<text x="764" y="1136" font-family="Arial" font-size="16" font-weight="bold" fill="white">message_outbox</text>
+<text x="763" y="1175" font-family="Arial" font-size="13" fill="#1e293b">PK id: uuid</text>
+<text x="763" y="1200" font-family="Arial" font-size="13" fill="#1e293b">event_type: varchar</text>
+<text x="763" y="1225" font-family="Arial" font-size="13" fill="#1e293b">payload: jsonb</text>
+<text x="763" y="1250" font-family="Arial" font-size="13" fill="#1e293b">created_at: timestamptz</text>
+<text x="763" y="1275" font-family="Arial" font-size="13" fill="#1e293b">published_at: timestamptz?</text>
+<text x="30" y="1370" font-family="Arial" font-size="15" fill="#475569">Sơ đồ rút gọn: xem README và file Mermaid để biết chính xác các quan hệ và cột chưa hiển thị.</text>
+</svg>

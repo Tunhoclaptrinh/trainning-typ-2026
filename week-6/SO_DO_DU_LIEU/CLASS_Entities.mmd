@@ -1,0 +1,51 @@
+classDiagram
+  class AuthorEntity {
+    <<Entity users>>
+    +string id
+    +string email
+    +string passwordHash
+    +Role role
+    +boolean isActive
+    +TemplateEntity[] templates
+  }
+  class CategoryEntity {
+    <<Entity categories>>
+    +string id
+    +string name
+    +string slug
+    +TemplateEntity[] templates
+  }
+  class TemplateEntity {
+    <<Entity templates>>
+    +string id
+    +string authorId
+    +string categoryId
+    +string title
+    +string slug
+    +Record contentJson
+    +number revision
+    +boolean isPublic
+    +AuthorEntity author
+    +CategoryEntity category
+  }
+  class RefreshSessionEntity {
+    <<Entity auth_refresh_sessions>>
+    +string id
+    +string userId
+    +string familyId
+    +string tokenHash
+    +Date expiresAt
+    +AuthorEntity user
+  }
+  class AdminAuditLogEntity {
+    <<Entity admin_audit_logs>>
+    +string id
+    +string actorId
+    +string action
+    +string targetType
+    +Record metadata
+    +Date createdAt
+  }
+  AuthorEntity "1" -- "0..*" TemplateEntity : author
+  CategoryEntity "1" -- "0..*" TemplateEntity : category
+  AuthorEntity "1" -- "0..*" RefreshSessionEntity : user
