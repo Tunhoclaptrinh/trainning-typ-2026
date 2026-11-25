@@ -29,6 +29,8 @@ Xây dựng một Backend Project dựa trên kiến thức đã học trong 5 t
 
 ## Bài nộp EruSentia · cập nhật 11/11/2026
 
+[Báo cáo tổng kết Word](final/NguyenTienTuan_BaoCaoTongKet_TYP2026_Final.docx) · [PDF tổng kết](final/NguyenTienTuan_BaoCaoTongKet_TYP2026_Final.pdf) · [Hướng dẫn nộp và kiểm tra trước khi gửi](SUBMISSION_GUIDE.md).
+
 [Báo cáo Markdown](WEEK6_REPORT.md) · [Bản HTML tương tác](WEEK6_REPORT.html) · [PDF để đọc/in](WEEK6_REPORT.pdf) · [Mốc nguồn và SHA-256](SOURCE_SNAPSHOT.md).
 
 Báo cáo có 16 chương và phụ lục: kiến trúc, mô hình dữ liệu, Transactional Outbox, idempotency, workspace/RBAC, Resource Gateway, API, UI/UX, kiểm chứng và kịch bản demo 12–15 phút. Bốn sơ đồ được lưu trong `assets/`; bản HTML chứa sẵn tài nguyên để đọc độc lập. Công cụ API cần một backend đang chạy và phiên kiểm thử riêng.
